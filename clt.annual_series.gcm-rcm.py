@@ -195,7 +195,7 @@ ensstd_anomaly=np.std(Anomaly2,axis=0)
 ensstd_anomaly_GCM=np.std(Anomaly_GCM2,axis=0)
 
 #=================================================== plot
-Title='annual time series (30-year running mean) of clt along the 21st century under RCP8.5'
+Title='annual time series (30-year running mean) of CLT along the 21st century under RCP8.5'
 
 
 fig, axes = plt.subplots(nrows=3, ncols=3,figsize=(16, 9),facecolor='w', edgecolor='k')
@@ -210,7 +210,7 @@ for k in range(N_region):
     axes[k].tick_params(direction='out',length=6,width=2,labelsize=10)
 
     axes[k].set_title('Region '+str(k+1),fontsize=10)
-    axes[k].set_ylabel('rsds anomalies in %', fontsize=10)
+    axes[k].set_ylabel('CLT anomalies in %', fontsize=10)
     
     axes[k].set_axisbelow(True)
     axes[k].yaxis.grid(color='gray', linestyle='dashed')
