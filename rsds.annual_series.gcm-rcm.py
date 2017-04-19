@@ -23,7 +23,7 @@ import textwrap
 
 # to load my functions
 import sys 
-sys.path.append('/Users/ctang/Code/My_Python_Code/')
+sys.path.append('/Users/ctang/Code/Python/')
 import ctang
 
 pl.close('all')
@@ -144,7 +144,7 @@ Ensmean_timstd_ref_GCM=np.mean(timstd_ref_GCM,axis=0)
 
 # running mean of each model in each region:
 Anomaly2 = np.zeros((N_model, N_region, 101))
-Anomaly_GCM2 = np.zeros((N_model, N_region, 101))
+Anomaly_GCM2 = np.zeros((N_model_GCM, N_region, 101))
 
 for r in range(N_region):
     for m in range(N_model):
@@ -159,7 +159,7 @@ ensstd_anomaly=np.std(Anomaly2,axis=0)
 ensstd_anomaly_GCM=np.std(Anomaly_GCM2,axis=0)
 
 #=================================================== plot
-Title='annual time series (30-year running mean) of RSDS along the 21st century under RCP8.5'
+Title='annual time series (30-year running mean) of SSR along the 21st century under RCP8.5'
 
 
 fig, axes = plt.subplots(nrows=3, ncols=3,figsize=(16, 9),facecolor='w', edgecolor='k')
@@ -174,7 +174,7 @@ for k in range(N_region):
     axes[k].tick_params(direction='out',length=6,width=2,labelsize=10)
 
     axes[k].set_title('Region '+str(k+1),fontsize=10)
-    axes[k].set_ylabel('rsds anomalies in %', fontsize=10)
+    axes[k].set_ylabel('SSR anomalies in %', fontsize=10)
     
     axes[k].set_axisbelow(True)
     axes[k].yaxis.grid(color='gray', linestyle='dashed')
@@ -193,20 +193,8 @@ for k in range(N_region):
 
 #=================================================== plot every model, RCMs and GCMs
     
-    for m in range(5):
-        axes[k].plot(TIME[15:116], Anomaly2[m,k,:], '-',linewidth=0.5)
-        #legend = axes[5].legend(loc='upper center', shadow=True)
-
-    #for m in range(N_model_GCM):
-        #axes[k].plot(TIME[15:116], ctang.running_mean(Anomaly_GCM[m,k,:],5),\
-                #'-',linewidth=0.5)
-        #legend = axes[5].legend(loc='upper center', shadow=True)
-
-    #for m in range(N_model):
-        #axes[k].plot(TIME, Changes[m,k,:], '-',linewidth=0.5)
-
-    #for m in range(N_model_GCM):
-        #axes[k].plot(TIME, Changes_GCM[m,k,:], '-',linewidth=0.5)
+    # for m in range(5):
+        # axes[k].plot(TIME[15:116], Anomaly2[m,k,:], '-',linewidth=0.5)
 #=================================================== plot ensmean of timstd ref
 
     axes[k].errorbar(1990,0,yerr=Ensmean_timstd_ref[k], color='red', ls='-',linewidth=2)
@@ -219,7 +207,7 @@ for k in range(N_region):
         '-', label='21 RCMs mean', color='blue', linewidth=2,zorder=2)
 
     axes[k].plot(TIME[15:116],ctang.running_mean(ensmean_anomaly_GCM[k],30),\
-        '-', label='10 GCMs mean', color='black', linewidth=2,zorder=2)
+        '-', label='11 GCMs mean', color='black', linewidth=2,zorder=2)
 
 #=================================================== plot ensstd of anomalies
 
@@ -246,11 +234,15 @@ for k in range(N_region):
 #=================================================== add legend
 #legend = ax.legend(loc='upper center', shadow=True)
 
+
+for kk in [7,8]:
+    ctang.empty_plot(axes[kk])
+
 plt.suptitle(Title)
 
 #===================================================  end of  plot
 
-plt.savefig('rsds.annual_series.gcm-rcm.eps', format='eps')
+# plt.savefig('rsds.annual_series.gcm-rcm.eps', format='eps')
 plt.savefig('rsds.annual_series.gcm-rcm.png')
 plt.show()
 quit()
