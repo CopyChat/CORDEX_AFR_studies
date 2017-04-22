@@ -29,13 +29,12 @@ Data='/Users/ctang/Code/CORDEX_AFR_studies/data/GCM-RCM_map/'
 
 
 # output:
-output='rsds.meanchange.rcm'
+output='clt.meanchange.rcm'
 DataMat=output
 
 #=================================================== Definitions
-N_region = 9
 N_model = 21
-VAR = 'rsds' #,'tas','sfcWind') #,'PVpot')
+VAR = 'clt' #,'tas','sfcWind') #,'PVpot')
 #---------------------------------------------------  data
 # 21 * 4 table: 21 models vs 4 vars
 
@@ -158,9 +157,9 @@ Ensmean_change=np.nanmean(mean_change,axis=0)
 
 #=================================================== plot
 degree_sign= u'\N{DEGREE SIGN}'
-Title='rsds change %'
+Title='clt change %'
 Unit=(('(W/m2)','(%)'))
-TTT=(('Mean RSDS changes RCP8.5 ', 'PVpot changes RCP8.5 '))
+TTT=(('Mean CLT changes RCP8.5 ', 'CLT changes RCP8.5 '))
 #--------------------------------------------------- 
 def PlotMap(array2D,lons,lats,axx,vmin,vmax):
     cmap = plt.cm.jet
@@ -190,12 +189,12 @@ fig.subplots_adjust(hspace=0.35,top=0.99,wspace=0.3,bottom=0.25)
 
 plt.sca(axes[0]) # active shis subplot for GCM
 ax=axes[0]
-PlotMap(Ensmean_change,lons,lats,ax,-10,10)
+PlotMap(Ensmean_change,lons,lats,ax,-20,20)
 plt.sca(axes[1]) # active shis subplot for GCM
 ax=axes[1]
-PlotMap(Ensmean_change_ttest,lons,lats,ax,-10,10)
+PlotMap(Ensmean_change_ttest,lons,lats,ax,-20,20)
 
-plt.suptitle('21 CORDEX models mean changes of SSR (%)',fontsize=14)
+plt.suptitle('21 CORDEX models mean changes(relative) of CLT (%)',fontsize=14)
 
 print output+'.eps'
 plt.savefig(output+'.eps',format='eps')

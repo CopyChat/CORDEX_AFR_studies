@@ -20,7 +20,7 @@ import textwrap
 
 # to load my functions
 import sys 
-sys.path.append('/Users/ctang/Code/Python/')
+sys.path.append('/Users/ctang/Code/My_Python_Code/')
 import ctang
 
 degree_sign= u'\N{DEGREE SIGN}'
@@ -268,9 +268,9 @@ plt.colorbar(cax,cmap=plt.cm.bwr,orientation='horizontal',shrink=0.9)
 plt.suptitle(Title)
 
 #plt.tight_layout()
-plt.savefig('rsds_change.map.gcm_vs_rcm.eps',format='eps')
-plt.savefig('rsds_change.map.gcm_vs_rcm.pdf')
-plt.savefig('rsds_change.map.gcm_vs_rcm.png')
+plt.savefig('map.gcm_vs_rcm.eps',format='eps')
+plt.savefig('map.gcm_vs_rcm.pdf')
+plt.savefig('map.gcm_vs_rcm.png')
 plt.show()
 
 quit()

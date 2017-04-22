@@ -136,20 +136,19 @@ for r in range(N_region):
             [ (t)*100/timmean_ref_GCM[m,r] for t in Anomaly_GCM[m,r,:]])
 
 #=================================================== test
-# fig1, ax = plt.subplots()
-# for r in range(N_region):
-    # for m in range(N_model):
-        # plt.plot(range(2099-1969),Anomaly[m,4,:])
-        # plt.plot(range(2099-1969),np.mean(Anomaly[:,4,:],axis=0),color='b')
-        # # plt.plot(range(2099-1969),range(2099-1969))
+fig1, ax = plt.subplots()
+for r in range(N_region):
+    for m in range(N_model):
+        plt.plot(range(2099-1969),Anomaly[m,4,:])
+        plt.plot(range(2099-1969),np.mean(Anomaly[:,4,:],axis=0),color='b')
+        # plt.plot(range(2099-1969),range(2099-1969))
 
-# fig2, ax = plt.subplots()
-# for r in range(N_region):
-    # for m in range(N_model_GCM):
-        # plt.plot(range(2099-1969),Anomaly_GCM[m,4,:])
-        # plt.plot(range(2099-1969),np.mean(Anomaly_GCM[:,4,:],axis=0),color='b')
-        # # plt.plot(range(2099-1969),range(2099-1969))
-# # plt.show()
+fig2, ax = plt.subplots()
+for r in range(N_region):
+    for m in range(N_model_GCM):
+        plt.plot(range(2099-1969),Anomaly_GCM[m,4,:])
+        plt.plot(range(2099-1969),np.mean(Anomaly_GCM[:,4,:],axis=0),color='b')
+        # plt.plot(range(2099-1969),range(2099-1969))
 
 #=================================================== test
 

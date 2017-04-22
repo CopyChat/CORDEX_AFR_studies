@@ -25,17 +25,15 @@ import ctang
 
 #=================================================== I/O info:
 # input data:
-Data='/Users/ctang/Code/CORDEX_AFR_studies/data/GCM-RCM_map/'
-
+Data='/Users/ctang/Code/CORDEX_AFR_studies/data/'
 
 # output:
-output='rsds.meanchange.rcm'
+output='clt.meanchange.gcm'
 DataMat=output
 
 #=================================================== Definitions
-N_region = 9
-N_model = 21
-VAR = 'rsds' #,'tas','sfcWind') #,'PVpot')
+N_model = 8
+VAR = 'clt' #,'tas','sfcWind') #,'PVpot')
 #---------------------------------------------------  data
 # 21 * 4 table: 21 models vs 4 vars
 
@@ -46,47 +44,38 @@ VAR = 'rsds' #,'tas','sfcWind') #,'PVpot')
     #  model_N_model
     #  ens
 #--------------------------------------------------- 
-RCM_Model=(\
-	'CCCma-CanESM2_SMHI-RCA4_v1',\
-	'CNRM-CERFACS-CNRM-CM5_SMHI-RCA4_v1',\
-	'CSIRO-QCCCE-CSIRO-Mk3-6-0_SMHI-RCA4_v1',\
-	'ICHEC-EC-EARTH_SMHI-RCA4_v1',\
-	'IPSL-IPSL-CM5A-MR_SMHI-RCA4_v1',\
-	'MIROC-MIROC5_SMHI-RCA4_v1',\
-	'MOHC-HadGEM2-ES_SMHI-RCA4_v1',\
-	'MPI-M-MPI-ESM-LR_SMHI-RCA4_v1',\
-	'NCC-NorESM1-M_SMHI-RCA4_v1',\
-	'NOAA-GFDL-GFDL-ESM2M_SMHI-RCA4_v1',\
-        \
-	'CNRM-CERFACS-CNRM-CM5_CLMcom-CCLM4-8-17_v1',\
-	'ICHEC-EC-EARTH_CLMcom-CCLM4-8-17_v1',\
-	'MOHC-HadGEM2-ES_CLMcom-CCLM4-8-17_v1',\
-	'MPI-M-MPI-ESM-LR_CLMcom-CCLM4-8-17_v1',\
-	'ICHEC-EC-EARTH_DMI-HIRHAM5_v2',\
-	'NCC-NorESM1-M_DMI-HIRHAM5_v1',\
-	'ICHEC-EC-EARTH_KNMI-RACMO22T_v1',\
-	'MOHC-HadGEM2-ES_KNMI-RACMO22T_v2',\
-	'ICHEC-EC-EARTH_MPI-CSC-REMO2009_v1',\
-	'IPSL-IPSL-CM5A-LR_GERICS-REMO2009_v1',\
-	'MPI-M-MPI-ESM-LR_MPI-CSC-REMO2009_v1')
+
+GCM_Model=(\
+    'CNRM-CM5',\
+    # 'CSIRO-Mk3-6-0',\
+    'CanESM2',\
+    # 'EC-EARTH',\
+    'GFDL-ESM2M',\
+    'HadGEM2-ES',\
+    'IPSL-CM5A-LR',\
+    # 'IPSL-CM5A-MR',\
+    'MIROC5',\
+    'MPI-ESM-LR',\
+    'NorESM1-M',\
+    )
 
 #================================================== reading data
 # 21 maps
 filefix=(\
-        '.hist.day.1970-1999.SA.timmean.nc' ,\
-        '.rcp85.day.2070-2099.SA.timmean.nc')
+        '_historical-rcp85_r1i1p1.1970-1999.SA.timmean.remap.nc',\
+        '_historical-rcp85_r1i1p1.2070-2099.SA.timmean.remap.nc')
 
 # Read lon,lat for model
-lons,lats=ctang.read_lonlat_netcdf(\
-        Data+VAR+'_AFR-44_'+RCM_Model[1]+filefix[0])
+lons,lats=ctang.read_lonlat_netcdf_1D(\
+        Data+VAR+'_Amon_'+GCM_Model[1]+filefix[0])
 
 # Read Ensmean of timmean for CORDEX 
 ## reading 21 models : (21,90,137)
 mean_ref=np.array([ctang.read_lonlatmap_netcdf(VAR,\
-    Data+VAR+'_AFR-44_'+RCM_Model[i]+filefix[0])\
+    Data+VAR+'_Amon_'+GCM_Model[i]+filefix[0])\
     for i in range(N_model)])
 mean_future=np.array([ctang.read_lonlatmap_netcdf(VAR,\
-    Data+VAR+'_AFR-44_'+RCM_Model[i]+filefix[1]) \
+    Data+VAR+'_Amon_'+GCM_Model[i]+filefix[1]) \
     for i in range(N_model)])
 #=================================================== Cal
 
@@ -94,11 +83,9 @@ mean_change=(mean_future-mean_ref)*100/mean_ref
 
 t_value=mean_change
 
-
 #--------------------------------------------------- 
 # for t test in each point
-T=2.086 # dof=20 two tail 0.05
-#T=1.725 # dof= 20 two tail 0.1 , the very same as 0.05
+T=2.228 # dof=10 two tail 0.05
 #--------------------------------------------------- 
 #t_value in N_model,lat,lon
 def significant_map(t_value):
@@ -142,7 +129,7 @@ def robust(t_value):
     return t_value
 #========================================= end of function
 
-# t_value=robust(significant_map(t_value))
+# # t_value=robust(significant_map(t_value))
 # t_value=significant_map(t_value)
 
 # save to txt file to save time
@@ -152,15 +139,30 @@ def robust(t_value):
 t_value=ctang.Loadmat(output+'.mat')
 print np.isnan(t_value).sum()
 
+#=================================================== test
+print t_value.shape
+for lat in range(t_value.shape[1]):
+    for lon in range(t_value.shape[2]):
+        print np.isnan(t_value[1,lat,lon]),np.isnan(t_value[2,lat,lon])
+# print np.isnan(t_value[2,:,:])
+# print "--------------"
+# print np.isnan(t_value[3,:,:])
+    
+
+
+quit()
+#=================================================== test
+
+
 # plotting array:
 Ensmean_change_ttest=np.nanmean(t_value,axis=0)
 Ensmean_change=np.nanmean(mean_change,axis=0)
 
 #=================================================== plot
 degree_sign= u'\N{DEGREE SIGN}'
-Title='rsds change %'
-Unit=(('(W/m2)','(%)'))
-TTT=(('Mean RSDS changes RCP8.5 ', 'PVpot changes RCP8.5 '))
+Title='clt change %'
+Unit=(('(%)','(%)'))
+TTT=(('Mean CLT changes RCP8.5 ', 'CLT changes RCP8.5 '))
 #--------------------------------------------------- 
 def PlotMap(array2D,lons,lats,axx,vmin,vmax):
     cmap = plt.cm.jet
@@ -190,12 +192,12 @@ fig.subplots_adjust(hspace=0.35,top=0.99,wspace=0.3,bottom=0.25)
 
 plt.sca(axes[0]) # active shis subplot for GCM
 ax=axes[0]
-PlotMap(Ensmean_change,lons,lats,ax,-10,10)
+PlotMap(Ensmean_change,lons,lats,ax,-20,20)
 plt.sca(axes[1]) # active shis subplot for GCM
 ax=axes[1]
-PlotMap(Ensmean_change_ttest,lons,lats,ax,-10,10)
+PlotMap(Ensmean_change_ttest,lons,lats,ax,-20,20)
 
-plt.suptitle('21 CORDEX models mean changes of SSR (%)',fontsize=14)
+plt.suptitle('8 CMPI5 models mean changes(relative) of CLT (%)',fontsize=14)
 
 print output+'.eps'
 plt.savefig(output+'.eps',format='eps')

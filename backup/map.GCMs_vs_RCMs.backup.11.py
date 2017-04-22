@@ -20,7 +20,7 @@ import textwrap
 
 # to load my functions
 import sys 
-sys.path.append('/Users/ctang/Code/Python/')
+sys.path.append('/Users/ctang/Code/My_Python_Code/')
 import ctang
 
 degree_sign= u'\N{DEGREE SIGN}'
@@ -135,26 +135,19 @@ RCM_Name=(\
 	'MPI-CSC-REMO2009_v1')
 
 #=================================================== test
-##
-print np.array([ctang.read_lonlatmap_netcdf(VAR,\
-        Data+VAR+'_AFR-44_'+RCM_Model[0]+'.hist.day.1970-1999.SA.timmean.nc')]).shape
-print np.array(ctang.read_lonlatmap_netcdf(VAR,\
-        Data+VAR+'_AFR-44_'+RCM_Model[0]+'.hist.day.1970-1999.SA.timmean.nc')).shape
 #quit()
 #=================================================== test
 
 # Read lon,lat
 lons,lats=ctang.read_lonlat_netcdf(\
-        Data+VAR+'_AFR-44_'+RCM_Model[1]+'.hist.day.1970-1999.SA.timmean.nc')
+        Data+VAR+'_AFR-44_'+RCM_Model[0]+'.hist.day.1970-1999.SA.timmean.nc')
 
-mean_ref=np.array([ctang.read_lonlatmap_netcdf(VAR,\
-        Data+VAR+'_AFR-44_'+RCM_Model[i]+'.hist.day.1970-1999.SA.timmean.nc') \
-    for i in range(N_model)])
+mean_ref=np.array([[ctang.read_lonlatmap_netcdf(VAR,\
+    Data+VAR+'_AFR-44_'+RCM_Model[i]+'.hist.day.1970-1999.SA.timmean.nc')] \
+    for i in range(N_model)])[:,0]
 mean_future=np.array([[ctang.read_lonlatmap_netcdf(VAR,\
     Data+VAR+'_AFR-44_'+RCM_Model[i]+'.rcp85.day.2070-2099.SA.timmean.nc')] \
     for i in range(N_model)])[:,0]
-
-print mean_ref.shape
 
 mean_ref_GCM=np.array([[ctang.read_lonlatmap_netcdf(VAR,\
         Data+VAR+'_Amon_'+GCM_Model[i]+'.hist.1970-1999.SA.timmean.nc')] \
@@ -210,9 +203,6 @@ def Plot_RCM(m,axx):
         llcrnrlon=lons.min(),urcrnrlon=lons.max(),resolution='h')
     ctang.setMap(map)
     x,y=map(lats,lons)
-    print lats.shape,lons.shape
-    print x.shape,y.shape
-    print mean_change[m].shape
     map.pcolormesh(y,x,mean_change[m],cmap=cmap,vmin=-20,vmax=20)
     plt.title('Exp '+ str(m+1)+', '+str(GCM_Model[m])+' --> '+str(RCM_Name[m]),fontsize= 6)
 
@@ -268,9 +258,9 @@ plt.colorbar(cax,cmap=plt.cm.bwr,orientation='horizontal',shrink=0.9)
 plt.suptitle(Title)
 
 #plt.tight_layout()
-plt.savefig('rsds_change.map.gcm_vs_rcm.eps',format='eps')
-plt.savefig('rsds_change.map.gcm_vs_rcm.pdf')
-plt.savefig('rsds_change.map.gcm_vs_rcm.png')
+plt.savefig('map.gcm_vs_rcm.eps',format='eps')
+plt.savefig('map.gcm_vs_rcm.pdf')
+plt.savefig('map.gcm_vs_rcm.png')
 plt.show()
 
 quit()

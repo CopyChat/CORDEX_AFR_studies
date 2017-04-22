@@ -82,7 +82,7 @@ t_value = np.zeros(( N_model, N_region))
 Future = np.zeros((4, N_model, N_region))
 
 # Read timmean for in each region, used for significance calculation
-# the significance of mean changes over each region, this map of this map
+# the significance of mean changes over each region, this map of significance
 # will be used for the time variability
 # the loaded data will be in 4D map: N_model, N_region, lat,lon
 

@@ -11,6 +11,7 @@ TODO:   1. calculate multiyear monthly mean for past 30 years: to defined season
 ========
 """
 import math
+import pdb
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -21,7 +22,7 @@ from mpl_toolkits.basemap import Basemap
 
 # to load my functions
 import sys 
-sys.path.append('/Users/ctang/Code/My_Python_Code/')
+sys.path.append('/Users/ctang/Code/Python/')
 import ctang
 
 #=================================================== Definitions
@@ -140,42 +141,62 @@ mean_future=np.array(ctang.read_3D_netcdf(VAR,\
         Data+'rsds.rcp85.2070-2099.ymonmean.SA.ensmean.nc'))
 std_future=np.array(ctang.read_3D_netcdf(VAR,\
         Data+'rsds.rcp85.2070-2099.ymonmean.SA.ensstd.nc'))
-Ref=np.array([mean_ref,std_ref*100/mean_ref,mean_future,std_future*100/mean_ref])
+
+Changes = mean_future - mean_ref
+
+Ref=np.array([mean_ref,Changes,\
+        mean_future,std_future*100/mean_ref])   # (4,12,90,137)
+
+
+# read changes_GCM
+
 print mean_ref.shape
+
 #=================================================== end of Reading
 
 #=================================================== plot setting
-LIMIT=[[150,320],[0,30],\
+LIMIT=[[150,320],[-20,20],\
         [150,320],[0,30]]   # 2 for mean 2 for std in %
+
 CbarLabel=(\
         'rsds (W/m2)',\
-        'std (%)',\
+        'rsds (W/m2)',\
         'rsds (W/m2)',\
         'std (%)',\
         'rsds (W/m2)',\
         'std (%)')
 Title=(\
-        'RCM Simulated RSDS mean(W/m2) in eath month in 1970-1999',\
-        'RCM Simulated RSDS std(%) in eath month in 1970-1999',\
-        'RCM Simulated RSDS mean(W/m2) in eath month in 2070-2099 - RCP8.5',\
-        'RCM Simulated RSDS std(%) in eath month in 2070-2099 - RCP8.5',\
+        'RCMs Simulated RSDS (W/m2) in eath month',\
+        'RCMs Simulated RSDS mean changes (W/m2) in eath month',\
+
+        'RCMs Simulated RSDS mean(W/m2) in eath month in 2070-2099 - RCP8.5',\
+        'RCMs Simulated RSDS std(%) in eath month in 2070-2099 - RCP8.5',\
+
         'GCM Simulated RSDS mean(W/m2) in eath month in 1970-1999',\
         'GCM Simulated RSDS std(%) in eath month in 2070-2099 - RCP8.5')
 
 #=================================================== ploting
 def PlotMap(array2D,month,axx,vmin,vmax):
+
+    cmap = plt.cm.jet
+    cmaplist = [cmap(i) for i in range(cmap.N)]
+    bounds = np.linspace(vmin,vmax,9)
+    norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
+
     map=Basemap(projection='cyl',llcrnrlat=lats[:,0].min(),urcrnrlat=lats[:,0].max(),\
-            llcrnrlon=lons[0,:].min(),urcrnrlon=lons[0,:].max(),resolution='h')
+            llcrnrlon=lons[0,:].min(),urcrnrlon=lons[0,:].max(),resolution='l')
     ctang.setMap(map)
+
     x,y=map(lats,lons)
-    im=map.pcolormesh(y,x,array2D,cmap=plt.cm.Oranges,vmin=vmin,vmax=vmax)
+    im=map.pcolormesh(y,x,array2D,cmap=cmap,vmin=vmin,vmax=vmax)
     #axx.axis('off')
+
     axx.xaxis.set_visible(False)
     axx.yaxis.set_visible(False)
     plt.title(str(Monthstep[month]),fontsize= 12)
     return im
 #--------------------------------------------------- 
-for f in [0,1]:
+for f in [1]:  # plot the corresponding var in Ref
     plt.figure(f)
     fig,axes = plt.subplots(nrows=4, ncols=3,\
         figsize=(12, 12),facecolor='w', edgecolor='k')
@@ -193,20 +214,14 @@ for f in [0,1]:
             # h=s+1;v=m+1; #month=(h-1)*3 + v # 1-12
             month=s*3 + m
             im=PlotMap(Ref[f,month,:,:],month,axx,vmin=LIMIT[f][0],vmax=LIMIT[f][1])
-    cbaxes = fig.add_axes([0.2, 0.2, 0.6, 0.04]) 
+    cbaxes = fig.add_axes([0.2, 0.2, 0.6, 0.02]) 
     #                    [left, bottom, width, height]
     cb = plt.colorbar(im, cax = cbaxes,orientation='horizontal')  
     cb.ax.set_xlabel(str(CbarLabel[f]))
     plt.suptitle(Title[f])
 
-    #plt.tight_layout()
-    plt.savefig('map.12month.rsds.'+str(f)+'.eps',format='eps')
-    plt.savefig('map.12month.rsds.'+str(f)+'.pdf')
+    # plt.savefig('map.12month.rsds.'+str(f)+'.eps',format='eps')
     plt.savefig('map.12month.rsds.'+str(f)+'.png')
-
-
-
-
 
 #=================================================== 
 

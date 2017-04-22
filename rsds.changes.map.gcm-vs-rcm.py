@@ -197,7 +197,7 @@ def Plot_GCM(m,axx):
     ctang.setMap(map)
     x,y=map(latsGCM[m],lonsGCM[m])
     map.pcolormesh(y,x,mean_change_GCM[m],cmap=cmap,\
-            vmin=-20,vmax=20)
+            vmin=-10,vmax=10)
     axx.set_xticks([])
     axx.set_yticks([])
     #axx.axis('off')
@@ -213,7 +213,7 @@ def Plot_RCM(m,axx):
     print lats.shape,lons.shape
     print x.shape,y.shape
     print mean_change[m].shape
-    map.pcolormesh(y,x,mean_change[m],cmap=cmap,vmin=-20,vmax=20)
+    map.pcolormesh(y,x,mean_change[m],cmap=cmap,vmin=-10,vmax=10)
     plt.title('Exp '+ str(m+1)+', '+str(GCM_Model[m])+' --> '+str(RCM_Name[m]),fontsize= 6)
 
 
@@ -245,7 +245,7 @@ for m in range(11):
             Plot_RCM(m,axx)
         if k == 2:
             if m == 10:
-                cax = axx.imshow(np.random.random((100,100)), vmin=-20, vmax=20,cmap=cmap)
+                cax = axx.imshow(np.random.random((100,100)), vmin=-10, vmax=10,cmap=cmap)
             else:
                 if GCM_Model[m+10] == 'EC-EARTH':
                     NotAvailable(axx)
