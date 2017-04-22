@@ -29,6 +29,7 @@ import ctang
 Data='/Users/ctang/Code/CORDEX_AFR_studies/data/map.12mon.SA/'
 N_model = 21
 VAR ='clt' 
+output='map.12month.meanchanges.rcm.clt'
 #=================================================== reading data
 RCM_Model=(\
     'clt_AFR-44_CCCma-CanESM2_SMHI-RCA4_v1',\
@@ -69,13 +70,49 @@ MeanChanges = np.mean(Changes, axis=0)
 print MeanChanges.shape
 
 #=================================================== end of Reading
+#--------------------------------------------------- 
+# for t test in each point
+#--------------------------------------------------- 
+#t_value in N_model,lat,lon
+def significant_map(t_value):
+    count=0
+    for mon in range(12):
+        for lat in range(t_value.shape[2]):
+            for lon in range(t_value.shape[3]):
+                grid = t_value[:,mon,lat,lon]
+                grid = grid[grid < 999]  # remove missing values
+                # print grid
+
+                print(mon,lat,lon,len(grid))
+                if len(grid) < 1:
+                    t_value[:,mon,lat,lon]=np.NaN
+                    print m,mon,lat,lon
+                else:
+                    Sig = stats.ttest_1samp(grid,0)[0]
+                    if np.abs(Sig) > ctang.get_T_value(len(grid)):
+                        count+=1
+                    else:
+                        t_value[:,mon,lat,lon]=np.NaN
+    return t_value
+#--------------------------------------------------- 
+
+# MeanChanges = np.nanmean(significant_map(Changes),axis=0)
+
+# save to txt file to save time
+# ctang.Save2mat(output,MeanChanges) 
+
+# reading from mat file
+MeanChanges=ctang.Loadmat(output+'.mat')
+
+print MeanChanges.shape
+
 
 #=================================================== plot setting
 LIMIT=[[-20,20]]
 
 CbarLabel='clt (%)'
 
-Title=str(N_model)+' RCMs Simulated mean CLT changes(absolute %) in eath month'
+Title=str(N_model)+' RCMs Simulated mean CLT changes (absolute %) in eath month'
 
 #=================================================== ploting
 def PlotMap(array2D,month,axx,vmin,vmax):

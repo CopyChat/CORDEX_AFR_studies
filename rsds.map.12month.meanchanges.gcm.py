@@ -13,6 +13,7 @@ TODO:   1. calculate multiyear monthly mean for past 30 years: to defined season
 import math
 import pdb
 import numpy as np
+import random
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
@@ -29,6 +30,7 @@ import ctang
 Data='/Users/ctang/Code/CORDEX_AFR_studies/data/map.12mon.SA/'
 N_model = 10
 VAR ='rsds' 
+output='map.12month.meanchanges.gcm.rsds'
 #=================================================== reading data
 GCM_Model=(\
     'rsds_CNRM-CM5.changes.ymon.mean.SA.remap.nc',\
@@ -51,13 +53,48 @@ lons,lats=ctang.read_lonlat_netcdf_1D(Data+GCM_Model[1])
 Changes = np.array(\
         [ctang.read_3D_netcdf(VAR,Data+GCM_Model[i])\
         for i in range(N_model)])
+# print np.isnan(Changes)
+
 print Changes.shape
 
-MeanChanges = np.mean(Changes, axis=0)
-print MeanChanges.shape
-
+print Changes[:,11,13,21]
+print Changes[:,0,0,5]
 #=================================================== end of Reading
+#--------------------------------------------------- 
+# for t test in each point
+#--------------------------------------------------- 
+#t_value in N_model,lat,lon
+def significant_map(t_value):
+    count=0
+    for mon in range(12):
+        for lat in range(t_value.shape[2]):
+            for lon in range(t_value.shape[3]):
+                print(mon,lat,lon)
+                grid = t_value[:,mon,lat,lon]
+                grid = grid[grid < 999]  # remove missing values
+                # print grid
 
+                if len(grid) < 1:
+                    t_value[:,mon,lat,lon]=np.NaN
+                    print m,mon,lat,lon
+                else:
+                    Sig = stats.ttest_1samp(grid,0)[0]
+                    if np.abs(Sig) > ctang.get_T_value(len(grid)):
+                        count+=1
+                    else:
+                        t_value[:,mon,lat,lon]=np.NaN
+    return t_value
+#--------------------------------------------------- 
+
+# MeanChanges = np.nanmean(significant_map(Changes),axis=0)
+
+# save to txt file to save time
+# ctang.Save2mat(output,MeanChanges) 
+
+# reading from mat file
+MeanChanges=ctang.Loadmat(output+'.mat')
+
+print MeanChanges.shape
 #=================================================== plot setting
 LIMIT=[[-20,20]]
 
@@ -110,7 +147,7 @@ cb.ax.set_xlabel(str(CbarLabel))
 plt.suptitle(Title)
 
 # plt.savefig('map.12month.rsds.'+str(f)+'.eps',format='eps')
-plt.savefig('map.12month.meanchanges.gcm.rsds'+'.png')
+plt.savefig(output+'.png')
 
 #=================================================== 
 
