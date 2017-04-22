@@ -86,21 +86,26 @@ t_value=mean_change
 
 #--------------------------------------------------- 
 # for t test in each point
-T=2.228 # dof=10 two tail 0.05
 #--------------------------------------------------- 
 #t_value in N_model,lat,lon
 def significant_map(t_value):
     count=0
-    for m in range(N_model):
-        print 'calculating t test in dim: ',str(m)
-        for lat in range(t_value.shape[1]):
-            for lon in range(t_value.shape[2]):
-                if abs(stats.ttest_1samp( t_value[:,lat,lon],0)[0]) > T:
+    for lat in range(t_value.shape[1]):
+        for lon in range(t_value.shape[2]):
+            grid = t_value[:,lat,lon]
+            grid = grid[grid < 999]  # remove missing values
+            # print grid
+
+            print(lat,lon,len(grid))
+            if len(grid) < 1:
+                t_value[:,lat,lon]=np.NaN
+                print lat,lon
+            else:
+                Sig = stats.ttest_1samp(grid,0)[0]
+                if np.abs(Sig) > ctang.get_T_value(len(grid)):
                     count+=1
                 else:
-                    t_value[m,lat,lon]=np.NaN
-    print("get good point in %: ", \
-        str(count*100/N_model/t_value.shape[1]/t_value[2]))
+                    t_value[:,lat,lon]=np.NaN
     return t_value
 #--------------------------------------------------- 
 
