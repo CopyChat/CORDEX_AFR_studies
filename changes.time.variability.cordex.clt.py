@@ -16,7 +16,7 @@ from matplotlib.ticker import AutoMinorLocator
 
 # to load my functions
 import sys 
-sys.path.append('/Users/ctang/Code/My_Python_Code/')
+sys.path.append('/Users/ctang/Code/Python/')
 import ctang
 
 #=================================================== Definitions
@@ -36,8 +36,20 @@ import ctang
 Data='/Users/ctang/Code/CORDEX_AFR_studies/data/time_variability/'
 N_region = 7
 N_model = 21
+N_model_GCM = 8
 VAR ='clt'
-T = 2.086 
+
+N_plot = 3 # mean, monthly variability, annual variability
+
+GCM_Model=(\
+        'CNRM-CM5',\
+        'CanESM2',\
+        'GFDL-ESM2M',\
+        'HadGEM2-ES',\
+        'IPSL-CM5A-LR',\
+        'MIROC5',\
+        'MPI-ESM-LR',\
+        'NorESM1-M')
 
 RCM_Model=(\
 	'CCCma-CanESM2_SMHI-RCA4_v1',\
@@ -66,32 +78,45 @@ RCM_Model=(\
 #=================================================== reading data
 # 21 * 4 table: 21 models vs 4 vars
 
-
-
 histfix='.hist.day.1970-1999.'
 rcp85fix = '.rcp85.day.2070-2099.'
 
+histfix_GCM ='_historical-rcp85_r1i1p1.1970-1999.'
+rcp85fix_GCM = '_historical-rcp85_r1i1p1.2070-2099.'
+
 filefix = (\
         '.fldmean.timmean.nc',\
-        '.fldmean.detrend.nc.daymean.maskannual.timstd.nc',\
+        # '.fldmean.detrend.nc.daymean.maskannual.timstd.nc',\
         '.fldmean.detrend.nc.monmean.maskannual.timstd.nc',\
         '.fldmean.detrend.nc.yearmean.masknoooon.timstd.nc')
 
-Ref = np.zeros(( 4,N_model, N_region))
+filefix_GCM = (\
+        '.fldmean.timmean.nc',\
+        '.fldmean.detrend.nc.monmean.maskannual.timstd.nc',\
+        '.fldmean.detrend.nc.yearmean.masknoooon.timstd.nc')
+
+Ref = np.zeros(( N_plot,N_model, N_region))
 t_value = np.zeros(( N_model, N_region))
-Future = np.zeros((4, N_model, N_region))
+Future = np.zeros((N_plot, N_model, N_region))
+
+Ref_GCM = np.zeros(( N_plot,N_model_GCM, N_region))
+t_value_GCM = np.zeros(( N_model_GCM, N_region))
+Future_GCM = np.zeros((N_plot, N_model_GCM, N_region))
 
 # Read timmean for in each region, used for significance calculation
-# the significance of mean changes over each region, this map of this map
+# the significance of mean changes over each region, this map of significance
 # will be used for the time variability
-# the loaded data will be in 4D map: N_model, N_region, lat,lon
+# the loaded data will be in 4D map: 4Var, N_model, N_region, lat,lon
 
-#print Data+VAR+'_AFR-44_'+RCM_Model[0]+histfix+str(1+1)+filefix[0]
+# print Data+VAR+'_AFR-44_'+RCM_Model[0]+histfix+str(1+1)+filefix[0]
 
-
-# Read for CORDEX & OBS
+# print Data+VAR+'_Amon_'+GCM_Model[0]+rcp85fix_GCM+str(3+1)+\
+                # filefix_GCM[1]
+#===================================================  reading functions
+# Read for CORDEX 
 def reading(Ref,Future):
-    for v in range(4):
+    print("reading RCMs data ...")
+    for v in range(N_plot):
         for i in range(N_model):
             Ref[v,i]=np.array([ctang.read_lonlatmap_netcdf(VAR,\
                 Data+VAR+'_AFR-44_'+RCM_Model[i]+histfix+str(k+1)+filefix[v])[0,0]\
@@ -100,7 +125,25 @@ def reading(Ref,Future):
                 Data+VAR+'_AFR-44_'+RCM_Model[i]+rcp85fix+str(k+1)+filefix[v])[0,0]\
                 for k in range(N_region)])
     return Ref,Future
+
 #=================================================== 
+# Read for CMPI5:
+def reading_GCM(Ref_GCM,Future_GCM):
+    print("reading GCMs data ...")
+    for v in range(N_plot):
+        for i in range(N_model_GCM):
+            Ref_GCM[v,i]=np.array([ctang.read_lonlatmap_netcdf(VAR,\
+                Data+VAR+'_Amon_'+GCM_Model[i]+histfix_GCM+str(k+1)+\
+                filefix_GCM[v])[0,0]\
+                for k in range(N_region)])
+            Future_GCM[v,i]=np.array([ctang.read_lonlatmap_netcdf(VAR,\
+                Data+VAR+'_Amon_'+GCM_Model[i]+rcp85fix_GCM+str(k+1)+\
+                filefix_GCM[v])[0,0]\
+                for k in range(N_region)])
+    return Ref_GCM,Future_GCM
+
+#=================================================== 
+# get significance in earch region
 def significanceMap(N_model,N_region,t_value):
     for m in range(N_model):
         for i in range(N_region):
@@ -109,28 +152,63 @@ def significanceMap(N_model,N_region,t_value):
             Future_map=np.array([ctang.read_lonlatmap_netcdf(VAR,\
                 Data+VAR+'_AFR-44_'+RCM_Model[m]+rcp85fix+str(i+1)+'.timmean.nc')])
             Change_map = Future_map - Ref_map
-            if abs(stats.ttest_1samp(Change_map[0].flatten(),0)[0]) > T:
+            if np.abs(stats.ttest_1samp(Change_map[0].flatten(),0)[0]) > \
+                    ctang.get_T_value(len(Change_map[0].flatten())):
                 t_value[m,i] = 1
     return t_value
-
+#=================================================== 
+# get significance in earch region
+def significanceMap_GCM(N_model_GCM,N_region,t_value):
+    for m in range(N_model_GCM):
+        for i in range(N_region):
+            Ref_map_GCM=np.array([ctang.read_lonlatmap_netcdf(VAR,\
+                Data+VAR+'_Amon_'+GCM_Model[m]+histfix_GCM+str(i+1)+'.timmean.nc')])
+            Future_map_GCM=np.array([ctang.read_lonlatmap_netcdf(VAR,\
+                Data+VAR+'_Amon_'+GCM_Model[m]+rcp85fix_GCM+str(i+1)+'.timmean.nc')])
+            Change_map_GCM = Future_map_GCM - Ref_map_GCM
+            if np.abs(stats.ttest_1samp(Change_map_GCM[0].flatten(),0)[0]) > \
+                    ctang.get_T_value(len(Change_map_GCM[0].flatten())):
+                t_value[m,i] = 1
+    return t_value
 #=================================================== 
 
-#Ref,Future = reading(Ref,Future)
-#ctang.Save2mat('Ref.clt',Ref) # save to txt file to save time
-#ctang.Save2mat('Future.clt',Future) # save to txt file to save time
 
-Ref = ctang.Loadmat('Ref.clt')
-Future = ctang.Loadmat('Future.clt')
-#=================================================== cal
-#Ref[0][ Ref[0] == 0 ] = np.nan
-Changes = np.array([(Future[i] - Ref[i])*100/Ref[0] for i in range(4)])
-Emean_Changes = np.mean( Changes, axis = 1)
+
+Ref,Future = reading(Ref,Future)
+Ref_GCM,Future_GCM = reading_GCM(Ref_GCM,Future_GCM)
+
+# GCMs have missing values:
+Ref_GCM[Ref_GCM > 999] = np.nan
+Future_GCM[Future_GCM > 999] = np.nan
+
+print Ref.shape
+print Ref_GCM.shape
 
 #--------------------------------------------------- t-test
 t_value = significanceMap(N_model,N_region,t_value)
+t_value_GCM = significanceMap_GCM(N_model_GCM,N_region,t_value_GCM)
+
+print t_value_GCM.shape
+print t_value.shape
+
+#ctang.Save2mat('Ref',Ref) # save to txt file to save time
+#ctang.Save2mat('Future',Future) # save to txt file to save time
+
+# Ref = ctang.Loadmat('Ref')
+# Future = ctang.Loadmat('Future')
+
+#=================================================== cal
+#Ref[0][ Ref[0] == 0 ] = np.nan
+Changes = np.array([(Future[i] - Ref[i])*100/Ref[0] for i in range(N_plot)])
+Emean_Changes = np.mean( Changes, axis = 1)
+
+Changes_GCM = np.array([(Future_GCM[i] - Ref_GCM[i])*100/Ref_GCM[0] \
+        for i in range(N_plot)])
+Emean_Changes_GCM = np.nanmean( Changes_GCM, axis = 1)
 #=================================================== plot
 ind = np.arange(1,N_region+1)   # num of regions
 width = 0.35                    # the width of the bars
+
 
 fig, axes = plt.subplots(nrows=2, ncols=2,figsize=(10, 6),facecolor='w', edgecolor='k')
 fig.subplots_adjust(bottom=0.15,hspace=0.8,wspace=0.4)
@@ -139,45 +217,70 @@ axes = axes.flatten() # reshape plot (2*2) to 4*1
 
 
 print ind
-rects0 = ax0.bar(ind, Emean_Changes[0], width, color='orange',align='center',zorder=1)
-rects1 = ax1.bar(ind, Emean_Changes[1], width, color='green',align='center',zorder=1)
-rects2 = ax2.bar(ind, Emean_Changes[2], width, color='black',align='center',zorder=1)
-rects3 = ax3.bar(ind, Emean_Changes[3], width, color='blue',align='center',zorder=1)
+# plot gcm:
+rects0 = ax0.bar(ind-width, Emean_Changes_GCM[0], width, color='orange',align='edge',zorder=1)
+rects1 = ax1.bar(ind-width, Emean_Changes_GCM[1], width, color='orange',align='edge',zorder=1)
+rects2 = ax2.bar(ind-width, Emean_Changes_GCM[2], width, color='orange',align='edge',zorder=1)
+# rects3 = ax3.bar(ind-width, Emean_Changes_GCM[3], width, color='blue',align='edge',zorder=1)
 
 
+# plot rcm:
+rects0 = ax0.bar(ind, Emean_Changes[0], width, color='green',align='edge',zorder=1)
+rects1 = ax1.bar(ind, Emean_Changes[1], width, color='green',align='edge',zorder=1)
+rects2 = ax2.bar(ind, Emean_Changes[2], width, color='green',align='edge',zorder=1)
+# rects3 = ax3.bar(ind, Emean_Changes[3], width, color='blue',align='edge',zorder=1)
 #-------------------- t-test in p<0.05,nof=20,2.086
-def plot_individual_model(modelchange,T=2.086):
+def plot_individual_model(modelchange,t_value):
     """
     input array should be in 11 * 9 
     
     """
-    for v in range(4):
+    for v in range(N_plot):
         for i in range(N_region):
             for j in range(N_model):
                 if abs(t_value[j,i]) > 0:
-                    axes[v].scatter((ind[i]),(modelchange[v,j,i]),s=10,\
-                        facecolors='red',edgecolors='r',zorder=2)
+                    axes[v].scatter((ind[i]+width/2),(modelchange[v,j,i]),s=10,\
+                        facecolors='b',edgecolors='b',zorder=2)
                 else:
-                    axes[v].scatter((ind[i]),(modelchange[v,j,i]),s=10,\
-                        facecolors='none',edgecolors='b',zorder=2)
+                    axes[v].scatter((ind[i]+width/2),(modelchange[v,j,i]),s=10,\
+                        facecolors='none',edgecolors='r',zorder=2)
 
 #--------------------------------------------------- end of function
-plot_individual_model(Changes,T)
+#-------------------- t-test in p<0.05,nof=20,2.086
+def plot_individual_model_GCM(modelchange,t_value_GCM):
+    """
+    input array should be in 11 * 9 
+    
+    """
+    for v in range(N_plot):
+        for i in range(N_region):
+            for j in range(N_model_GCM):
+                if abs(t_value_GCM[j,i]) > 0:
+                    axes[v].scatter((ind[i]-width/2),(modelchange[v,j,i]),s=10,\
+                        facecolors='b',edgecolors='b',zorder=2)
+                else:
+                    axes[v].scatter((ind[i]-width/2),(modelchange[v,j,i]),s=10,\
+                        facecolors='none',edgecolors='r',zorder=2)
 
+#--------------------------------------------------- end of function
+print t_value_GCM.shape
+print t_value.shape
+plot_individual_model(Changes,t_value)
+plot_individual_model_GCM(Changes_GCM,t_value_GCM)
 
 
 #=================================================== 
 # add some text for labels, title and axes ticks
 
-Title=['mean', 'daily variability', 'monthly variability', 'annual variability']
+Title=['mean changes', 'monthly variability', 'annual variability']
 
 #ax0.legend((rects1[0], ('Men')))
 
 # set ticks and tick labels
-for k in range(4):
+for k in range(N_plot):
     axes[k].set_xlim((width, N_region+1))
     axes[k].set_xticks(ind )
-    axes[k].set_xticklabels(('1', '2', '3', '4', '5', '6', '7', '8', '9'))
+    axes[k].set_xticklabels(('1', '2', '3', '4', '5', '6', '7' ))
     axes[k].set_xlabel('Region',fontsize=14)
     axes[k].spines['left'].set_linewidth(2)
     axes[k].spines['bottom'].set_linewidth(2)
@@ -187,6 +290,9 @@ for k in range(4):
     #axes[1].set_ylim((-15, 15))
     #axes[2].set_ylim((-15, 15))
     #axes[3].set_ylim((-35, 35))
+
+    # plt.yscale('log')
+    # axes[k].set_yscale('log')
 
     #axes[k].set_yticks([-1, 0, 1])
     axes[k].set_title(Title[k],fontsize=14)
@@ -209,8 +315,10 @@ for k in range(4):
 
     axes[k].axhline(y=0, xmin=0, xmax=N_region+1,color='black',linewidth=2)
 
+
+ctang.empty_plot(axes[3])
 #=================================================== end of plot
-plt.suptitle('Projected changes in the mean and the time variability of cloud cover fraction (clt)',fontsize=16)
+plt.suptitle('Projected changes in the mean and the time variability of CLT',fontsize=16)
 
 #plt.savefig('time.variability.eps', format='eps')
 plt.savefig('time.variability.clt.png')
