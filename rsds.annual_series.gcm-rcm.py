@@ -93,25 +93,26 @@ TIME=np.array(range(YEAR1,YEAR4+1,1))
 
 #each map is mean_ref[0,0,:,:].shape
 Anomaly = np.zeros((N_model, N_region, YEAR4-YEAR1+1))
-Anomaly_GCM = np.zeros((N_model_GCM, N_region, YEAR4-YEAR1+1))
 Changes = np.zeros((N_model, N_region, YEAR4-YEAR1+1))
-Changes_GCM = np.zeros((N_model, N_region, YEAR4-YEAR1+1))
 yearmean_future = np.zeros((N_model, N_region, YEAR4-YEAR1+1))
+
+Anomaly_GCM = np.zeros((N_model_GCM, N_region, YEAR4-YEAR1+1))
+Changes_GCM = np.zeros((N_model_GCM, N_region, YEAR4-YEAR1+1))
 yearmean_future_GCM = np.zeros((N_model_GCM, N_region, YEAR4-YEAR1+1))
 
 # in 3D: (N_model,N_region,130years)
 for r in range(N_region):
-    yearmean_future[:,r,:]=np.array([[ctang.read_time_netcdf(VAR,\
-        DIR+VAR+'_AFR-44_'+MODEL[i]+'.hist_rcp85.day.1970-2099.'+str(r+1)+\
-        '.fldmean.yearmean.nc')] for i in range(N_model)])[:,0,:]
-    yearmean_future_GCM[:,r,:]=np.array([[ctang.read_time_netcdf(VAR,\
-        DIR+GCM[i]+'.1970-2099.'+str(r+1)+'.fldmean.yearmean.nc')] \
-        for i in range(N_model_GCM)])[:,0,:]
     Anomaly[:,r,:]=np.array([[ctang.read_time_netcdf(VAR,\
         DIR+VAR+'_AFR-44_'+MODEL[i]+'.hist_rcp85.day.1970-2099.'+str(r+1)+\
         '.fldmean.monmean.anomaly.yearmean.nc')] for i in range(N_model)])[:,0,:]
+    yearmean_future[:,r,:]=np.array([[ctang.read_time_netcdf(VAR,\
+        DIR+VAR+'_AFR-44_'+MODEL[i]+'.hist_rcp85.day.1970-2099.'+str(r+1)+\
+        '.fldmean.yearmean.nc')] for i in range(N_model)])[:,0,:]
     Anomaly_GCM[:,r,:]=np.array([[ctang.read_time_netcdf(VAR,\
         DIR+GCM[i]+'.1970-2099.'+str(r+1)+'.fldmean.monmean.anomaly.yearmean.nc')]\
+        for i in range(N_model_GCM)])[:,0,:]
+    yearmean_future_GCM[:,r,:]=np.array([[ctang.read_time_netcdf(VAR,\
+        DIR+GCM[i]+'.1970-2099.'+str(r+1)+'.fldmean.yearmean.nc')] \
         for i in range(N_model_GCM)])[:,0,:]
 
 # timmean_ref as ref of anomalies
@@ -207,7 +208,7 @@ for k in range(N_region):
         '-', label='21 RCMs mean', color='blue', linewidth=2,zorder=2)
 
     axes[k].plot(TIME[15:116],ctang.running_mean(ensmean_anomaly_GCM[k],30),\
-        '-', label='11 GCMs mean', color='black', linewidth=2,zorder=2)
+        '-', label='10 GCMs mean', color='black', linewidth=2,zorder=2)
 
 #=================================================== plot ensstd of anomalies
 

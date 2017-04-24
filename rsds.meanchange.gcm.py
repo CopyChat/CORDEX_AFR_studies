@@ -80,9 +80,20 @@ mean_future=np.array([ctang.read_lonlatmap_netcdf(VAR,\
     for i in range(N_model)])
 #=================================================== Cal
 
+# missing value
+mean_ref[mean_ref > 999] = np.nan
+mean_future[mean_future > 999] = np.nan
+
 mean_change=(mean_future-mean_ref)*100/mean_ref
 
 t_value=mean_change
+
+# for i in range(N_model):
+    # for lat in range(t_value.shape[1]):
+        # for lon in range(t_value.shape[2]):
+            # if mean_future[i,lat,lon] > 999:
+                # print mean_change[i,lat,lon]
+                # quit()
 
 #--------------------------------------------------- 
 # for t test in each point
@@ -146,8 +157,8 @@ t_value=ctang.Loadmat(output+'.mat')
 print np.isnan(t_value).sum()
 
 # plotting array:
-Ensmean_change_ttest=np.nanmean(t_value,axis=0)
 Ensmean_change=np.nanmean(mean_change,axis=0)
+Ensmean_change_ttest=np.nanmean(t_value,axis=0)
 
 #=================================================== plot
 degree_sign= u'\N{DEGREE SIGN}'
