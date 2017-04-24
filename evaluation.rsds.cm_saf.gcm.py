@@ -2,11 +2,10 @@
 """
 ========
 Ctang, A map of mean max and min of ensembles
-        from CORDEX AFR-44, in Southern Africa
+        from CMIP5 AFR-44, in Southern Africa
         Data was restored on titan
 ========
 """
-
 import math
 import pdb
 import subprocess
@@ -19,7 +18,7 @@ from matplotlib.ticker import AutoMinorLocator
 from mpl_toolkits.basemap import Basemap , addcyclic
 import textwrap
 
-# commit
+
 # to load my functions
 import sys 
 sys.path.append('/Users/ctang/Code/Python/')
@@ -29,7 +28,7 @@ import ctang
 #=================================================== Definitions
 Data='/Users/ctang/Code/CORDEX_AFR_studies/data/validation_CM_SAF/'
 OBS_Dir='/Users/ctang/Code/CORDEX_AFR_studies/data/OBS/'
-N_model = 21
+N_model = 10
 VAR ='rsds' # ,'tas','sfcWind') #,'PVpot')
 OBSvar = 'SIS'
 N_column = 4
@@ -38,77 +37,63 @@ N_plot = N_column*N_row
 #=================================================== test
 ##
 #=================================================== end of test
-RCM_Model=(\
-	'CCCma-CanESM2_SMHI-RCA4_v1',\
-	'CNRM-CERFACS-CNRM-CM5_SMHI-RCA4_v1',\
-	'CSIRO-QCCCE-CSIRO-Mk3-6-0_SMHI-RCA4_v1',\
-	'ICHEC-EC-EARTH_SMHI-RCA4_v1',\
-	'IPSL-IPSL-CM5A-MR_SMHI-RCA4_v1',\
-	'MIROC-MIROC5_SMHI-RCA4_v1',\
-	'MOHC-HadGEM2-ES_SMHI-RCA4_v1',\
-	'MPI-M-MPI-ESM-LR_SMHI-RCA4_v1',\
-	'NCC-NorESM1-M_SMHI-RCA4_v1',\
-	'NOAA-GFDL-GFDL-ESM2M_SMHI-RCA4_v1',\
-        \
-	'CNRM-CERFACS-CNRM-CM5_CLMcom-CCLM4-8-17_v1',\
-	'ICHEC-EC-EARTH_CLMcom-CCLM4-8-17_v1',\
-	'MOHC-HadGEM2-ES_CLMcom-CCLM4-8-17_v1',\
-	'MPI-M-MPI-ESM-LR_CLMcom-CCLM4-8-17_v1',\
-	'ICHEC-EC-EARTH_DMI-HIRHAM5_v2',\
-	'NCC-NorESM1-M_DMI-HIRHAM5_v1',\
-	'ICHEC-EC-EARTH_KNMI-RACMO22T_v1',\
-	'MOHC-HadGEM2-ES_KNMI-RACMO22T_v2',\
-	'ICHEC-EC-EARTH_MPI-CSC-REMO2009_v1',\
-	'IPSL-IPSL-CM5A-LR_GERICS-REMO2009_v1',\
-	'MPI-M-MPI-ESM-LR_MPI-CSC-REMO2009_v1')
+GCM_Model=(\
+        'CNRM-CM5',\
+        'CSIRO-Mk3-6-0',\
+        'CanESM2',\
+        'GFDL-ESM2M',\
+        'HadGEM2-ES',\
+        'IPSL-CM5A-LR',\
+        'IPSL-CM5A-MR',\
+        'MIROC5',\
+        'MPI-ESM-LR',\
+        'NorESM1-M')
 
 #=================================================== reading data
 # 21 * 4 table: 21 models vs 4 vars
 
 OBSfile=(\
-        'SISmm.CDR.mon.mean.198301-200512.SA.timmean.nc',\
-        'SISmm.CDR.mon.mean.198301-200512.SA.monmean.detrended.maskannual.timstd.nc',\
-        'SISmm.CDR.mon.mean.198301-200512.SA.yearmean.detrended.masknoooon.timstd.nc')
+        'SISmm.CDR.mon.mean.198301-200512.SA.timmean.remap.gcm.nc',\
+        'SISmm.CDR.mon.mean.198301-200512.SA.monmean.detrended.maskannual.timstd.remap.gcm.nc',\
+        'SISmm.CDR.mon.mean.198301-200512.SA.yearmean.detrended.masknoooon.timstd.remap.gcm.nc')
 
 OBS_remap=(\
-        'SISmm.CDR.mon.mean.198301-200512.SA.timmean.remap.rcm.nc',\
-        'SISmm.CDR.mon.mean.198301-200512.SA.monmean.detrended.maskannual.timstd.remap.rcm.nc',\
-        'SISmm.CDR.mon.mean.198301-200512.SA.yearmean.detrended.masknoooon.timstd.remap.rcm.nc')
+        'SISmm.CDR.mon.mean.198301-200512.SA.timmean.remap.gcm.nc',\
+        'SISmm.CDR.mon.mean.198301-200512.SA.monmean.detrended.maskannual.timstd.remap.gcm.nc',\
+        'SISmm.CDR.mon.mean.198301-200512.SA.yearmean.detrended.masknoooon.timstd.remap.gcm.nc')
 
 filefix=(\
-        '.hist_rcp85.day.1983-2005.SA.timmean.nc',\
-        '.hist_rcp85.day.1983-2005.SA.monmean.detrended.maskannual.timstd.nc',\
-        '.hist_rcp85.day.1983-2005.SA.yearmean.detrended.masknoooon.timstd.nc')
+        '_historical-rcp85_r1i1p1.1970-2099.nc.1983-2005.SA.timmean.remap.nc',\
+        '_historical-rcp85_r1i1p1.1970-2099.nc.1983-2005.SA.monmean.detrended.maskannual.timstd.remap.nc',\
+        '_historical-rcp85_r1i1p1.1970-2099.nc.1983-2005.SA.yearmean.detrended.masknoooon.timstd.remap.nc')
 
 # Read lon,lat for model
-lons,lats=ctang.read_lonlat_netcdf(\
-        Data+VAR+'_AFR-44_'+RCM_Model[1]+filefix[0])
+lons,lats=ctang.read_lonlat_netcdf_1D(\
+        Data+VAR+'_Amon_'+GCM_Model[1]+filefix[0])
+
+# Read lon,lat for OBS Plot the remap OBS, because time variability cannot be normalised by GCM in low resolution
+
+lonsOBS,latsOBS=ctang.read_lonlat_netcdf_1D(OBS_Dir+OBS_remap[0])
 
 
-# Read lon,lat for OBS Plot the remap OBS, because time variability cannot be normalised by RCM in low resolution
-
-lonsOBS,latsOBS=ctang.read_lonlat_netcdf(OBS_Dir+OBS_remap[0])
-
-
-
-# Read Ensmean of timmean for CORDEX & OBS
-timmean_CORDEX=np.array([ctang.read_lonlatmap_netcdf(VAR,\
-        Data+VAR+'_AFR-44_'+RCM_Model[i]+filefix[0])\
+# Read Ensmean of timmean for CMIP5 & OBS
+timmean_CMIP5=np.array([ctang.read_lonlatmap_netcdf(VAR,\
+        Data+VAR+'_Amon_'+GCM_Model[i]+filefix[0])\
         for i in range(N_model)])
 timmean_OBS=np.array(ctang.read_lonlatmap_netcdf(OBSvar, OBS_Dir+OBSfile[0]))
 timmean_OBS_remap=np.array(ctang.read_lonlatmap_netcdf(OBSvar, OBS_Dir+OBS_remap[0]))
 
 print timmean_OBS_remap
 
-# Read Ensmean of monthly std for CORDEX & OBS
-monstd_CORDEX=np.array([ctang.read_lonlatmap_netcdf(VAR,\
-        Data+VAR+'_AFR-44_'+RCM_Model[i]+filefix[1]) for i in range(N_model)])
+# Read Ensmean of monthly std for CMIP5 & OBS
+monstd_CMIP5=np.array([ctang.read_lonlatmap_netcdf(VAR,\
+        Data+VAR+'_Amon_'+GCM_Model[i]+filefix[1]) for i in range(N_model)])
 monstd_OBS=np.array(ctang.read_lonlatmap_netcdf(OBSvar,OBS_Dir+OBSfile[1]))
 monstd_OBS_remap=np.array(ctang.read_lonlatmap_netcdf(OBSvar,OBS_Dir+OBS_remap[1]))
 
-# Read Ensmean of annual std for CORDEX & OBS
-annualstd_CORDEX=np.array([ctang.read_lonlatmap_netcdf(VAR,\
-        Data+VAR+'_AFR-44_'+RCM_Model[i]+filefix[2]) for i in range(N_model)])
+# Read Ensmean of annual std for CMIP5 & OBS
+annualstd_CMIP5=np.array([ctang.read_lonlatmap_netcdf(VAR,\
+        Data+VAR+'_Amon_'+GCM_Model[i]+filefix[2]) for i in range(N_model)])
 annualstd_OBS=np.array(ctang.read_lonlatmap_netcdf(OBSvar, OBS_Dir+OBSfile[2]))
 annualstd_OBS_remap=np.array(ctang.read_lonlatmap_netcdf(OBSvar, OBS_Dir+OBS_remap[2]))
 
@@ -122,14 +107,14 @@ timmean_OBS_remap[timmean_OBS_remap > 100055] = np.nan
 monstd_OBS_remap[monstd_OBS_remap > 100000] = np.nan
 annualstd_OBS_remap[annualstd_OBS_remap > 100000] = np.nan
 
-timmean_CORDEX[timmean_CORDEX > 100055] = np.nan
-monstd_CORDEX[monstd_CORDEX > 100000] = np.nan
-annualstd_CORDEX[annualstd_CORDEX > 100000] = np.nan
+timmean_CMIP5[timmean_CMIP5 > 1000] = np.nan
+monstd_CMIP5[monstd_CMIP5 > 1000] = np.nan
+annualstd_CMIP5[annualstd_CMIP5 > 1000] = np.nan
 
-# Ensmean of CORDEX 
-Ensmean_timmean_CORDEX=np.mean(timmean_CORDEX,axis=0)
-Ensmean_monstd_CORDEX=np.mean(monstd_CORDEX,axis=0)
-Ensmean_annualstd_CORDEX=np.mean(annualstd_CORDEX,axis=0)
+# Ensmean of CMIP5 
+Ensmean_timmean_CMIP5=np.mean(timmean_CMIP5,axis=0)
+Ensmean_monstd_CMIP5=np.mean(monstd_CMIP5,axis=0)
+Ensmean_annualstd_CMIP5=np.mean(annualstd_CMIP5,axis=0)
 
 # for OBS
 #monstd_OBS = monstd_OBS
@@ -140,12 +125,12 @@ annualstd_OBS_remap = annualstd_OBS_remap
 
 
 # Ensmean of Bias
-Ensmean_timmean_Bias=(Ensmean_timmean_CORDEX-timmean_OBS_remap)
-Ensmean_monstd_Bias=(Ensmean_monstd_CORDEX-monstd_OBS_remap)
-Ensmean_annualstd_Bias=(Ensmean_annualstd_CORDEX-annualstd_OBS_remap)
+Ensmean_timmean_Bias=(Ensmean_timmean_CMIP5-timmean_OBS_remap)
+Ensmean_monstd_Bias=(Ensmean_monstd_CMIP5-monstd_OBS_remap)
+Ensmean_annualstd_Bias=(Ensmean_annualstd_CMIP5-annualstd_OBS_remap)
 
 
-Climatology=np.array([ Ensmean_timmean_CORDEX, Ensmean_monstd_CORDEX, Ensmean_annualstd_CORDEX])
+Climatology=np.array([ Ensmean_timmean_CMIP5, Ensmean_monstd_CMIP5, Ensmean_annualstd_CMIP5])
 OBSData=np.array([ timmean_OBS_remap, monstd_OBS_remap, annualstd_OBS_remap])
 BiasData=np.array([ Ensmean_timmean_Bias, Ensmean_monstd_Bias, Ensmean_annualstd_Bias])
 
@@ -163,25 +148,25 @@ RefStd = np.array([np.nanstd(var) for var in (\
 # to get std and corr: 1st, make nan = mask
 Samples0 = np.array([[np.nanstd(m,ddof=1)/RefStd[0], \
         np.ma.corrcoef(timmean_OBS_remap.flatten(),m,allow_masked='Ture')[0,1]]\
-        for m in [np.ma.array(timmean_CORDEX[i,:,:].flatten(), \
-            mask=np.isnan(timmean_CORDEX[i,:,:].flatten())) \
+        for m in [np.ma.array(timmean_CMIP5[i,:,:].flatten(), \
+            mask=np.isnan(timmean_CMIP5[i,:,:].flatten())) \
             for i in range(N_model)]])
 
 Samples1 = np.array([[np.nanstd(m,ddof=1)/RefStd[1], \
         np.ma.corrcoef(monstd_OBS_remap.flatten(),m,allow_masked='Ture')[0,1]] for m in \
-        [np.ma.array(monstd_CORDEX[i,:,:].flatten(), \
-            mask=np.isnan(monstd_CORDEX[i,:,:].flatten())) \
+        [np.ma.array(monstd_CMIP5[i,:,:].flatten(), \
+            mask=np.isnan(monstd_CMIP5[i,:,:].flatten())) \
             for i in range(N_model)]])
 
 Samples2 = np.array([[np.nanstd(m,ddof=1)/RefStd[2], \
         np.ma.corrcoef(annualstd_OBS_remap.flatten(),m,allow_masked='Ture')[0,1]] for m in \
-        [np.ma.array(annualstd_CORDEX[i,:,:].flatten(), \
-            mask=np.isnan(annualstd_CORDEX[i,:,:].flatten())) \
+        [np.ma.array(annualstd_CMIP5[i,:,:].flatten(), \
+            mask=np.isnan(annualstd_CMIP5[i,:,:].flatten())) \
             for i in range(N_model)]])
 SAMPLE=np.array([Samples0, Samples1, Samples2])
 
 print RefStd
-print SAMPLE[1]
+print SAMPLE[0]
 #=================================================== end of cal
 #=================================================== plot
 Title='Evaluation of the simulated SSR in the historical period 1983-2005'
@@ -233,6 +218,7 @@ for m in range(N_row):
         axx=axes[m,k]
         if k == 0:
             if m == 0:
+                print lons.shape
                 PlotMap(Climatology[m],lons,lats,m,k,axx,LIMIT[m,k][0],LIMIT[m,k][1])
             else:
                 PlotMap(Climatology[m],lons,lats,m,k,axx,LIMIT[m,k][0],LIMIT[m,k][1])
@@ -262,7 +248,7 @@ for m in range(N_row):
 plt.suptitle(Title)
 
 #plt.savefig('evaluation.eps',format='eps')
-plt.savefig('evaluation.rsds.cm_saf.rcm.png')
+plt.savefig('evaluation.rsds.cm_saf.gcm.png')
 plt.show()
 
 quit()
