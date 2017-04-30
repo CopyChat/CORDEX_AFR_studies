@@ -168,16 +168,19 @@ SAMPLE=np.array([Samples0, Samples1, Samples2])
 
 print RefStd
 print SAMPLE[0]
+print SAMPLE[1]
+print SAMPLE[2]
 #=================================================== end of cal
 #=================================================== plot
-Title='Evaluation of the simulated SSR in the historical period 1983-2005'
+Title='Evaluation of the simulated CLT in the historical period 1970-1999'
 TTT1=('Climatology','OBS(CRU','Bias','Taylor diagram')
 TTT0=('Mean', 'Monthly variability', 'Annual variability')
 #=================================================== 
 Unit=(\
-    ('(W/m2)','(W/m2)','(W/m2)','(%)'),\
-    ('(W/m2)','(W/m2)','(W/m2)','(%)'),\
-    ('(W/m2)','(W/m2)','(W/m2)','(%)'),\
+    ('(abs %)','(abs %)','(abs %)','(%)'),\
+    ('(abs %)','(abs %)','(abs %)','(abs %)'),\
+    ('(abs %)','(abs %)','(abs %)','(abs %)'),\
+    ('(%)','(%)','(%)','(abs %)'),\
     ('(W/m2)','(W/m2)','(W/m2)','(%)'))
 #=================================================== 
 def PlotMap(array2D,lons,lats,m,k,axx,vmin,vmax):
@@ -197,7 +200,7 @@ def PlotMap(array2D,lons,lats,m,k,axx,vmin,vmax):
     axx.xaxis.set_visible(False)
     axx.yaxis.set_visible(False)
 
-    plt.title('SSR '+TTT0[m]+' '+TTT1[k]+' '+Unit[m][k],fontsize= 8)
+    plt.title('CLT '+TTT0[m]+' '+TTT1[k]+' '+Unit[m][k],fontsize= 8)
     cb=plt.colorbar(cmap=plt.cm.jet,orientation='horizontal',shrink=1) 
     cb.ax.tick_params(['{:.0f}'.format(x) for x in bounds ],labelsize=7) 
     #cbar.ax.set_yticklabels(['{:.0f}'.format(x) for x in np.arange(cbar_min, cbar_max+cbar_step, cbar_step)], fontsize=16, weight='bold')
@@ -208,9 +211,9 @@ fig, axes = plt.subplots(nrows=N_row, ncols=N_column,\
 #fig.subplots_adjust(hspace=0.35,top=0.96,wspace=0.3)
 #=================================================== 
 LIMIT=np.array([\
-        [[150,300],[150,300],[-25,25]],\
-        [[0,20],[0,20],[-5,5]],\
-        [[0,10],[0,10],[-5,5]]])
+        [[10,80],[10,80],[-25,25]],\
+        [[0,15],[0,15],[-10,10]],\
+        [[0,5],[0,5],[-5,5]]])
 
 for m in range(N_row):
     for k in range(N_column):
@@ -249,7 +252,7 @@ for m in range(N_row):
 plt.suptitle(Title)
 
 #plt.savefig('evaluation.eps',format='eps')
-plt.savefig('evaluation.clt.cm_saf.gcm.png')
+plt.savefig('evaluation.clt.cru.gcm.png')
 plt.show()
 
 quit()
