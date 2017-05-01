@@ -60,6 +60,30 @@ RCM_name=(\
 	'REMO2009_v1',\
 	'REMO2009_v1',\
 	'REMO2009_v1')
+GCM_name=(\
+	'CanESM2',\
+	'CNRM-CM5',\
+	'CSIRO-Mk3-6-0',\
+	'EC-EARTH',\
+	'IPSL-CM5A-MR',\
+	'MIROC5',\
+	'HadGEM2-ES',\
+	'MPI-ESM-LR',\
+	'NorESM1-M',\
+	'GFDL-ESM2M',\
+        \
+	'CNRM-CM5',\
+	'EC-EARTH',\
+	'HadGEM2-ES',\
+	'MPI-ESM-LR',\
+	'EC-EARTH',\
+	'NorESM1-M',\
+	'EC-EARTH',\
+	'HadGEM2-ES',\
+	'EC-EARTH',\
+	'IPSL-CM5A-LR',\
+	'M-MPI-ESM-LR')
+
 RCM_Model=(\
 	'CCCma-CanESM2_SMHI-RCA4_v1',\
 	'CNRM-CERFACS-CNRM-CM5_SMHI-RCA4_v1',\
@@ -148,7 +172,7 @@ def PlotMap(array2D,lons,lats,m,k,axx,vmin,vmax):
     axx.xaxis.set_visible(False)
     axx.yaxis.set_visible(False)
 
-    plt.title(str(m+1)+' '+RCM_name[m]+" "+TITLE2[k]+" "+Unit[k],fontsize= 8)
+    plt.title(str(m+1)+' '+GCM_name[m]+" "+RCM_name[m]+" "+ TITLE2[k]+" "+Unit[k],fontsize= 8)
 
     cb=plt.colorbar(cmap=plt.cm.jet,orientation='horizontal',shrink=0.7) 
     cb.ax.tick_params(['{:.0f}'.format(x) for x in bounds ],labelsize=6) 
