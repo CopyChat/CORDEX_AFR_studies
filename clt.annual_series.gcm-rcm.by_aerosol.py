@@ -304,8 +304,8 @@ plt.suptitle(Title)
 
 #===================================================  end of  plot
 
-plt.savefig('clt.annual_series.gcm-rcm.eps', format='eps')
-plt.savefig('clt.annual_series.gcm-rcm.png')
+plt.savefig('clt.annual_series.gcm-rcm.by_aerosol.eps', format='eps')
+plt.savefig('clt.annual_series.gcm-rcm.by_aerosol.png')
 plt.show()
 quit()
 
