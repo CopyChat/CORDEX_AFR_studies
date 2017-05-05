@@ -53,9 +53,9 @@ GCM_Model=(\
 # 21 * 4 table: 21 models vs 4 vars
 
 OBSfile=(\
-        'SISmm.CDR.mon.mean.198301-200512.SA.timmean.remap.gcm.nc',\
-        'SISmm.CDR.mon.mean.198301-200512.SA.monmean.detrended.maskannual.timstd.remap.gcm.nc',\
-        'SISmm.CDR.mon.mean.198301-200512.SA.yearmean.detrended.masknoooon.timstd.remap.gcm.nc')
+        'SISmm.CDR.mon.mean.198301-200512.SA.timmean.nc',\
+        'SISmm.CDR.mon.mean.198301-200512.SA.monmean.detrended.maskannual.timstd.nc',\
+        'SISmm.CDR.mon.mean.198301-200512.SA.yearmean.detrended.masknoooon.timstd.nc')
 
 OBS_remap=(\
         'SISmm.CDR.mon.mean.198301-200512.SA.timmean.remap.gcm.nc',\
@@ -74,6 +74,7 @@ lons,lats=ctang.read_lonlat_netcdf_1D(\
 # Read lon,lat for OBS Plot the remap OBS, because time variability cannot be normalised by GCM in low resolution
 
 lonsOBS,latsOBS=ctang.read_lonlat_netcdf_1D(OBS_Dir+OBS_remap[0])
+lonsOBS,latsOBS=ctang.read_lonlat_netcdf_1D(OBS_Dir+OBSfile[0])
 
 
 # Read Ensmean of timmean for CMIP5 & OBS
@@ -131,7 +132,8 @@ Ensmean_annualstd_Bias=(Ensmean_annualstd_CMIP5-annualstd_OBS_remap)
 
 
 Climatology=np.array([ Ensmean_timmean_CMIP5, Ensmean_monstd_CMIP5, Ensmean_annualstd_CMIP5])
-OBSData=np.array([ timmean_OBS_remap, monstd_OBS_remap, annualstd_OBS_remap])
+# OBSData=np.array([ timmean_OBS_remap, monstd_OBS_remap, annualstd_OBS_remap])
+OBSData=np.array([ timmean_OBS, monstd_OBS, annualstd_OBS])
 BiasData=np.array([ Ensmean_timmean_Bias, Ensmean_monstd_Bias, Ensmean_annualstd_Bias])
 
 print OBSData[0]
@@ -228,7 +230,7 @@ for m in range(N_row):
             else:
                 PlotMap(OBSData[m],lonsOBS,latsOBS,m,k,axx,LIMIT[m,k][0],LIMIT[m,k][1])
         if k == 2:
-            PlotMap(BiasData[m],lonsOBS,latsOBS,m,k,axx,LIMIT[m,k][0],LIMIT[m,k][1])
+            PlotMap(BiasData[m],lons,lats,m,k,axx,LIMIT[m,k][0],LIMIT[m,k][1])
         if k == 3:
             Taylor.TaylorPlot(SAMPLE[m],1,fig,(N_row,N_column,m*N_column+k+1),axx)
 #TaylorPlot(samples,refstd,fig,rect,ax4):
