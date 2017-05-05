@@ -7,6 +7,7 @@ Ctang, A map of mean max and min of ensembles
 ========
 """
 import math
+import pdb
 import subprocess
 import numpy as np
 import matplotlib as mpl
@@ -205,7 +206,7 @@ print SAMPLE[3]
 print RefStd
 #=================================================== end of cal
 #=================================================== plot
-Title='Evaluation of the simulated RSDS in the historical period'
+Title='Evaluation of the simulated SSR in the 1970 1999'
 TTT1=('Climatology','OBS','Bias','Taylor diagram')
 TTT0=('Mean', 'Daily variability', 'Monthly variability', 'Annual variability')
 #=================================================== 
@@ -232,7 +233,7 @@ def PlotMap(array2D,lons,lats,m,k,axx,vmin,vmax):
     axx.xaxis.set_visible(False)
     axx.yaxis.set_visible(False)
 
-    plt.title('RSDS '+TTT0[m]+' '+TTT1[k]+' '+Unit[m][k],fontsize= 8)
+    plt.title('SSR '+TTT0[m]+' '+TTT1[k]+' '+Unit[m][k],fontsize= 8)
     cb=plt.colorbar(cmap=plt.cm.jet,orientation='horizontal',shrink=1) 
     cb.ax.tick_params(labelsize=5) 
 #=================================================== 
