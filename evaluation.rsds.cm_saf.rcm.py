@@ -87,7 +87,7 @@ lons,lats=ctang.read_lonlat_netcdf(\
 
 # Read lon,lat for OBS Plot the remap OBS, because time variability cannot be normalised by RCM in low resolution
 
-lonsOBS,latsOBS=ctang.read_lonlat_netcdf(OBS_Dir+OBS_remap[0])
+lonsOBS,latsOBS=ctang.read_lonlat_netcdf_1D(OBS_Dir+OBSfile[0])
 
 
 
@@ -146,12 +146,13 @@ Ensmean_annualstd_Bias=(Ensmean_annualstd_CORDEX-annualstd_OBS_remap)
 
 
 Climatology=np.array([ Ensmean_timmean_CORDEX, Ensmean_monstd_CORDEX, Ensmean_annualstd_CORDEX])
-OBSData=np.array([ timmean_OBS_remap, monstd_OBS_remap, annualstd_OBS_remap])
+# OBSData=np.array([ timmean_OBS_remap, monstd_OBS_remap, annualstd_OBS_remap])
+OBSData=np.array([ timmean_OBS, monstd_OBS, annualstd_OBS])
 BiasData=np.array([ Ensmean_timmean_Bias, Ensmean_monstd_Bias, Ensmean_annualstd_Bias])
 
-print OBSData[0]
-print OBSData[1].shape
-print OBSData[2].shape
+# print OBSData[0]
+# print OBSData[1].shape
+# print OBSData[2].shape
 
 #=================================================== input
 ## Reference dataset
@@ -200,6 +201,9 @@ def PlotMap(array2D,lons,lats,m,k,axx,vmin,vmax):
     bounds = np.linspace(vmin,vmax,11)
     norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
 
+    # print "---------------"
+    # print lons.shape
+
     map=Basemap(projection='cyl',llcrnrlat=lats[:,0].min(),urcrnrlat=lats[:,0].max(),\
             llcrnrlon=lons[0,:].min(),urcrnrlon=lons[0,:].max(),resolution='l')
     ctang.setMap(map)
@@ -242,7 +246,7 @@ for m in range(N_row):
             else:
                 PlotMap(OBSData[m],lonsOBS,latsOBS,m,k,axx,LIMIT[m,k][0],LIMIT[m,k][1])
         if k == 2:
-            PlotMap(BiasData[m],lonsOBS,latsOBS,m,k,axx,LIMIT[m,k][0],LIMIT[m,k][1])
+            PlotMap(BiasData[m],lons,lats,m,k,axx,LIMIT[m,k][0],LIMIT[m,k][1])
         if k == 3:
             Taylor.TaylorPlot(SAMPLE[m],1,fig,(N_row,N_column,m*N_column+k+1),axx)
 #TaylorPlot(samples,refstd,fig,rect,ax4):
