@@ -223,7 +223,7 @@ fig, axes = plt.subplots(nrows=N_row, ncols=N_column,\
         figsize=(6, 35),facecolor='w', edgecolor='k') # figsize=(w,h)
 fig.subplots_adjust(hspace=0.3,top=0.96,wspace=0)
 #=================================================== 
-LIMIT=np.array([ [150,300],[-25,25]])
+LIMIT=np.array([ [120,300],[-75,75]])
 
 for m in range(N_row):
     if m == 0:
