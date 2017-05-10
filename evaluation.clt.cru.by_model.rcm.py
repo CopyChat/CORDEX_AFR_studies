@@ -143,9 +143,12 @@ timmean_CORDEX=np.array([ctang.read_lonlatmap_netcdf(VAR,\
 timmean_OBS=np.array(ctang.read_lonlatmap_netcdf(OBSvar, OBS_Dir+OBSfile[0]))
 timmean_OBS_remap=np.array(ctang.read_lonlatmap_netcdf(OBSvar, OBS_Dir+OBS_remap[0]))
 
+timmean_OBS_remap[timmean_OBS_remap > 1000] = np.nan
+
 print timmean_OBS_remap
 Bias=np.array([timmean_CORDEX[i]-timmean_OBS_remap for i in range(N_model)])
 print Bias.shape
+
 
 print timmean_OBS_remap.shape
 print timmean_CORDEX.shape
@@ -172,7 +175,7 @@ def PlotMap(array2D,lons,lats,m,k,axx,vmin,vmax):
     axx.xaxis.set_visible(False)
     axx.yaxis.set_visible(False)
 
-    plt.title(str(m+1)+' '+GCM_name[m]+" "+RCM_name[m]+" "+ TITLE2[k]+" "+Unit[k],fontsize= 8)
+    plt.title(str(m+1)+' '+GCM_name[m]+"+"+RCM_name[m]+" "+ TITLE2[k]+" "+Unit[k],fontsize= 8)
 
     cb=plt.colorbar(cmap=plt.cm.jet,orientation='horizontal',shrink=0.7) 
     cb.ax.tick_params(['{:.0f}'.format(x) for x in bounds ],labelsize=6) 
@@ -184,7 +187,7 @@ fig, axes = plt.subplots(nrows=N_row, ncols=N_column,\
         figsize=(6, 35),facecolor='w', edgecolor='k') # figsize=(w,h)
 fig.subplots_adjust(hspace=0.3,top=0.96,wspace=0)
 #=================================================== 
-LIMIT=np.array([ [0,80],[-25,25]])
+LIMIT=np.array([ [0,100],[-35,35]])
 
 for m in range(N_row):
     if m == 0:
