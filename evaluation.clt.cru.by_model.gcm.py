@@ -117,6 +117,7 @@ timmean_CMIP5=np.array([ctang.read_lonlatmap_netcdf(VAR,\
 timmean_OBS=np.array(ctang.read_lonlatmap_netcdf(OBSvar, OBS_Dir+OBSfile))
 timmean_OBS_remap=np.array(ctang.read_lonlatmap_netcdf(OBSvar, OBS_Dir+OBS_remap))
 
+timmean_OBS_remap[timmean_OBS_remap > 1000] = np.nan
 print timmean_OBS_remap
 
 Bias=np.array([timmean_CMIP5[i]-timmean_OBS_remap for i in range(N_model)])
@@ -160,8 +161,8 @@ fig, axes = plt.subplots(nrows=N_row, ncols=N_column,\
         figsize=(6, 35),facecolor='w', edgecolor='k') # figsize=(w,h)
 fig.subplots_adjust(hspace=0.3,top=0.96,wspace=0)
 #=================================================== 
-LIMIT=np.array([ [0,80],[-25,25]])
 
+LIMIT=np.array([ [0,100],[-35,35]])
 for m in range(N_row):
     if m == 0:
         for k in range(N_column):
