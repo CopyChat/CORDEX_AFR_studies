@@ -194,8 +194,9 @@ Title='Evaluation of the simulated SSR in the historical period 1983-2005'
 Unit=( '(W/m2)','(W/m2)','(W/m2)')
 #=================================================== 
 TITLE2=('','bias vs CM_SAF')
-def PlotMap(array2D,lons,lats,m,k,axx,vmin,vmax):
-    cmap = plt.cm.jet
+def PlotMap(array2D,lons,lats,m,k,axx,vmin,vmax,cmap):
+    # cmap = plt.cm.jet
+    # cmap = plt.cm.bwr
     cmaplist = [cmap(i) for i in range(cmap.N)]
     bounds = np.linspace(vmin,vmax,11)
     norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
@@ -232,9 +233,11 @@ for m in range(N_row):
             plt.sca(axes[m,k]) # active shis subplot for RCM
             axx=axes[m,k]
             if k == 0:
-                PlotMap(timmean_CMIP5[m],lons,lats,m,k,axx,LIMIT[k][0],LIMIT[k][1])
+                cmap = plt.cm.jet
+                PlotMap(timmean_CMIP5[m],lons,lats,m,k,axx,LIMIT[k][0],LIMIT[k][1],cmap)
             if k == 1:
-                PlotMap(Bias[m],lons,lats,m,k,axx,LIMIT[k][0],LIMIT[k][1])
+                cmap = plt.cm.bwr
+                PlotMap(Bias[m],lons,lats,m,k,axx,LIMIT[k][0],LIMIT[k][1],cmap)
     else:
         if RCM_Model[m] == 'CanESM2':
             ctang.NotAvailable(axes[m,0])
@@ -245,9 +248,11 @@ for m in range(N_row):
                 plt.sca(axes[m,k]) # active shis subplot for RCM
                 axx=axes[m,k]
                 if k == 0:
-                    PlotMap(timmean_CMIP5[m],lons,lats,m,k,axx,LIMIT[k][0],LIMIT[k][1])
+                    cmap = plt.cm.jet
+                    PlotMap(timmean_CMIP5[m],lons,lats,m,k,axx,LIMIT[k][0],LIMIT[k][1],cmap)
                 if k == 1:
-                    PlotMap(Bias[m],lons,lats,m,k,axx,LIMIT[k][0],LIMIT[k][1])
+                    cmap = plt.cm.bwr
+                    PlotMap(Bias[m],lons,lats,m,k,axx,LIMIT[k][0],LIMIT[k][1],cmap)
 
 #TaylorPlot(samples,refstd,fig,rect,ax4):
 
