@@ -89,7 +89,7 @@ lons,lats=ctang.read_lonlat_netcdf(\
 
 # Read lon,lat for OBS Plot the remap OBS, because time variability cannot be normalised by RCM in low resolution
 
-lonsOBS,latsOBS=ctang.read_lonlat_netcdf(OBS_Dir+OBS_remap[0])
+lonsOBS,latsOBS=ctang.read_lonlat_netcdf_1D(OBS_Dir+OBSfile[0])
 
 
 # Read Ensmean of timmean for CORDEX & OBS
@@ -152,7 +152,7 @@ Ensmean_monstd_Bias=(Ensmean_monstd_CORDEX-monstd_OBS_remap)
 Ensmean_annualstd_Bias=(Ensmean_annualstd_CORDEX-annualstd_OBS_remap)
 
 Climatology=np.array([ Ensmean_timmean_CORDEX, Ensmean_monstd_CORDEX, Ensmean_annualstd_CORDEX])
-OBSData=np.array([ timmean_OBS_remap, monstd_OBS_remap, annualstd_OBS_remap])
+OBSData=np.array([ timmean_OBS, monstd_OBS, annualstd_OBS])
 BiasData=np.array([ Ensmean_timmean_Bias, Ensmean_monstd_Bias, Ensmean_annualstd_Bias])
 
 # print OBSData[0]
@@ -224,8 +224,8 @@ print SAMPLE[2]
 print SAMPLE.shape
 #=================================================== end of cal
 #=================================================== plot
-Title='Evaluation of the simulated CLT in the historical period 1979 2005'
-TTT1=('Climatology','OBS(CLT','Bias','Taylor diagram')
+Title='Evaluation of the simulated mean CLT vs ERA_Interim in the historical period 1979 2005'
+TTT1=('CORDEX','ERA_Interim','CORDEX - ERA_Interim','Taylor diagram')
 TTT0=('Mean', 'Monthly variability', 'Annual variability')
 #=================================================== 
 Unit=(\
@@ -283,7 +283,7 @@ for m in range(N_row):
             else:
                 PlotMap(OBSData[m],lonsOBS,latsOBS,m,k,axx,LIMIT[m,k][0],LIMIT[m,k][1])
         if k == 2:
-            PlotMap(BiasData[m],lonsOBS,latsOBS,m,k,axx,LIMIT[m,k][0],LIMIT[m,k][1])
+            PlotMap(BiasData[m],lons,lats,m,k,axx,LIMIT[m,k][0],LIMIT[m,k][1])
         if k == 3:
             Taylor.TaylorPlot(SAMPLE[m],1,fig,(N_row,N_column,m*N_column+k+1),axx)
 #TaylorPlot(samples,refstd,fig,rect,ax4):
@@ -303,7 +303,7 @@ for m in range(N_row):
 plt.suptitle(Title)
 
 #plt.savefig('evaluation.eps',format='eps')
-plt.savefig('evaluation.clt.era_in.rcm.png')
+plt.savefig('evaluation.clt.era_interim.rcm.png')
 plt.show()
 
 quit()
