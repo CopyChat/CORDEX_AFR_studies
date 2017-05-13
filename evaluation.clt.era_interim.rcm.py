@@ -151,7 +151,6 @@ Ensmean_timmean_Bias=(Ensmean_timmean_CORDEX-timmean_OBS_remap)
 Ensmean_monstd_Bias=(Ensmean_monstd_CORDEX-monstd_OBS_remap)
 Ensmean_annualstd_Bias=(Ensmean_annualstd_CORDEX-annualstd_OBS_remap)
 
-
 Climatology=np.array([ Ensmean_timmean_CORDEX, Ensmean_monstd_CORDEX, Ensmean_annualstd_CORDEX])
 OBSData=np.array([ timmean_OBS_remap, monstd_OBS_remap, annualstd_OBS_remap])
 BiasData=np.array([ Ensmean_timmean_Bias, Ensmean_monstd_Bias, Ensmean_annualstd_Bias])
@@ -188,9 +187,33 @@ def cal_corr_std(obs2D,N_model,modelarray):
             np.array(corr1[1:]))).T
 #=================================================== 
 
+Samples0 = cal_corr_std(timmean_OBS_remap,N_model,timmean_CORDEX)
+Samples1 = cal_corr_std(monstd_OBS_remap,N_model,monstd_CORDEX)
+Samples2 = cal_corr_std(annualstd_OBS_remap,N_model,annualstd_CORDEX)
+#=================================================== 
+# output: 21 model x ( normalized std, corr)
+def cal_corr_std(obs2D,N_model,modelarray):
+    a=obs2D.flatten()
+    for m in range(N_model):
+        a=np.vstack((a, modelarray[m].flatten()))
+    b=a.T
+
+    df = pd.DataFrame(b)
+
+    std1 = df.std()
+    std0 = df.std()[0]
+    print std0
+    corr1 = df.corr()[0]
+
+    return np.vstack((np.array(std1[1:]/std0),\
+            np.array(corr1[1:]))).T
+#=================================================== 
+
 Samples0 = cal_corr_std(timmean_OBS_remap,21,timmean_CORDEX)
 Samples1 = cal_corr_std(monstd_OBS_remap,21,monstd_CORDEX)
 Samples2 = cal_corr_std(annualstd_OBS_remap,21,annualstd_CORDEX)
+
+SAMPLE=np.array([Samples0, Samples1, Samples2])
 
 SAMPLE=np.array([Samples0, Samples1, Samples2])
 
@@ -280,7 +303,7 @@ for m in range(N_row):
 plt.suptitle(Title)
 
 #plt.savefig('evaluation.eps',format='eps')
-plt.savefig('evaluation.clt.cru.rcm.png')
+plt.savefig('evaluation.clt.era_in.rcm.png')
 plt.show()
 
 quit()
