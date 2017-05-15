@@ -186,7 +186,7 @@ print SAMPLE[1]
 #=================================================== end of cal
 #=================================================== plot
 Title='Evaluation of the simulated SSR in the historical period 1983-2005'
-TTT1=('Climatology','OBS(CM_SAF','Bias','Taylor diagram')
+TTT1=('CORDEX','CM_SAF','Bias','Taylor diagram')
 TTT0=('Mean', 'Monthly variability', 'Annual variability')
 #=================================================== 
 Unit=(\
