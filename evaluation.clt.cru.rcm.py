@@ -9,6 +9,7 @@ Ctang, A map of mean max and min of ensembles
 
 import math
 import pdb
+import pandas as pd
 import subprocess
 import numpy as np
 import matplotlib as mpl
@@ -159,32 +160,37 @@ RefStd = np.array([np.nanstd(var) for var in (\
         (monstd_OBS_remap).flatten(),\
         (annualstd_OBS_remap).flatten())])
 
-# to get std and corr: 1st, make nan = mask
-Samples0 = np.array([[np.nanstd(m,ddof=1)/RefStd[0], \
-        np.ma.corrcoef(timmean_OBS_remap.flatten(),m,allow_masked='Ture')[0,1]]\
-        for m in [np.ma.array(timmean_CORDEX[i,:,:].flatten(), \
-            mask=np.isnan(timmean_CORDEX[i,:,:].flatten())) \
-            for i in range(N_model)]])
 
-Samples1 = np.array([[np.nanstd(m,ddof=1)/RefStd[1], \
-        np.ma.corrcoef(monstd_OBS_remap.flatten(),m,allow_masked='Ture')[0,1]] for m in \
-        [np.ma.array(monstd_CORDEX[i,:,:].flatten(), \
-            mask=np.isnan(monstd_CORDEX[i,:,:].flatten())) \
-            for i in range(N_model)]])
+#=================================================== 
+# output: 21 model x ( normalized std, corr)
+def cal_corr_std(obs2D,N_model,modelarray):
+    a=obs2D.flatten()
+    for m in range(N_model):
+        a=np.vstack((a, modelarray[m].flatten()))
+    b=a.T
 
-Samples2 = np.array([[np.nanstd(m,ddof=1)/RefStd[2], \
-        np.ma.corrcoef(annualstd_OBS_remap.flatten(),m,allow_masked='Ture')[0,1]] for m in \
-        [np.ma.array(annualstd_CORDEX[i,:,:].flatten(), \
-            mask=np.isnan(annualstd_CORDEX[i,:,:].flatten())) \
-            for i in range(N_model)]])
+    df = pd.DataFrame(b)
+
+    std1 = df.std()
+    std0 = df.std()[0]
+    print std0
+    corr1 = df.corr()[0]
+
+    return np.vstack((np.array(std1[1:]/std0),\
+            np.array(corr1[1:]))).T
+#=================================================== 
+
+Samples0 = cal_corr_std(timmean_OBS_remap,N_model,timmean_CORDEX)
+Samples1 = cal_corr_std(monstd_OBS_remap,N_model,monstd_CORDEX)
+Samples2 = cal_corr_std(annualstd_OBS_remap,N_model,annualstd_CORDEX)
+
 SAMPLE=np.array([Samples0, Samples1, Samples2])
-
 print RefStd
 print SAMPLE[1]
 #=================================================== end of cal
 #=================================================== plot
 Title='Evaluation of the simulated CLT in the historical period 1970 1999'
-TTT1=('Climatology','OBS(CLT','Bias','Taylor diagram')
+TTT1=('CORDEX','CRU','Bias','Taylor diagram')
 TTT0=('Mean', 'Monthly variability', 'Annual variability')
 #=================================================== 
 Unit=(\
