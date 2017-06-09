@@ -26,12 +26,12 @@ import Taylor
 import ctang
 
 #=================================================== Definitions
-Data='/Users/ctang/Code/CORDEX_AFR_studies/data/validation_CM_SAF/'
+Data='/Users/ctang/Code/CORDEX_AFR_studies/data/validation_ERA_Interim/'
 OBS_Dir='/Users/ctang/Code/CORDEX_AFR_studies/data/OBS/'
 N_model = 21
-VAR ='rsds' # ,'tas','sfcWind') #,'PVpot')
-OBS='CM_SAF'
-OBSvar = 'SIS'
+VAR ='clt' # ,'tas','sfcWind') #,'PVpot')
+OBS='ERA_Interim'
+OBSvar = 'tcc'
 N_column = 2
 N_row = 21
 N_plot = N_column*N_row
@@ -43,7 +43,9 @@ Season='DJF'
 GCM_Model=(\
 	'CanESM2',\
 	'CNRM-CM5',\
-	'CSIRO-Mk3-6-0',\
+
+	# 'CSIRO-Mk3-6-0',\
+	'CanESM2',\
 
 	# 'EC-EARTH',\
 	'CanESM2',\
@@ -81,14 +83,13 @@ GCM_Model=(\
 
 GCM_name=GCM_Model
 # real model:
+
 # GCM_Model=(\
         # 'CNRM-CM5',\
-        # 'CSIRO-Mk3-6-0',\
         # 'CanESM2',\
         # 'GFDL-ESM2M',\
         # 'HadGEM2-ES',\
         # 'IPSL-CM5A-LR',\
-        # 'IPSL-CM5A-MR',\
         # 'MIROC5',\
         # 'MPI-ESM-LR',\
         # 'NorESM1-M')
@@ -96,24 +97,24 @@ GCM_name=GCM_Model
 # 21 * 4 table: 21 models vs 4 vars
 
 OBSfile=(\
-        'SISmm.CDR.mon.mean.198301-200512.SA.timmean.remap.gcm.nc',\
-        'SISmm.CDR.mon.mean.198301-200512.SA.monmean.detrended.maskannual.timstd.remap.gcm.nc',\
-        'SISmm.CDR.mon.mean.198301-200512.SA.yearmean.detrended.masknoooon.timstd.remap.gcm.nc')
+        'ERA_In.clt.mon.mean.1979-2005.SA.'+str(Season)+'.timmean.nc',\
+        'SISmm.CDR.mon.mean.197901-200512.SA.monmean.detrended.maskannual.timstd.remap.gcm.nc',\
+        'SISmm.CDR.mon.mean.197901-200512.SA.yearmean.detrended.masknoooon.timstd.remap.gcm.nc')
 
 OBS_remap=(\
-        'SISmm.CDR.mon.mean.198301-200512.SA.'+str(Season)+'.timmean.remap.gcm.nc',\
-        'SISmm.CDR.mon.mean.198301-200512.SA.monmean.detrended.maskannual.timstd.remap.gcm.nc',\
-        'SISmm.CDR.mon.mean.198301-200512.SA.yearmean.detrended.masknoooon.timstd.remap.gcm.nc')
+        'ERA_In.clt.mon.mean.1979-2005.SA.'+str(Season)+'.timmean.remap.gcm.nc',\
+        'SISmm.CDR.mon.mean.197901-200512.SA.monmean.detrended.maskannual.timstd.remap.gcm.nc',\
+        'SISmm.CDR.mon.mean.197901-200512.SA.yearmean.detrended.masknoooon.timstd.remap.gcm.nc')
 
 filefix=(\
-        '_historical-rcp85_r1i1p1.1983-2005.SA.'+str(Season)+'.timmean.nc',\
-        '_historical-rcp85_r1i1p1.1970-2099.nc.1983-2005.SA.monmean.detrended.maskannual.timstd.remap.nc',\
-        '_historical-rcp85_r1i1p1.1970-2099.nc.1983-2005.SA.yearmean.detrended.masknoooon.timstd.remap.nc')
+        '_historical-rcp85_r1i1p1_1951-2099.nc.1979-2005.SA.'+str(Season)+'.timmean.nc',\
+        '_historical-rcp85_r1i1p1.1970-2099.nc.1979-2005.SA.monmean.detrended.maskannual.timstd.remap.nc',\
+        '_historical-rcp85_r1i1p1.1970-2099.nc.1979-2005.SA.yearmean.detrended.masknoooon.timstd.remap.nc')
 
 filefix_remap=(\
-        '_historical-rcp85_r1i1p1.1983-2005.SA.'+str(Season)+'.timmean.remap.nc',\
-        '_historical-rcp85_r1i1p1.1970-2099.nc.1983-2005.SA.monmean.detrended.maskannual.timstd.remap.nc',\
-        '_historical-rcp85_r1i1p1.1970-2099.nc.1983-2005.SA.yearmean.detrended.masknoooon.timstd.remap.nc')
+        '_historical-rcp85_r1i1p1_1951-2099.nc.1979-2005.SA.'+str(Season)+'.timmean.remap.nc',\
+        '_historical-rcp85_r1i1p1.1970-2099.nc.1979-2005.SA.monmean.detrended.maskannual.timstd.remap.nc',\
+        '_historical-rcp85_r1i1p1.1970-2099.nc.1979-2005.SA.yearmean.detrended.masknoooon.timstd.remap.nc')
 
 # Read lon,lat for model
 # lons,lats=ctang.read_lonlat_netcdf_1D(\
@@ -138,8 +139,8 @@ timmean_CMIP5_remap=np.array([ctang.read_lonlatmap_netcdf(VAR,\
         Data+VAR+'_Amon_'+GCM_Model[i]+filefix_remap[0])\
         for i in range(N_model)])
 
-timmean_OBS=np.array(ctang.read_lonlatmap_netcdf(OBSvar, OBS_Dir+OBSfile[0]))
-timmean_OBS_remap=np.array(ctang.read_lonlatmap_netcdf(OBSvar, OBS_Dir+OBS_remap[0]))
+timmean_OBS=np.array(ctang.read_lonlatmap_netcdf(OBSvar, OBS_Dir+OBSfile[0])*100)
+timmean_OBS_remap=np.array(ctang.read_lonlatmap_netcdf(OBSvar, OBS_Dir+OBS_remap[0])*100)
 
 print timmean_OBS_remap
 
@@ -150,12 +151,11 @@ print timmean_OBS_remap.shape
 print timmean_CMIP5.shape
 
 #=================================================== plot
-Title='Evaluation of the simulated SSR in the historical period 1983-2005 in '\
-        +str(Season)
+Title='Evaluation of the simulated '+str(VAR)+' in the historical period 1979-2005'
 #=================================================== 
-Unit=( '(W/m2)','(W/m2)','(W/m2)')
+Unit=( '(%)','(%)','(%)')
 #=================================================== 
-TITLE2=('','bias vs CM_SAF')
+TITLE2=('','bias vs '+str(OBS))
 def PlotMap(array2D,lons,lats,m,k,axx,vmin,vmax):
     cmap = plt.cm.jet
     cmaplist = [cmap(i) for i in range(cmap.N)]
@@ -187,7 +187,7 @@ fig, axes = plt.subplots(nrows=N_row, ncols=N_column,\
         figsize=(8, 40),facecolor='w', edgecolor='k') # figsize=(w,h)
 fig.subplots_adjust(hspace=0.3,top=0.96,wspace=0)
 #=================================================== 
-LIMIT=np.array([ [150,300],[-25,25]])
+LIMIT=np.array([ [0,100],[-45,45]])
 
 for m in range(N_row):
     if m == 0:
@@ -220,9 +220,9 @@ for m in range(N_row):
 
 plt.suptitle(Title)
 
-OutputImage='evaluation.'+str(VAR)+'.'+str(OBS)+'.by_model.gcm.'+str(Season)
+OutputImage='evaluation.'+str(VAR)+'.'+str(OBS)+'.by_model.gcm'+str(Season)
 #plt.savefig(OutputImage+'.eps',format='eps')
 plt.savefig(OutputImage+'.png')
-
 plt.show()
+
 quit()

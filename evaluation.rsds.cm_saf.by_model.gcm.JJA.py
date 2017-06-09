@@ -30,6 +30,7 @@ Data='/Users/ctang/Code/CORDEX_AFR_studies/data/validation_CM_SAF/'
 OBS_Dir='/Users/ctang/Code/CORDEX_AFR_studies/data/OBS/'
 N_model = 21
 VAR ='rsds' # ,'tas','sfcWind') #,'PVpot')
+OBS='CM_SAF'
 OBSvar = 'SIS'
 N_column = 2
 N_row = 21
@@ -219,8 +220,10 @@ for m in range(N_row):
 
 plt.suptitle(Title)
 
-#plt.savefig('evaluation.eps',format='eps')
-plt.savefig('evaluation.rsds.cm_saf.by_model.gcm.png')
+OutputImage='evaluation.'+str(VAR)+'.'+str(OBS)+'.by_model.gcm.'+str(Season)
+#plt.savefig(OutputImage+'.eps',format='eps')
+plt.savefig(OutputImage+'.png')
+
 plt.show()
 
 quit()

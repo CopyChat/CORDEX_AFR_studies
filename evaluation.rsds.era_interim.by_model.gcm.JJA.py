@@ -26,16 +26,16 @@ import Taylor
 import ctang
 
 #=================================================== Definitions
-Data='/Users/ctang/Code/CORDEX_AFR_studies/data/validation_CM_SAF/'
+Data='/Users/ctang/Code/CORDEX_AFR_studies/data/validation_ERA_Interim/'
 OBS_Dir='/Users/ctang/Code/CORDEX_AFR_studies/data/OBS/'
 N_model = 21
 VAR ='rsds' # ,'tas','sfcWind') #,'PVpot')
-OBS='CM_SAF'
-OBSvar = 'SIS'
+OBS='ERA_Interim'
+OBSvar = 'ssrd'
 N_column = 2
 N_row = 21
 N_plot = N_column*N_row
-Season='DJF'
+Season='JJA'
 #=================================================== test
 ##
 #=================================================== end of test
@@ -96,24 +96,24 @@ GCM_name=GCM_Model
 # 21 * 4 table: 21 models vs 4 vars
 
 OBSfile=(\
-        'SISmm.CDR.mon.mean.198301-200512.SA.timmean.remap.gcm.nc',\
-        'SISmm.CDR.mon.mean.198301-200512.SA.monmean.detrended.maskannual.timstd.remap.gcm.nc',\
-        'SISmm.CDR.mon.mean.198301-200512.SA.yearmean.detrended.masknoooon.timstd.remap.gcm.nc')
+        'ERA_In.ssrd.mon.mean.1979-2005.SA.'+str(Season)+'.timmean.nc',\
+        'SISmm.CDR.mon.mean.197901-200512.SA.monmean.detrended.maskannual.timstd.remap.gcm.nc',\
+        'SISmm.CDR.mon.mean.197901-200512.SA.yearmean.detrended.masknoooon.timstd.remap.gcm.nc')
 
 OBS_remap=(\
-        'SISmm.CDR.mon.mean.198301-200512.SA.'+str(Season)+'.timmean.remap.gcm.nc',\
-        'SISmm.CDR.mon.mean.198301-200512.SA.monmean.detrended.maskannual.timstd.remap.gcm.nc',\
-        'SISmm.CDR.mon.mean.198301-200512.SA.yearmean.detrended.masknoooon.timstd.remap.gcm.nc')
+        'ERA_In.ssrd.mon.mean.1979-2005.SA.'+str(Season)+'.timmean.remap.gcm.nc',\
+        'SISmm.CDR.mon.mean.197901-200512.SA.monmean.detrended.maskannual.timstd.remap.gcm.nc',\
+        'SISmm.CDR.mon.mean.197901-200512.SA.yearmean.detrended.masknoooon.timstd.remap.gcm.nc')
 
 filefix=(\
-        '_historical-rcp85_r1i1p1.1983-2005.SA.'+str(Season)+'.timmean.nc',\
-        '_historical-rcp85_r1i1p1.1970-2099.nc.1983-2005.SA.monmean.detrended.maskannual.timstd.remap.nc',\
-        '_historical-rcp85_r1i1p1.1970-2099.nc.1983-2005.SA.yearmean.detrended.masknoooon.timstd.remap.nc')
+        '_historical-rcp85_r1i1p1.1979-2005.SA.'+str(Season)+'.timmean.nc',\
+        '_historical-rcp85_r1i1p1.1970-2099.nc.1979-2005.SA.monmean.detrended.maskannual.timstd.remap.nc',\
+        '_historical-rcp85_r1i1p1.1970-2099.nc.1979-2005.SA.yearmean.detrended.masknoooon.timstd.remap.nc')
 
 filefix_remap=(\
-        '_historical-rcp85_r1i1p1.1983-2005.SA.'+str(Season)+'.timmean.remap.nc',\
-        '_historical-rcp85_r1i1p1.1970-2099.nc.1983-2005.SA.monmean.detrended.maskannual.timstd.remap.nc',\
-        '_historical-rcp85_r1i1p1.1970-2099.nc.1983-2005.SA.yearmean.detrended.masknoooon.timstd.remap.nc')
+        '_historical-rcp85_r1i1p1.1979-2005.SA.'+str(Season)+'.timmean.remap.nc',\
+        '_historical-rcp85_r1i1p1.1970-2099.nc.1979-2005.SA.monmean.detrended.maskannual.timstd.remap.nc',\
+        '_historical-rcp85_r1i1p1.1970-2099.nc.1979-2005.SA.yearmean.detrended.masknoooon.timstd.remap.nc')
 
 # Read lon,lat for model
 # lons,lats=ctang.read_lonlat_netcdf_1D(\
@@ -150,12 +150,12 @@ print timmean_OBS_remap.shape
 print timmean_CMIP5.shape
 
 #=================================================== plot
-Title='Evaluation of the simulated SSR in the historical period 1983-2005 in '\
+Title='Evaluation of the simulated SSR in the historical period 1979-2005 in '\
         +str(Season)
 #=================================================== 
 Unit=( '(W/m2)','(W/m2)','(W/m2)')
 #=================================================== 
-TITLE2=('','bias vs CM_SAF')
+TITLE2=('','bias vs '+str(OBS))
 def PlotMap(array2D,lons,lats,m,k,axx,vmin,vmax):
     cmap = plt.cm.jet
     cmaplist = [cmap(i) for i in range(cmap.N)]
@@ -220,9 +220,9 @@ for m in range(N_row):
 
 plt.suptitle(Title)
 
-OutputImage='evaluation.'+str(VAR)+'.'+str(OBS)+'.by_model.gcm.'+str(Season)
+OutputImage='evaluation.'+str(VAR)+'.'+str(OBS)+'.by_model.gcm'+str(Season)
 #plt.savefig(OutputImage+'.eps',format='eps')
 plt.savefig(OutputImage+'.png')
-
 plt.show()
+
 quit()
