@@ -47,9 +47,8 @@ GCM_Model=(\
 
 	# 'EC-EARTH',\
 	'CanESM2',\
-	# 'IPSL-CM5A-MR',\
-	'CanESM2',\
 
+	'IPSL-CM5A-MR',\
 	'MIROC5',\
 	'HadGEM2-ES',\
 	'MPI-ESM-LR',\
