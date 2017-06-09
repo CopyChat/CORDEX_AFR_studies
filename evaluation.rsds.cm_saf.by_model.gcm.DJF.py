@@ -34,6 +34,7 @@ OBSvar = 'SIS'
 N_column = 2
 N_row = 21
 N_plot = N_column*N_row
+Season='DJF'
 #=================================================== test
 ##
 #=================================================== end of test
@@ -99,17 +100,17 @@ OBSfile=(\
         'SISmm.CDR.mon.mean.198301-200512.SA.yearmean.detrended.masknoooon.timstd.remap.gcm.nc')
 
 OBS_remap=(\
-        'SISmm.CDR.mon.mean.198301-200512.SA.DJF.timmean.remap.gcm.nc',\
+        'SISmm.CDR.mon.mean.198301-200512.SA.'+str(Season)+'.timmean.remap.gcm.nc',\
         'SISmm.CDR.mon.mean.198301-200512.SA.monmean.detrended.maskannual.timstd.remap.gcm.nc',\
         'SISmm.CDR.mon.mean.198301-200512.SA.yearmean.detrended.masknoooon.timstd.remap.gcm.nc')
 
 filefix=(\
-        '_historical-rcp85_r1i1p1.1983-2005.SA.DJF.timmean.nc',\
+        '_historical-rcp85_r1i1p1.1983-2005.SA.'+str(Season)+'.timmean.nc',\
         '_historical-rcp85_r1i1p1.1970-2099.nc.1983-2005.SA.monmean.detrended.maskannual.timstd.remap.nc',\
         '_historical-rcp85_r1i1p1.1970-2099.nc.1983-2005.SA.yearmean.detrended.masknoooon.timstd.remap.nc')
 
 filefix_remap=(\
-        '_historical-rcp85_r1i1p1.1983-2005.SA.DJF.timmean.remap.nc',\
+        '_historical-rcp85_r1i1p1.1983-2005.SA.'+str(Season)+'.timmean.remap.nc',\
         '_historical-rcp85_r1i1p1.1970-2099.nc.1983-2005.SA.monmean.detrended.maskannual.timstd.remap.nc',\
         '_historical-rcp85_r1i1p1.1970-2099.nc.1983-2005.SA.yearmean.detrended.masknoooon.timstd.remap.nc')
 
@@ -126,7 +127,6 @@ lats=np.array([ctang.read_lat_netcdf_1D(\
 # Read lon,lat for OBS Plot the remap OBS, because time variability cannot be normalised by GCM in low resolution
 
 lonsOBS,latsOBS=ctang.read_lonlat_netcdf_1D(OBS_Dir+OBS_remap[0])
-
 
 # Read Ensmean of timmean for CMIP5 & OBS
 timmean_CMIP5=np.array([ctang.read_lonlatmap_netcdf(VAR,\
@@ -149,7 +149,8 @@ print timmean_OBS_remap.shape
 print timmean_CMIP5.shape
 
 #=================================================== plot
-Title='Evaluation of the simulated SSR in the historical period 1983-2005'
+Title='Evaluation of the simulated SSR in the historical period 1983-2005 in '\
+        +str(Season)
 #=================================================== 
 Unit=( '(W/m2)','(W/m2)','(W/m2)')
 #=================================================== 
@@ -174,14 +175,15 @@ def PlotMap(array2D,lons,lats,m,k,axx,vmin,vmax):
 
     plt.title(str(m+1)+' '+GCM_name[m]+" "+TITLE2[k]+" "+Unit[k],fontsize= 8)
 
-    cb=plt.colorbar(cmap=plt.cm.jet,orientation='horizontal',shrink=0.7) 
+    cb=plt.colorbar(cmap=plt.cm.jet,orientation='horizontal',shrink=0.5) 
     cb.ax.tick_params(['{:.0f}'.format(x) for x in bounds ],labelsize=6) 
+    axx.text(0.9, 0.9,str(Season), ha='center', va='center', transform=axx.transAxes)
     #cbar.ax.set_yticklabels(['{:.0f}'.format(x) for x in np.arange(cbar_min, cbar_max+cbar_step, cbar_step)], fontsize=16, weight='bold')
 #=================================================== 
 #=================================================== ploting
 fig, axes = plt.subplots(nrows=N_row, ncols=N_column,\
         # sharex=True, sharey=True,\
-        figsize=(6, 35),facecolor='w', edgecolor='k') # figsize=(w,h)
+        figsize=(8, 40),facecolor='w', edgecolor='k') # figsize=(w,h)
 fig.subplots_adjust(hspace=0.3,top=0.96,wspace=0)
 #=================================================== 
 LIMIT=np.array([ [150,300],[-25,25]])
