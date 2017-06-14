@@ -45,8 +45,7 @@ GCM_Model=(\
 	'CNRM-CM5',\
 	'CSIRO-Mk3-6-0',\
 
-	# 'EC-EARTH',\
-	'CanESM2',\
+        'EC-EARTH',\
 
         'IPSL-CM5A-MR',\
 	'MIROC5',\
@@ -56,24 +55,20 @@ GCM_Model=(\
 	'GFDL-ESM2M',\
 	'CNRM-CM5',\
 
-	# 'EC-EARTH',\
-	'CanESM2',\
+        'EC-EARTH',\
 
 	'HadGEM2-ES',\
 	'MPI-ESM-LR',\
 
-	# 'EC-EARTH',\
-	'CanESM2',\
+        'EC-EARTH',\
 
 	'NorESM1-M',\
 
-	# 'EC-EARTH',\
-	'CanESM2',\
+        'EC-EARTH',\
 
 	'HadGEM2-ES',\
 
-	# 'EC-EARTH',\
-	'CanESM2',\
+        'EC-EARTH',\
 
 	'IPSL-CM5A-LR',\
 	'MPI-ESM-LR')
@@ -154,9 +149,9 @@ Title='Evaluation of the simulated SSR in the historical period 1979-2005 in '\
 #=================================================== 
 Unit=( '(W/m2)','(W/m2)','(W/m2)')
 #=================================================== 
-TITLE2=('','bias vs '+str(OBS))
-def PlotMap(array2D,lons,lats,m,k,axx,vmin,vmax):
-    cmap = plt.cm.jet
+TITLE2=('','- '+str(OBS))
+def PlotMap(array2D,lons,lats,m,k,axx,vmin,vmax,cmap):
+    # cmap = plt.cm.jet
     cmaplist = [cmap(i) for i in range(cmap.N)]
     bounds = np.linspace(vmin,vmax,11)
     norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
@@ -186,7 +181,7 @@ fig, axes = plt.subplots(nrows=N_row, ncols=N_column,\
         figsize=(8, 40),facecolor='w', edgecolor='k') # figsize=(w,h)
 fig.subplots_adjust(hspace=0.3,top=0.96,wspace=0)
 #=================================================== 
-LIMIT=np.array([ [150,300],[-25,25]])
+LIMIT=np.array([ [60,320],[-100,100]])
 
 for m in range(N_row):
     if m == 0:
@@ -195,9 +190,11 @@ for m in range(N_row):
             plt.sca(axes[m,k]) # active shis subplot for GCM
             axx=axes[m,k]
             if k == 0:
-                PlotMap(timmean_CMIP5[m],lons[m],lats[m],m,k,axx,LIMIT[k][0],LIMIT[k][1])
+                cmap = plt.cm.jet
+                PlotMap(timmean_CMIP5[m],lons[m],lats[m],m,k,axx,LIMIT[k][0],LIMIT[k][1],cmap)
             if k == 1:
-                PlotMap(Bias[m],lonsOBS,latsOBS,m,k,axx,LIMIT[k][0],LIMIT[k][1])
+                cmap = plt.cm.seismic
+                PlotMap(Bias[m],lonsOBS,latsOBS,m,k,axx,LIMIT[k][0],LIMIT[k][1],cmap)
     else:
         if GCM_Model[m] == 'CanESM2':
             ctang.NotAvailable(axes[m,0])
@@ -208,9 +205,11 @@ for m in range(N_row):
                 plt.sca(axes[m,k]) # active shis subplot for GCM
                 axx=axes[m,k]
                 if k == 0:
-                    PlotMap(timmean_CMIP5[m],lons[m],lats[m],m,k,axx,LIMIT[k][0],LIMIT[k][1])
+                    cmap = plt.cm.jet
+                    PlotMap(timmean_CMIP5[m],lons[m],lats[m],m,k,axx,LIMIT[k][0],LIMIT[k][1],cmap)
                 if k == 1:
-                    PlotMap(Bias[m],lonsOBS,latsOBS,m,k,axx,LIMIT[k][0],LIMIT[k][1])
+                    cmap = plt.cm.seismic
+                    PlotMap(Bias[m],lonsOBS,latsOBS,m,k,axx,LIMIT[k][0],LIMIT[k][1],cmap)
 
 #TaylorPlot(samples,refstd,fig,rect,ax4):
 
@@ -219,7 +218,7 @@ for m in range(N_row):
 
 plt.suptitle(Title)
 
-OutputImage='evaluation.'+str(VAR)+'.'+str(OBS)+'.by_model.gcm'+str(Season)
+OutputImage='evaluation.'+str(VAR)+'.'+str(OBS)+'.by_model.gcm.'+str(Season)
 #plt.savefig(OutputImage+'.eps',format='eps')
 plt.savefig(OutputImage+'.png')
 plt.show()

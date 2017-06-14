@@ -47,37 +47,22 @@ GCM_Model=(\
 	# 'CSIRO-Mk3-6-0',\
 	'CanESM2',\
 
-	# 'EC-EARTH',\
-	'CanESM2',\
-	# 'IPSL-CM5A-MR',\
-	'CanESM2',\
-
+        'EC-EARTH',\
+        'IPSL-CM5A-MR',\
 	'MIROC5',\
 	'HadGEM2-ES',\
 	'MPI-ESM-LR',\
 	'NorESM1-M',\
 	'GFDL-ESM2M',\
 	'CNRM-CM5',\
-
-	# 'EC-EARTH',\
-	'CanESM2',\
-
+        'EC-EARTH',\
 	'HadGEM2-ES',\
 	'MPI-ESM-LR',\
-
-	# 'EC-EARTH',\
-	'CanESM2',\
-
+        'EC-EARTH',\
 	'NorESM1-M',\
-
-	# 'EC-EARTH',\
-	'CanESM2',\
-
+        'EC-EARTH',\
 	'HadGEM2-ES',\
-
-	# 'EC-EARTH',\
-	'CanESM2',\
-
+        'EC-EARTH',\
 	'IPSL-CM5A-LR',\
 	'MPI-ESM-LR')
 
@@ -155,7 +140,7 @@ Title='Evaluation of the simulated '+str(VAR)+' in the historical period 1979-20
 #=================================================== 
 Unit=( '(%)','(%)','(%)')
 #=================================================== 
-TITLE2=('','bias vs '+str(OBS))
+TITLE2=('','- '+str(OBS))
 def PlotMap(array2D,lons,lats,m,k,axx,vmin,vmax):
     cmap = plt.cm.jet
     cmaplist = [cmap(i) for i in range(cmap.N)]
@@ -187,7 +172,7 @@ fig, axes = plt.subplots(nrows=N_row, ncols=N_column,\
         figsize=(8, 40),facecolor='w', edgecolor='k') # figsize=(w,h)
 fig.subplots_adjust(hspace=0.3,top=0.96,wspace=0)
 #=================================================== 
-LIMIT=np.array([ [0,100],[-45,45]])
+LIMIT=np.array([ [0,100],[-50,50]])
 
 for m in range(N_row):
     if m == 0:

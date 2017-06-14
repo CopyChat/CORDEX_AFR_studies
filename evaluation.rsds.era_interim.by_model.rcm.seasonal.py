@@ -28,13 +28,13 @@ import ctang
 Data='/Users/ctang/Code/CORDEX_AFR_studies/data/validation_ERA_Interim/'
 OBS_Dir='/Users/ctang/Code/CORDEX_AFR_studies/data/OBS/'
 N_model = 21
-VAR ='clt' # ,'tas','sfcWind') #,'PVpot')
+VAR ='rsds' # ,'tas','sfcWind') #,'PVpot')
 OBS='ERA_Interim'
-OBSvar = 'tcc'
+OBSvar = 'ssrd'
 N_column = 2
 N_row = 21
 N_plot = N_column*N_row
-Season='DJF'
+Season='JJA'
 #=================================================== test
 ##
 #=================================================== end of test
@@ -114,17 +114,17 @@ GCM_name=(\
 # 21 * 4 table: 21 models vs 4 vars
 
 OBSfile=(\
-        'ERA_In.clt.mon.mean.1979-2005.SA.'+str(Season)+'.timmean.nc',\
+        'ERA_In.ssrd.mon.mean.1979-2005.SA.'+str(Season)+'.timmean.nc',\
         'SISmm.CDR.mon.mean.197901-200512.SA.monmean.detrended.maskannual.timstd.remap.gcm.nc',\
         'SISmm.CDR.mon.mean.197901-200512.SA.yearmean.detrended.masknoooon.timstd.remap.gcm.nc')
 
 OBS_remap=(\
-        'ERA_In.clt.mon.mean.1979-2005.SA.'+str(Season)+'.timmean.remap.rcm.nc',\
+        'ERA_In.ssrd.mon.mean.1979-2005.SA.'+str(Season)+'.timmean.remap.rcm.nc',\
         'SISmm.CDR.mon.mean.197901-200512.SA.monmean.detrended.maskannual.timstd.remap.gcm.nc',\
         'SISmm.CDR.mon.mean.197901-200512.SA.yearmean.detrended.masknoooon.timstd.remap.gcm.nc')
 
 filefix=(\
-        '.hist_rcp85.day.1970-2099.nc.1979-2005.SA.'+str(Season)+'.timmean.nc',\
+        '.hist_rcp85.day.1979-2005.SA.'+str(Season)+'.timmean.nc',\
         '_historical-rcp85_r1i1p1.1970-2099.nc.1979-2005.SA.monmean.detrended.maskannual.timstd.remap.nc',\
         '_historical-rcp85_r1i1p1.1970-2099.nc.1979-2005.SA.yearmean.detrended.masknoooon.timstd.remap.nc')
 
@@ -151,8 +151,8 @@ lonsOBS,latsOBS=ctang.read_lonlat_netcdf(OBS_Dir+OBS_remap[0])
 timmean_CORDEX=np.array([ctang.read_lonlatmap_netcdf(VAR,\
         Data+VAR+'_AFR-44_'+RCM_Model[i]+filefix[0])\
         for i in range(N_model)])
-timmean_OBS=np.array(ctang.read_lonlatmap_netcdf(OBSvar, OBS_Dir+OBSfile[0])*100)
-timmean_OBS_remap=np.array(ctang.read_lonlatmap_netcdf(OBSvar, OBS_Dir+OBS_remap[0])*100)
+timmean_OBS=np.array(ctang.read_lonlatmap_netcdf(OBSvar, OBS_Dir+OBSfile[0]))
+timmean_OBS_remap=np.array(ctang.read_lonlatmap_netcdf(OBSvar, OBS_Dir+OBS_remap[0]))
 
 print timmean_OBS_remap
 Bias=np.array([timmean_CORDEX[i]-timmean_OBS_remap for i in range(N_model)])
@@ -164,7 +164,7 @@ print timmean_CORDEX.shape
 #=================================================== plot
 Title='Evaluation of the simulated '+str(VAR)+' in the historical period 1979-2005'
 #=================================================== 
-Unit=( '(%)','(%)','(%)')
+Unit=( '(W/m2)','(W/m2)','(W/m2)')
 #=================================================== 
 TITLE2=('',' - '+str(OBS))
 def PlotMap(array2D,lons,lats,m,k,axx,vmin,vmax,cmap):
@@ -185,9 +185,9 @@ def PlotMap(array2D,lons,lats,m,k,axx,vmin,vmax,cmap):
     axx.xaxis.set_visible(False)
     axx.yaxis.set_visible(False)
 
-    plt.title(str(m+1)+' '+GCM_name[m]+" "+RCM_name[m]+" "+ TITLE2[k]+" "+Unit[k],fontsize= 8)
+    plt.title(str(m+1)+' '+RCM_name[m]+"_"+GCM_name[m]+" "+ TITLE2[k]+" "+Unit[k],fontsize= 8)
 
-    cb=plt.colorbar(cmap=plt.cm.jet,orientation='horizontal',shrink=0.7) 
+    cb=plt.colorbar(cmap=plt.cm.jet,orientation='horizontal',shrink=0.8) 
     cb.ax.tick_params(['{:.0f}'.format(x) for x in bounds ],labelsize=6) 
     #cbar.ax.set_yticklabels(['{:.0f}'.format(x) for x in np.arange(cbar_min, cbar_max+cbar_step, cbar_step)], fontsize=16, weight='bold')
     
@@ -197,14 +197,10 @@ def PlotMap(array2D,lons,lats,m,k,axx,vmin,vmax,cmap):
 #=================================================== ploting
 fig, axes = plt.subplots(nrows=N_row, ncols=N_column,\
         # sharex=True, sharey=True,\
-        figsize=(6, 35),facecolor='w', edgecolor='k') # figsize=(w,h)
-fig.subplots_adjust(hspace=0.3,top=0.96,wspace=0)
+        figsize=(9, 80),facecolor='w', edgecolor='k') # figsize=(w,h)
+fig.subplots_adjust(hspace=0.2,top=0.96,wspace=0)
 #=================================================== 
-LIMIT=np.array([ [0,100],[-50,50]])
-# LIMIT=np.array([\
-        # [[10,80],[10,80],[-25,25]],\
-        # [[0,15],[0,15],[-10,10]],\
-        # [[0,5],[0,5],[-5,5]]])
+LIMIT=np.array([ [60,360],[-100,100]])
 
 for m in range(N_row):
     if m == 0:

@@ -40,28 +40,28 @@ Season='JJA'
 #=================================================== end of test
 # use CanESM2 instead of all not avail model:
 RCM_name=(\
-	'RCA4_v1',\
-	'RCA4_v1',\
-	'RCA4_v1',\
-	'RCA4_v1',\
-	'RCA4_v1',\
-	'RCA4_v1',\
-	'RCA4_v1',\
-	'RCA4_v1',\
-	'RCA4_v1',\
-	'RCA4_v1',\
+	'RCA4',\
+	'RCA4',\
+	'RCA4',\
+	'RCA4',\
+	'RCA4',\
+	'RCA4',\
+	'RCA4',\
+	'RCA4',\
+	'RCA4',\
+	'RCA4',\
         \
-	'CCLM4-8-17_v1',\
-	'CCLM4-8-17_v1',\
-	'CCLM4-8-17_v1',\
-	'CCLM4-8-17_v1',\
-	'HIRHAM5_v2',\
-	'HIRHAM5_v2',\
-	'RACMO22T_v1',\
-	'RACMO22T_v1',\
-	'REMO2009_v1',\
-	'REMO2009_v1',\
-	'REMO2009_v1')
+	'CCLM4',\
+	'CCLM4',\
+	'CCLM4',\
+	'CCLM4',\
+	'HIRHAM5',\
+	'HIRHAM5',\
+	'RACMO22T',\
+	'RACMO22T',\
+	'REMO2009',\
+	'REMO2009',\
+	'REMO2009')
 RCM_Model=(\
 	'CCCma-CanESM2_SMHI-RCA4_v1',\
 	'CNRM-CERFACS-CNRM-CM5_SMHI-RCA4_v1',\
@@ -166,7 +166,7 @@ Title='Evaluation of the simulated SSR in the historical period 1979-2005'
 #=================================================== 
 Unit=( '(W/m2)','(W/m2)','(W/m2)')
 #=================================================== 
-TITLE2=('','bias vs '+str(OBS))
+TITLE2=('',' - '+str(OBS))
 def PlotMap(array2D,lons,lats,m,k,axx,vmin,vmax,cmap):
     # cmap = plt.cm.jet
     # cmap = plt.cm.seismic
@@ -200,7 +200,7 @@ fig, axes = plt.subplots(nrows=N_row, ncols=N_column,\
         figsize=(6, 35),facecolor='w', edgecolor='k') # figsize=(w,h)
 fig.subplots_adjust(hspace=0.3,top=0.96,wspace=0)
 #=================================================== 
-LIMIT=np.array([ [120,300],[-75,75]])
+LIMIT=np.array([ [60,320],[-100,100]])
 
 for m in range(N_row):
     if m == 0:
