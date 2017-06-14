@@ -90,6 +90,7 @@ def PlotMap(array2D,lons,lats,m,k,axx,vmin,vmax,cmap):
     
     axx.text(0.9, 0.9,str(Season[m]), ha='center', va='center', transform=axx.transAxes)
 
+
 #===================================================  to plot
 
 fig, axes = plt.subplots(nrows=2, ncols=N_obs,\
