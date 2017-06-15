@@ -29,6 +29,8 @@ N_column = 2
 N_row = 21
 N_plot = N_column*N_row
 degree_sign= u'\N{DEGREE SIGN}'
+### if plot only the obs not bias:
+BIAS=0
 #=================================================== test
 ##
 #=================================================== end of test
@@ -52,7 +54,12 @@ VAR=(\
     'ssrd',\
     )
 
-Unit=( '(W/m2)','(W/m2)','(W/m2)')
+Unit=(\
+    '(W/$m^{2}$)',\
+    '(W/$m^{2}$)',\
+    '(W/$m^{2}$)',\
+    )
+
 
 Temp_cover=(\
     '1983-2005',\
@@ -65,7 +72,7 @@ N_obs=len(OBS_name)
 
 def PlotMap(array2D,lons,lats,m,k,axx,vmin,vmax,cmap):
     cmaplist = [cmap(i) for i in range(cmap.N)]
-    bounds = np.linspace(vmin,vmax,11)
+    bounds = np.linspace(vmin,vmax,21)
     norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
 
     map=Basemap(projection='cyl',llcrnrlat=lats[:,0].min(),urcrnrlat=lats[:,0].max(),\
@@ -82,14 +89,18 @@ def PlotMap(array2D,lons,lats,m,k,axx,vmin,vmax,cmap):
     if k==0:
         plt.title(OBS_name[k]+'  '+Unit[k],fontsize=10)
     else:
-        plt.title(OBS_name[k]+' - '+OBS_name[0]+'  '+Unit[k],fontsize= 10)
+        ### if plot the bias
+        if BIAS==1:
+            plt.title(OBS_name[k]+' - '+OBS_name[0]+'  '+Unit[k],fontsize= 10)
+        else:
+            plt.title(OBS_name[k]+'  '+Unit[k],fontsize=10)
+
 
     cb=plt.colorbar(cmap=plt.cm.jet,orientation='horizontal',shrink=0.8) 
     cb.ax.tick_params(['{:.0f}'.format(x) for x in bounds ],labelsize=6) 
     #cbar.ax.set_yticklabels(['{:.0f}'.format(x) for x in np.arange(cbar_min, cbar_max+cbar_step, cbar_step)], fontsize=16, weight='bold')
     
     axx.text(0.9, 0.9,str(Season[m]), ha='center', va='center', transform=axx.transAxes)
-
 
 #===================================================  to plot
 
@@ -134,7 +145,9 @@ for S in range(2):
     print S,k,"-----------"
     PlotMap(Ref_OBS,lons,lats,S,k,axx,60,360,cmap)
 
-    cmap = plt.cm.seismic
+    ### if plot the bias
+    if BIAS==1:
+        cmap = plt.cm.seismic
 
     for i in range(N_obs-1):
         k=k+1
@@ -150,7 +163,12 @@ for S in range(2):
         print S,k,"-----------"
         plt.sca(axes[S,k]) # active shis subplot for RCM
         axx=axes[S,k]
-        PlotMap(OBS-Ref_OBS_remap,lonsOBS,latsOBS,S,k,axx,-75,75,cmap)
+
+        ### if plot the bias
+        if BIAS==1:
+            PlotMap(OBS-Ref_OBS_remap,lonsOBS,latsOBS,S,k,axx,-75,75,cmap)
+        else:
+            PlotMap(OBS,lonsOBS,latsOBS,S,k,axx,60,360,cmap)
 
 
 
