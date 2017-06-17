@@ -28,9 +28,9 @@ import ctang
 #=================================================== Definitions
 Data='/Users/ctang/Code/CORDEX_AFR_studies/data/validation_CM_SAF/'
 OBS_Dir='/Users/ctang/Code/CORDEX_AFR_studies/data/OBS/validation_CM_SAF/'
-VAR ='rsds' # ,'tas','sfcWind') #,'PVpot')
+VAR ='clt' # ,'tas','sfcWind') #,'PVpot')
 OBS='CM_SAF'
-OBSvar = 'SIS'
+OBSvar = 'cfc'
 N_column = 2
 Season='JJA'
 #=================================================== test
@@ -40,21 +40,37 @@ Season='JJA'
 
 # real model:
 GCM_Model=(\
-        'CMIP5-ENSEMBLE',\
-        'CanESM2',\
-        'CNRM-CM5',\
-        'CSIRO-Mk3-6-0',\
-        'EC-EARTH',\
-        'GFDL-ESM2M',\
-        'HadGEM2-ES',\
-        'IPSL-CM5A-LR',\
-        'IPSL-CM5A-MR',\
-        'MIROC5',\
-        'MPI-ESM-LR',\
-        'NorESM1-M',\
-        )
+    'CMIP5-ENSEMBLE',\
+    'CanESM2',\
+    'CNRM-CM5',\
+    # 'CSIRO-Mk3-6-0',\
+    'NotAvailable',\
 
-GCM_name=GCM_Model
+    'EC-EARTH',\
+    'GFDL-ESM2M',\
+    'HadGEM2-ES',\
+    'IPSL-CM5A-LR',\
+    'IPSL-CM5A-MR',\
+    'MIROC5',\
+    'MPI-ESM-LR',\
+    'NorESM1-M',\
+    )
+GCM_name=(\
+    'CMIP5-ENSEMBLE',\
+    'CanESM2',\
+    'CNRM-CM5',\
+
+    'CSIRO-Mk3-6-0',\
+
+    'EC-EARTH',\
+    'GFDL-ESM2M',\
+    'HadGEM2-ES',\
+    'IPSL-CM5A-LR',\
+    'IPSL-CM5A-MR',\
+    'MIROC5',\
+    'MPI-ESM-LR',\
+    'NorESM1-M',\
+    )
 N_model = len(GCM_Model)
 N_row = N_model
 N_plot = N_column*N_row
@@ -64,25 +80,30 @@ LABLE2='abcdefghigklmnopqrstuvwxyz'
 # 21 * 4 table: 21 models vs 4 vars
 
 OBS_remap=(\
-'SISmm.CDR.mon.mean.198301-200512.SA.'+str(Season)+'.timmean.remap.CMIP5-ENSEMBLE.nc',\
-'SISmm.CDR.mon.mean.198301-200512.SA.'+str(Season)+'.timmean.remap.CanESM2.nc',\
-'SISmm.CDR.mon.mean.198301-200512.SA.'+str(Season)+'.timmean.remap.CNRM-CM5.nc',\
-'SISmm.CDR.mon.mean.198301-200512.SA.'+str(Season)+'.timmean.remap.CSIRO-Mk3-6-0.nc',\
-'SISmm.CDR.mon.mean.198301-200512.SA.'+str(Season)+'.timmean.remap.EC-EARTH.nc',\
-'SISmm.CDR.mon.mean.198301-200512.SA.'+str(Season)+'.timmean.remap.GFDL-ESM2M.nc',\
-'SISmm.CDR.mon.mean.198301-200512.SA.'+str(Season)+'.timmean.remap.HadGEM2-ES.nc',\
-'SISmm.CDR.mon.mean.198301-200512.SA.'+str(Season)+'.timmean.remap.IPSL-CM5A-LR.nc',\
-'SISmm.CDR.mon.mean.198301-200512.SA.'+str(Season)+'.timmean.remap.IPSL-CM5A-MR.nc',\
-'SISmm.CDR.mon.mean.198301-200512.SA.'+str(Season)+'.timmean.remap.MIROC5.nc',\
-'SISmm.CDR.mon.mean.198301-200512.SA.'+str(Season)+'.timmean.remap.MPI-ESM-LR.nc',\
-'SISmm.CDR.mon.mean.198301-200512.SA.'+str(Season)+'.timmean.remap.NorESM1-M.nc',\
+'CFCmm.CM_SAF.CLARA-A2.1983-2005.GL.SA.'+str(Season)+'.timmean.remap.CMIP5-ENSEMBLE.nc',\
+'CFCmm.CM_SAF.CLARA-A2.1983-2005.GL.SA.'+str(Season)+'.timmean.remap.CanESM2.nc',\
+'CFCmm.CM_SAF.CLARA-A2.1983-2005.GL.SA.'+str(Season)+'.timmean.remap.CNRM-CM5.nc',\
+
+# 'CFCmm.CM_SAF.CLARA-A2.1983-2005.GL.SA.'+str(Season)+'.timmean.remap.CSIRO-Mk3-6-0.nc',\
+'CFCmm.CM_SAF.CLARA-A2.1983-2005.GL.SA.'+str(Season)+'.timmean.remap.NotAvailable.nc',\
+
+'CFCmm.CM_SAF.CLARA-A2.1983-2005.GL.SA.'+str(Season)+'.timmean.remap.EC-EARTH.nc',\
+'CFCmm.CM_SAF.CLARA-A2.1983-2005.GL.SA.'+str(Season)+'.timmean.remap.GFDL-ESM2M.nc',\
+'CFCmm.CM_SAF.CLARA-A2.1983-2005.GL.SA.'+str(Season)+'.timmean.remap.HadGEM2-ES.nc',\
+'CFCmm.CM_SAF.CLARA-A2.1983-2005.GL.SA.'+str(Season)+'.timmean.remap.IPSL-CM5A-LR.nc',\
+'CFCmm.CM_SAF.CLARA-A2.1983-2005.GL.SA.'+str(Season)+'.timmean.remap.IPSL-CM5A-MR.nc',\
+'CFCmm.CM_SAF.CLARA-A2.1983-2005.GL.SA.'+str(Season)+'.timmean.remap.MIROC5.nc',\
+'CFCmm.CM_SAF.CLARA-A2.1983-2005.GL.SA.'+str(Season)+'.timmean.remap.MPI-ESM-LR.nc',\
+'CFCmm.CM_SAF.CLARA-A2.1983-2005.GL.SA.'+str(Season)+'.timmean.remap.NorESM1-M.nc',\
 )
 
-filefix='_historical-rcp85_r1i1p1.1983-2005.SA.'+str(Season)+'.timmean.nc'
+filefix='_historical-rcp85_r1i1p1_1951-2099.nc.1983-2005.SA.'+str(Season)+'.timmean.nc'
 
 # Read lon,lat for model
 # lons,lats=ctang.read_lonlat_netcdf_1D(\
         # Data+VAR+'_Amon_'+GCM_Model[1]+filefix[0])
+print Data+VAR+'_Amon_'+GCM_Model[3]+filefix
+
 lons=np.array([ctang.read_lon_netcdf_1D(\
         Data+VAR+'_Amon_'+GCM_Model[i]+filefix)\
         for i in range(N_model)])
@@ -94,6 +115,8 @@ lats=np.array([ctang.read_lat_netcdf_1D(\
 timmean_CMIP5=np.array([ctang.read_lonlatmap_netcdf(VAR,\
         Data+VAR+'_Amon_'+GCM_Model[i]+filefix)\
         for i in range(N_model)])
+
+print OBS_Dir+OBS_remap[0]
 
 timmean_OBS_remap=np.array([ctang.read_lonlatmap_netcdf(OBSvar,\
         OBS_Dir+OBS_remap[i])\
@@ -109,7 +132,7 @@ print Bias[1].shape
 Title='Evaluation of the simulated SSR in the historical period 1983-2005 in '\
         +str(Season)
 #=================================================== 
-Unit=( '(W/m2)','(W/m2)','(W/m2)')
+Unit=( '(%)','(%)','(%)','(%)','(%)')
 #=================================================== 
 TITLE2=('','- '+str(OBS))
 def PlotMap(array2D,lons,lats,m,k,axx,vmin,vmax,cmap):
@@ -148,7 +171,7 @@ fig, axes = plt.subplots(nrows=N_row, ncols=N_column,\
         figsize=(9, 40),facecolor='w', edgecolor='k') # figsize=(w,h)
 fig.subplots_adjust(hspace=0.2,top=0.96,wspace=0)
 #=================================================== 
-LIMIT=np.array([ [60,360],[-100,100]])
+LIMIT=np.array([ [0,100],[-50,50]])
 
 for m in range(N_row):
     if m < 1:
@@ -163,7 +186,7 @@ for m in range(N_row):
                 cmap = plt.cm.seismic
                 PlotMap(Bias[m],lons[m],lats[m],m,k,axx,LIMIT[k][0],LIMIT[k][1],cmap)
     else:
-        if GCM_Model[m] == 'CanESM2222':
+        if GCM_Model[m] == 'NotAvailable':
             ctang.NotAvailable(axes[m,0])
             ctang.NotAvailable(axes[m,1])
         else:
