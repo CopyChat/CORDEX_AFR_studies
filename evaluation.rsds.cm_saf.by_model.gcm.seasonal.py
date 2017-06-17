@@ -40,6 +40,7 @@ Season='DJF'
 
 # real model:
 GCM_Model=(\
+        'CMIP5-ENSEMBLE',\
         'CanESM2',\
         'CNRM-CM5',\
         'CSIRO-Mk3-6-0',\
@@ -51,17 +52,19 @@ GCM_Model=(\
         'MIROC5',\
         'MPI-ESM-LR',\
         'NorESM1-M',\
-        'CMIP5-ENSEMBLE',\
         )
 
 GCM_name=GCM_Model
 N_model = len(GCM_Model)
 N_row = N_model
 N_plot = N_column*N_row
+LABLE='ABCDEFGHIGKLMNOPQRSTUVWXYZ'
+LABLE2='abcdefghigklmnopqrstuvwxyz'
 #=================================================== reading data
 # 21 * 4 table: 21 models vs 4 vars
 
 OBS_remap=(\
+'SISmm.CDR.mon.mean.198301-200512.SA.'+str(Season)+'.timmean.remap.CMIP5-ENSEMBLE.nc',\
 'SISmm.CDR.mon.mean.198301-200512.SA.'+str(Season)+'.timmean.remap.CanESM2.nc',\
 'SISmm.CDR.mon.mean.198301-200512.SA.'+str(Season)+'.timmean.remap.CNRM-CM5.nc',\
 'SISmm.CDR.mon.mean.198301-200512.SA.'+str(Season)+'.timmean.remap.CSIRO-Mk3-6-0.nc',\
@@ -73,7 +76,6 @@ OBS_remap=(\
 'SISmm.CDR.mon.mean.198301-200512.SA.'+str(Season)+'.timmean.remap.MIROC5.nc',\
 'SISmm.CDR.mon.mean.198301-200512.SA.'+str(Season)+'.timmean.remap.MPI-ESM-LR.nc',\
 'SISmm.CDR.mon.mean.198301-200512.SA.'+str(Season)+'.timmean.remap.NorESM1-M.nc',\
-'SISmm.CDR.mon.mean.198301-200512.SA.'+str(Season)+'.timmean.remap.CMIP5-ENSEMBLE.nc',\
 )
 
 filefix='_historical-rcp85_r1i1p1.1983-2005.SA.'+str(Season)+'.timmean.nc'
@@ -133,6 +135,11 @@ def PlotMap(array2D,lons,lats,m,k,axx,vmin,vmax,cmap):
     cb=plt.colorbar(cmap=plt.cm.jet,orientation='horizontal',shrink=0.8) 
     cb.ax.tick_params(['{:.0f}'.format(x) for x in bounds ],labelsize=6) 
     axx.text(0.9, 0.9,str(Season), ha='center', va='center', transform=axx.transAxes)
+    if k==0:
+        axx.text(0.1, 0.9,'('+str(LABLE[m])+')', ha='center', va='center', transform=axx.transAxes)
+    else:
+        axx.text(0.1, 0.9,'('+str(LABLE2[m])+')', ha='center', va='center', transform=axx.transAxes)
+
     #cbar.ax.set_yticklabels(['{:.0f}'.format(x) for x in np.arange(cbar_min, cbar_max+cbar_step, cbar_step)], fontsize=16, weight='bold')
 #=================================================== 
 #=================================================== ploting
@@ -144,7 +151,7 @@ fig.subplots_adjust(hspace=0.2,top=0.96,wspace=0)
 LIMIT=np.array([ [60,360],[-100,100]])
 
 for m in range(N_row):
-    if m == 0:
+    if m < 1:
         for k in range(N_column):
             print 'm='+str(m),'k='+str(k)
             plt.sca(axes[m,k]) # active shis subplot for GCM
@@ -156,9 +163,9 @@ for m in range(N_row):
                 cmap = plt.cm.seismic
                 PlotMap(Bias[m],lons[m],lats[m],m,k,axx,LIMIT[k][0],LIMIT[k][1],cmap)
     else:
-        if GCM_Model[m] == 'CanESM2':
-            ctang.notavailable(axes[m,0])
-            ctang.notavailable(axes[m,1])
+        if GCM_Model[m] == 'CanESM2222':
+            ctang.NotAvailable(axes[m,0])
+            ctang.NotAvailable(axes[m,1])
         else:
             for k in range(N_column):
                 print 'm='+str(m),'k='+str(k)
