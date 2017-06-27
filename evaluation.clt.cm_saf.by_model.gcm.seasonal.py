@@ -33,6 +33,7 @@ OBS='CM_SAF'
 OBSvar = 'cfc'
 N_column = 2
 Season='JJA'
+Season='DJF'
 #=================================================== test
 ##
 #=================================================== end of test
@@ -43,8 +44,8 @@ GCM_Model=(\
     'CMIP5-ENSEMBLE',\
     'CanESM2',\
     'CNRM-CM5',\
-    # 'CSIRO-Mk3-6-0',\
-    'NotAvailable',\
+    'CSIRO-Mk3-6-0',\
+    # 'NotAvailable',\
 
     'EC-EARTH',\
     'GFDL-ESM2M',\
@@ -59,9 +60,7 @@ GCM_name=(\
     'CMIP5-ENSEMBLE',\
     'CanESM2',\
     'CNRM-CM5',\
-
     'CSIRO-Mk3-6-0',\
-
     'EC-EARTH',\
     'GFDL-ESM2M',\
     'HadGEM2-ES',\
@@ -84,8 +83,8 @@ OBS_remap=(\
 'CFCmm.CM_SAF.CLARA-A2.1983-2005.GL.SA.'+str(Season)+'.timmean.remap.CanESM2.nc',\
 'CFCmm.CM_SAF.CLARA-A2.1983-2005.GL.SA.'+str(Season)+'.timmean.remap.CNRM-CM5.nc',\
 
-# 'CFCmm.CM_SAF.CLARA-A2.1983-2005.GL.SA.'+str(Season)+'.timmean.remap.CSIRO-Mk3-6-0.nc',\
-'CFCmm.CM_SAF.CLARA-A2.1983-2005.GL.SA.'+str(Season)+'.timmean.remap.NotAvailable.nc',\
+'CFCmm.CM_SAF.CLARA-A2.1983-2005.GL.SA.'+str(Season)+'.timmean.remap.CSIRO-Mk3-6-0.nc',\
+# 'CFCmm.CM_SAF.CLARA-A2.1983-2005.GL.SA.'+str(Season)+'.timmean.remap.NotAvailable.nc',\
 
 'CFCmm.CM_SAF.CLARA-A2.1983-2005.GL.SA.'+str(Season)+'.timmean.remap.EC-EARTH.nc',\
 'CFCmm.CM_SAF.CLARA-A2.1983-2005.GL.SA.'+str(Season)+'.timmean.remap.GFDL-ESM2M.nc',\
