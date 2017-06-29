@@ -64,6 +64,7 @@ GCM_Model=(\
         'EC-EARTH',\
 	'IPSL-CM5A-LR',\
 	'MPI-ESM-LR')
+
 GCM_resolution=(\
 	str('2.8*2.8')+degree_sign,\
 	str('1.4*1.4')+degree_sign,\
@@ -111,28 +112,28 @@ RCM_Model=(\
 	'IPSL-IPSL-CM5A-LR_GERICS-REMO2009_v1',\
 	'MPI-M-MPI-ESM-LR_MPI-CSC-REMO2009_v1')
 RCM_Name=(\
-	'RCA4_v1',\
-	'RCA4_v1',\
-	'RCA4_v1',\
-	'RCA4_v1',\
-	'RCA4_v1',\
-	'RCA4_v1',\
-	'RCA4_v1',\
-	'RCA4_v1',\
-	'RCA4_v1',\
-	'RCA4_v1',\
+	'RCA4',\
+	'RCA4',\
+	'RCA4',\
+	'RCA4',\
+	'RCA4',\
+	'RCA4',\
+	'RCA4',\
+	'RCA4',\
+	'RCA4',\
+	'RCA4',\
         \
-	'CCLM4-8-17_v1',\
-	'CCLM4-8-17_v1',\
-	'CCLM4-8-17_v1',\
-	'CCLM4-8-17_v1',\
-	'HIRHAM5_v2',\
-	'HIRHAM5_v2',\
-	'RACMO22T_v1',\
-	'RACMO22T_v2',\
-	'MPI-CSC-REMO2009_v1',\
-	'GERICS-REMO2009_v1',\
-	'MPI-CSC-REMO2009_v1')
+	'CCLM4',\
+	'CCLM4',\
+	'CCLM4',\
+	'CCLM4',\
+	'HIRHAM5',\
+	'HIRHAM5',\
+	'RACMO22T',\
+	'RACMO22T',\
+	'REMO2009',\
+	'REMO2009',\
+	'REMO2009')
 
 #=================================================== test
 ##
@@ -149,6 +150,7 @@ lons,lats=ctang.read_lonlat_netcdf(\
 
 mean_ref=np.array([ctang.read_lonlatmap_netcdf(VAR,\
         Data+VAR+'_AFR-44_'+RCM_Model[i]+'.hist.day.1970-1999.SA.timmean.nc') \
+
     for i in range(N_model)])
 mean_future=np.array([[ctang.read_lonlatmap_netcdf(VAR,\
     Data+VAR+'_AFR-44_'+RCM_Model[i]+'.rcp85.day.2070-2099.SA.timmean.nc')] \
@@ -176,9 +178,10 @@ mean_change=np.array((mean_future-mean_ref)*100/mean_ref)                 # RADS
 mean_change_GCM=np.array((mean_future_GCM-mean_ref_GCM)*100/mean_ref_GCM) # RADS
 
 #=================================================== plot
-Title='Porjection Changes in RSDS(%) - RCP8.5'
+Title='Porjection Changes in SSR(%) - RCP8.5'
 #=================================================== 
 cmap = plt.cm.bwr
+cmap = plt.cm.seismic
 cmaplist = [cmap(i) for i in range(cmap.N)]
 bounds = np.linspace(-21,21,11)
 norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
@@ -214,7 +217,7 @@ def Plot_RCM(m,axx):
     print x.shape,y.shape
     print mean_change[m].shape
     map.pcolormesh(y,x,mean_change[m],cmap=cmap,vmin=-10,vmax=10)
-    plt.title('Exp '+ str(m+1)+', '+str(GCM_Model[m])+' --> '+str(RCM_Name[m]),fontsize= 6)
+    plt.title('Exp '+ str(m+1)+', '+str(RCM_Name[m])+"_"+str(GCM_Model[m]),fontsize= 6)
 
 
 def NotAvailable(axx):
@@ -237,20 +240,14 @@ for m in range(11):
         plt.sca(axes[m,k]) # active shis subplot for GCM
         axx=axes[m,k]
         if k == 0:
-            if GCM_Model[m] == 'EC-EARTH':
-                NotAvailable(axx)
-            else:
-                Plot_GCM(m,axx)
+            Plot_GCM(m,axx)
         if k == 1:
             Plot_RCM(m,axx)
         if k == 2:
             if m == 10:
                 cax = axx.imshow(np.random.random((100,100)), vmin=-10, vmax=10,cmap=cmap)
             else:
-                if GCM_Model[m+10] == 'EC-EARTH':
-                    NotAvailable(axx)
-                else:
-                    Plot_GCM(m+10,axx)
+                Plot_GCM(m+10,axx)
         if k == 3:
             if m == 10:
                 print "done"
@@ -269,7 +266,7 @@ plt.suptitle(Title)
 
 #plt.tight_layout()
 # plt.savefig('map.gcm_vs_rcm.eps',format='eps')
-plt.savefig('map.gcm_vs_rcm.png')
+plt.savefig('rsds.changes.gcm_vs_rcm.png')
 plt.show()
 
 quit()
