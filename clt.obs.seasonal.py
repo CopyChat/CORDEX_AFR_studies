@@ -22,7 +22,7 @@ sys.path.append('/Users/ctang/Code/Python/')
 import ctang
 
 #=================================================== Definitions
-OBS_Dir='/Users/ctang/Code/CORDEX_AFR_studies/data/OBS/'
+OBS_Dir='/Users/ctang/Code/CORDEX_AFR_studies/data/OBS/obs.clt/'
 VAR ='rsds' # ,'tas','sfcWind') #,'PVpot')
 OBS='ERA_Interim'
 N_column = 2
@@ -30,7 +30,7 @@ N_row = 21
 N_plot = N_column*N_row
 degree_sign= u'\N{DEGREE SIGN}'
 ### if plot only the obs not bias:
-BIAS=0
+BIAS=1
 #=================================================== test
 ##
 #=================================================== end of test
@@ -39,22 +39,22 @@ BIAS=0
 Season=('DJF','JJA')
 
 OBS_name=(\
-	'ERA_interim',\
-        'NCEP-NCAR',\
 	'CM_SAF',\
         'ISCCP',\
+	'ERA_Interim',\
+        'NCEP-NCAR',\
         )
 Resolution=(\
-	str('0.75*0.75')+degree_sign,\
-        str('1.875*1.875')+degree_sign,\
 	str('0.25*0.25')+degree_sign,\
 	str('2.5*2.5')+degree_sign,\
+	str('0.75*0.75')+degree_sign,\
+        str('1.875*1.875')+degree_sign,\
         )
 VAR=(\
-    'tcc',\
-    'tcdc',\
     'cfc',\
     'cltisccp',\
+    'tcc',\
+    'tcdc',\
     )
 
 Unit=(\
@@ -66,10 +66,10 @@ Unit=(\
 
 
 Temp_cover=(\
-    '1979-2005',\
-    '1979-2005',\
     '1983-2005',\
     '1984-2005',\
+    '1979-2005',\
+    '1979-2005',\
     )
 N_obs=len(OBS_name)
 
@@ -118,31 +118,29 @@ fig.subplots_adjust(hspace=0.2,top=0.90,wspace=0.2)
 # 21 * 4 table: 21 models vs 4 vars
 for S in range(2):
 
-    Reference='ERA_In.clt.mon.mean.1979-2005.SA.'+str(Season[S])+'.timmean.nc'
+    Reference='CFCmm.CM_SAF.CLARA-A2.1983-2005.GL.SA.'+str(Season[S])+'.timmean.nc'
 
     OBSfile=(\
-        'tcdc.eatm.gauss.mon.mean.1979-2005.SA.'+str(Season[S])+'.timmean.nc',\
-        # 'cru_ts4.00.cld.1970-1999.SA.'+str(Season[S])+'.timmean.nc',\
-        'CFCmm.CM_SAF.CLARA-A2.1983-2005.GL.SA.'+str(Season[S])+'.timmean.nc',\
         'cltisccp.monmean.1984-2005.SA.'+str(Season[S])+'.timmean.nc',\
+        'ERA_In.clt.mon.mean.1979-2005.SA.'+str(Season[S])+'.timmean.nc',\
+        'tcdc.eatm.gauss.mon.mean.1979-2005.SA.'+str(Season[S])+'.timmean.nc',\
         )
 
     Ref_remap=(\
-        'ERA_In.clt.mon.mean.1979-2005.SA.'+str(Season[S])+'.timmean.remap.ncep.nc',\
-        'ERA_In.clt.mon.mean.1979-2005.SA.'+str(Season[S])+'.timmean.remap.cru.nc',\
-        'ERA_In.clt.mon.mean.1979-2005.SA.'+str(Season[S])+'.timmean.remap.isccp.nc',\
+        'CFCmm.CM_SAF.CLARA-A2.1983-2005.GL.SA.'+str(Season[S])+'.timmean.remap.isccp.nc',\
+        'CFCmm.CM_SAF.CLARA-A2.1983-2005.GL.SA.'+str(Season[S])+'.timmean.remap.era_in.nc',\
+        'CFCmm.CM_SAF.CLARA-A2.1983-2005.GL.SA.'+str(Season[S])+'.timmean.remap.ncep.nc',\
         )
 
 #=================================================== calculate bias
 
 # Read Ref as CM_saf
     print OBS_Dir+Reference
-    Ref_OBS=np.array(ctang.read_lonlatmap_netcdf(VAR[0],OBS_Dir+Reference)*100)
+    Ref_OBS=np.array(ctang.read_lonlatmap_netcdf(VAR[0],OBS_Dir+Reference))
     print Ref_OBS.shape
 
     lons,lats=ctang.read_lonlat_netcdf_1D(\
         OBS_Dir+Reference)
-
 
     k=0 # column number = N_obs
     plt.sca(axes[S,k]) # active shis subplot for RCM
@@ -159,13 +157,17 @@ for S in range(2):
 
     for i in range(N_obs-1):
         k=k+1
-        Ref_OBS_remap=np.array(ctang.read_lonlatmap_netcdf(VAR[0],OBS_Dir+Ref_remap[i])*100)
+        Ref_OBS_remap=np.array(ctang.read_lonlatmap_netcdf(VAR[0],OBS_Dir+Ref_remap[i]))
 
+
+        print OBS_Dir+OBSfile[i]
         OBS=np.array(ctang.read_lonlatmap_netcdf(VAR[i+1],OBS_Dir+OBSfile[i]))
         print Ref_OBS_remap.shape,OBS.shape
 
-        # mask the missing value > 1000
+        if OBS_name[k] == 'ERA_Interim':
+            OBS=OBS*100
 
+        # mask the missing value > 1000
         OBS[OBS>1000]=np.nan
 
         lonsOBS,latsOBS=ctang.read_lonlat_netcdf_1D(\
@@ -178,7 +180,7 @@ for S in range(2):
 
         ### if plot the bias
         if BIAS==1:
-            PlotMap(OBS-Ref_OBS_remap,lonsOBS,latsOBS,S,k,axx,-55,55,cmap)
+            PlotMap(OBS-Ref_OBS_remap,lonsOBS,latsOBS,S,k,axx,-50,50,cmap)
         else:
             PlotMap(OBS,lonsOBS,latsOBS,S,k,axx,0,100,cmap)
 

@@ -70,9 +70,9 @@ OBSfile=(\
         'SISmm.CDR.mon.mean.198301-200512.SA.yearmean.detrended.masknoooon.timstd.nc')
 
 OBS_remap=(\
-        'SISmm.CDR.mon.mean.198301-200512.SA.timmean.remap.nc',\
-        'SISmm.CDR.mon.mean.198301-200512.SA.monmean.detrended.maskannual.timstd.remap.nc',\
-        'SISmm.CDR.mon.mean.198301-200512.SA.yearmean.detrended.masknoooon.timstd.remap.nc')
+        'SISmm.CDR.mon.mean.198301-200512.SA.timmean.remap.rcm..nc',\
+        'SISmm.CDR.mon.mean.198301-200512.SA.monmean.detrended.maskannual.timstd.remap.rcm..nc',\
+        'SISmm.CDR.mon.mean.198301-200512.SA.yearmean.detrended.masknoooon.timstd.remap.rcm..nc')
 
 filefix=(\
         '.hist_rcp85.day.1983-2005.SA.timmean.nc',\

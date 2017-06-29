@@ -63,7 +63,7 @@ OBS_remap=(\
         'SISmm.CDR.mon.mean.198301-200512.SA.yearmean.detrended.masknoooon.timstd.remap.gcm.nc')
 
 filefix=(\
-        '_historical-rcp85_r1i1p1.1970-2099.nc.1983-2005.SA.timmean.remap.nc',\
+        '_historical-rcp85_r1i1p1.1970-2099.nc.1983-2005.SA.DJF.timmean.remap.nc',\
         '_historical-rcp85_r1i1p1.1970-2099.nc.1983-2005.SA.monmean.detrended.maskannual.timstd.remap.nc',\
         '_historical-rcp85_r1i1p1.1970-2099.nc.1983-2005.SA.yearmean.detrended.masknoooon.timstd.remap.nc')
 

@@ -21,7 +21,7 @@ from mpl_toolkits.basemap import Basemap
 
 # to load my functions
 import sys 
-sys.path.append('/Users/ctang/Code/My_Python_Code/')
+sys.path.append('/Users/ctang/Code/Python/')
 import ctang
 
 #=================================================== Definitions

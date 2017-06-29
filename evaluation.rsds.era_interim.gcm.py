@@ -26,11 +26,11 @@ import Taylor
 import ctang
 
 #=================================================== Definitions
-Data='/Users/ctang/Code/CORDEX_AFR_studies/data/validation_CM_SAF/'
+Data='/Users/ctang/Code/CORDEX_AFR_studies/data/validation_ERA_Interim/'
 OBS_Dir='/Users/ctang/Code/CORDEX_AFR_studies/data/OBS/'
 N_model = 10
 VAR ='rsds' # ,'tas','sfcWind') #,'PVpot')
-OBSvar = 'SIS'
+OBSvar = 'ssrd'
 N_column = 4
 N_row = 3
 N_plot = N_column*N_row
@@ -53,19 +53,19 @@ GCM_Model=(\
 # 21 * 4 table: 21 models vs 4 vars
 
 OBSfile=(\
-        'SISmm.CDR.mon.mean.198301-200512.SA.timmean.nc',\
-        'SISmm.CDR.mon.mean.198301-200512.SA.monmean.detrended.maskannual.timstd.nc',\
-        'SISmm.CDR.mon.mean.198301-200512.SA.yearmean.detrended.masknoooon.timstd.nc')
+        'ERA_In.ssrd.mon.mean.1979-2005.SA.timmean.nc',\
+        'ERA_In.ssrd.mon.mean.1979-2005.SA.monmean.detrend.maskannual.timstd.nc',\
+        'ERA_In.ssrd.mon.mean.1979-2005.SA.yearmean.detrend.masknoooon.timstd.nc')
 
 OBS_remap=(\
-        'SISmm.CDR.mon.mean.198301-200512.SA.timmean.remap.gcm.nc',\
-        'SISmm.CDR.mon.mean.198301-200512.SA.monmean.detrended.maskannual.timstd.remap.gcm.nc',\
-        'SISmm.CDR.mon.mean.198301-200512.SA.yearmean.detrended.masknoooon.timstd.remap.gcm.nc')
+        'ERA_In.ssrd.mon.mean.1979-2005.SA.timmean.remap.gcm.nc',\
+        'ERA_In.ssrd.mon.mean.1979-2005.SA.monmean.detrend.maskannual.timstd.remap.gcm.nc',\
+        'ERA_In.ssrd.mon.mean.1979-2005.SA.yearmean.detrend.masknoooon.timstd.remap.gcm.nc')
 
 filefix=(\
-        '_historical-rcp85_r1i1p1.1970-2099.nc.1983-2005.SA.timmean.remap.nc',\
-        '_historical-rcp85_r1i1p1.1970-2099.nc.1983-2005.SA.monmean.detrended.maskannual.timstd.remap.nc',\
-        '_historical-rcp85_r1i1p1.1970-2099.nc.1983-2005.SA.yearmean.detrended.masknoooon.timstd.remap.nc')
+        '_historical-rcp85_r1i1p1.1979-2005.SA.timmean.remap.nc',\
+        '_historical-rcp85_r1i1p1.1979-2005.SA.monmean.detrended.maskannual.timstd.remap.nc',\
+        '_historical-rcp85_r1i1p1.1979-2005.SA.yearmean.detrended.masknoooon.timstd.remap.nc')
 
 # Read lon,lat for model
 lons,lats=ctang.read_lonlat_netcdf_1D(\
@@ -73,7 +73,6 @@ lons,lats=ctang.read_lonlat_netcdf_1D(\
 
 # Read lon,lat for OBS Plot the remap OBS, because time variability cannot be normalised by GCM in low resolution
 
-lonsOBS,latsOBS=ctang.read_lonlat_netcdf_1D(OBS_Dir+OBS_remap[0])
 lonsOBS,latsOBS=ctang.read_lonlat_netcdf_1D(OBS_Dir+OBSfile[0])
 
 
@@ -100,17 +99,17 @@ annualstd_OBS_remap=np.array(ctang.read_lonlatmap_netcdf(OBSvar, OBS_Dir+OBS_rem
 
 #=================================================== cal
 # remove the missing points
-timmean_OBS[timmean_OBS > 100055] = np.nan
-monstd_OBS[monstd_OBS > 100000] = np.nan
-annualstd_OBS[annualstd_OBS > 100000] = np.nan
+timmean_OBS[timmean_OBS < -100] = np.nan
+monstd_OBS[monstd_OBS < -100] = np.nan
+annualstd_OBS[annualstd_OBS < -100] = np.nan
 
-timmean_OBS_remap[timmean_OBS_remap > 100055] = np.nan
-monstd_OBS_remap[monstd_OBS_remap > 100000] = np.nan
-annualstd_OBS_remap[annualstd_OBS_remap > 100000] = np.nan
+timmean_OBS_remap[timmean_OBS_remap < -100] = np.nan
+monstd_OBS_remap[monstd_OBS_remap < -100] = np.nan
+annualstd_OBS_remap[annualstd_OBS_remap < -100] = np.nan
 
-timmean_CMIP5[timmean_CMIP5 > 1000] = np.nan
-monstd_CMIP5[monstd_CMIP5 > 1000] = np.nan
-annualstd_CMIP5[annualstd_CMIP5 > 1000] = np.nan
+timmean_CMIP5[timmean_CMIP5 > 100055] = np.nan
+monstd_CMIP5[monstd_CMIP5 > 100000] = np.nan
+annualstd_CMIP5[annualstd_CMIP5 > 100000] = np.nan
 
 # Ensmean of CMIP5 
 Ensmean_timmean_CMIP5=np.mean(timmean_CMIP5,axis=0)
@@ -171,8 +170,8 @@ print RefStd
 print SAMPLE[0]
 #=================================================== end of cal
 #=================================================== plot
-Title='Evaluation of the simulated SSR in the historical period 1983-2005'
-TTT1=('CMIP5','CM_SAF','Bias','Taylor diagram')
+Title='Evaluation of the simulated SSR vs ERA_Interim in the historical period 1983-2005'
+TTT1=('CMIP5','ERA_Interim','Bias','Taylor diagram')
 TTT0=('Mean', 'Monthly variability', 'Annual variability')
 #=================================================== 
 Unit=(\
@@ -250,7 +249,8 @@ for m in range(N_row):
 plt.suptitle(Title)
 
 #plt.savefig('evaluation.eps',format='eps')
-plt.savefig('evaluation.rsds.cm_saf.gcm.png')
+plt.savefig('evaluation.rsds.era_interim.gcm.png')
+
 plt.show()
 
 quit()

@@ -168,6 +168,7 @@ TTT=(('Mean RSDS changes RCP8.5 ', 'PVpot changes RCP8.5 '))
 #--------------------------------------------------- 
 def PlotMap(array2D,lons,lats,axx,vmin,vmax):
     cmap = plt.cm.jet
+    cmap = plt.cm.seismic
     cmaplist = [cmap(i) for i in range(cmap.N)]
     bounds = np.linspace(vmin,vmax,9)
     norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
@@ -199,7 +200,7 @@ plt.sca(axes[1]) # active shis subplot for GCM
 ax=axes[1]
 PlotMap(Ensmean_change_ttest,lons,lats,ax,-10,10)
 
-plt.suptitle('11 CMPI5 models mean changes of SSR (%)',fontsize=14)
+plt.suptitle('11 CMPI5 mean changes of SSR (%)',fontsize=14)
 
 print output+'.eps'
 plt.savefig(output+'.eps',format='eps')

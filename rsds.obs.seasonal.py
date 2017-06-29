@@ -30,7 +30,7 @@ N_row = 21
 N_plot = N_column*N_row
 degree_sign= u'\N{DEGREE SIGN}'
 ### if plot only the obs not bias:
-BIAS=0
+BIAS=1
 #=================================================== test
 ##
 #=================================================== end of test
@@ -41,7 +41,7 @@ Season=('DJF','JJA')
 OBS_name=(\
 	'CM_SAF',\
 	'SRB',\
-	'ERA_interim',\
+	'ERA_Interim',\
         'NCEP-NCAR',\
         )
 Resolution=(\
@@ -77,7 +77,7 @@ N_obs=len(OBS_name)
 
 def PlotMap(array2D,lons,lats,m,k,axx,vmin,vmax,cmap):
     cmaplist = [cmap(i) for i in range(cmap.N)]
-    bounds = np.linspace(vmin,vmax,11)
+    bounds = np.linspace(vmin,vmax,21)
     norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
 
     map=Basemap(projection='cyl',llcrnrlat=lats[:,0].min(),urcrnrlat=lats[:,0].max(),\
@@ -173,7 +173,7 @@ for S in range(2):
 
         ### if plot the bias
         if BIAS==1:
-            PlotMap(OBS-Ref_OBS_remap,lonsOBS,latsOBS,S,k,axx,-75,75,cmap)
+            PlotMap(OBS-Ref_OBS_remap,lonsOBS,latsOBS,S,k,axx,-100,100,cmap)
         else:
             PlotMap(OBS,lonsOBS,latsOBS,S,k,axx,60,360,cmap)
 

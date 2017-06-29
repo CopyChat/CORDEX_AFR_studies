@@ -21,7 +21,7 @@ import textwrap
 
 # to load my functions
 import sys 
-sys.path.append('/Users/ctang/Code/My_Python_Code/')
+sys.path.append('/Users/ctang/Code/Python/')
 import Taylor
 import ctang
 

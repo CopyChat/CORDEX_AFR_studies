@@ -28,38 +28,43 @@ import ctang
 Data='/Users/ctang/Code/CORDEX_AFR_studies/data/validation_CM_SAF/'
 OBS_Dir='/Users/ctang/Code/CORDEX_AFR_studies/data/OBS/'
 N_model = 21
-VAR ='rsds' # ,'tas','sfcWind') #,'PVpot')
-OBSvar = 'SIS'
+VAR ='clt' # ,'tas','sfcWind') #,'PVpot')
+OBS='CM_SAF'
+OBSvar = 'cfc'
 N_column = 2
 N_row = 21
 N_plot = N_column*N_row
+Season='DJF'
+# Season='JJA'
 #=================================================== test
 ##
 #=================================================== end of test
 # use CanESM2 instead of all not avail model:
 RCM_name=(\
-	'RCA4_v1',\
-	'RCA4_v1',\
-	'RCA4_v1',\
-	'RCA4_v1',\
-	'RCA4_v1',\
-	'RCA4_v1',\
-	'RCA4_v1',\
-	'RCA4_v1',\
-	'RCA4_v1',\
-	'RCA4_v1',\
+	'RCA4',\
+	'RCA4',\
+	'RCA4',\
+	'RCA4',\
+	'RCA4',\
+	'RCA4',\
+	'RCA4',\
+	'RCA4',\
+	'RCA4',\
+	'RCA4',\
         \
-	'CCLM4-8-17_v1',\
-	'CCLM4-8-17_v1',\
-	'CCLM4-8-17_v1',\
-	'CCLM4-8-17_v1',\
-	'HIRHAM5_v2',\
-	'HIRHAM5_v2',\
-	'RACMO22T_v1',\
-	'RACMO22T_v1',\
-	'REMO2009_v1',\
-	'REMO2009_v1',\
-	'REMO2009_v1')
+	'CCLM4',\
+	'CCLM4',\
+	'CCLM4',\
+	'CCLM4',\
+	'HIRHAM5',\
+	'HIRHAM5',\
+	'RACMO22T',\
+	'RACMO22T',\
+	'REMO2009',\
+	'REMO2009',\
+	'REMO2009',\
+	# '21RCMs',\
+        )
 RCM_Model=(\
 	'CCCma-CanESM2_SMHI-RCA4_v1',\
 	'CNRM-CERFACS-CNRM-CM5_SMHI-RCA4_v1',\
@@ -82,7 +87,10 @@ RCM_Model=(\
 	'MOHC-HadGEM2-ES_KNMI-RACMO22T_v2',\
 	'ICHEC-EC-EARTH_MPI-CSC-REMO2009_v1',\
 	'IPSL-IPSL-CM5A-LR_GERICS-REMO2009_v1',\
-	'MPI-M-MPI-ESM-LR_MPI-CSC-REMO2009_v1')
+	'MPI-M-MPI-ESM-LR_MPI-CSC-REMO2009_v1',\
+        
+	# 'CORDEX-ENSEMBLE_21RCMs',\
+        )
 
 GCM_name=(\
 	'CanESM2',\
@@ -106,36 +114,42 @@ GCM_name=(\
 	'HadGEM2-ES',\
 	'EC-EARTH',\
 	'IPSL-CM5A-LR',\
-	'M-MPI-ESM-LR')
-
+	'M-MPI-ESM-LR',\
+        
+	# 'CORDEX-ENSEMBLE',\
+        )
 #=================================================== reading data
 # 21 * 4 table: 21 models vs 4 vars
 
 OBSfile=(\
-        'SISmm.CDR.mon.mean.198301-200512.SA.timmean.nc',\
-        'SISmm.CDR.mon.mean.198301-200512.SA.monmean.detrended.maskannual.timstd.nc',\
-        'SISmm.CDR.mon.mean.198301-200512.SA.yearmean.detrended.masknoooon.timstd.nc')
+        'CFCmm.CM_SAF.CLARA-A2.1983-2005.GL.SA.JJA.timmean.nc',\
+        'SISmm.CDR.mon.mean.197901-200512.SA.monmean.detrended.maskannual.timstd.remap.gcm.nc',\
+        'SISmm.CDR.mon.mean.197901-200512.SA.yearmean.detrended.masknoooon.timstd.remap.gcm.nc')
 
 OBS_remap=(\
-        'SISmm.CDR.mon.mean.198301-200512.SA.timmean.remap.rcm.nc',\
-        'SISmm.CDR.mon.mean.198301-200512.SA.monmean.detrended.maskannual.timstd.remap.rcm.nc',\
-        'SISmm.CDR.mon.mean.198301-200512.SA.yearmean.detrended.masknoooon.timstd.remap.rcm.nc')
+        'CFCmm.CM_SAF.CLARA-A2.1983-2005.GL.SA.'+str(Season)+'.timmean.remap.rcm.nc',\
+        'SISmm.CDR.mon.mean.197901-200512.SA.monmean.detrended.maskannual.timstd.remap.gcm.nc',\
+        'SISmm.CDR.mon.mean.197901-200512.SA.yearmean.detrended.masknoooon.timstd.remap.gcm.nc')
 
 filefix=(\
-        '.hist_rcp85.day.1983-2005.SA.timmean.nc',\
-        '.hist_rcp85.day.1983-2005.SA.monmean.detrended.maskannual.timstd.nc',\
-        '.hist_rcp85.day.1983-2005.SA.yearmean.detrended.masknoooon.timstd.nc')
+        '.hist_rcp85.day.1983-2005.SA.'+str(Season)+'.timmean.nc',\
+        '_historical-rcp85_r1i1p1.1970-2099.nc.1979-2005.SA.monmean.detrended.maskannual.timstd.remap.nc',\
+        '_historical-rcp85_r1i1p1.1970-2099.nc.1979-2005.SA.yearmean.detrended.masknoooon.timstd.remap.nc')
+
+
 
 # Read lon,lat for model
 lons,lats=ctang.read_lonlat_netcdf(\
         Data+VAR+'_AFR-44_'+RCM_Model[1]+filefix[0])
-
+# lons=np.array([ctang.read_lon_netcdf_1D(\
+        # Data+VAR+'_AFR-44_'+RCM_Model[i]+filefix[0])\
+        # for i in range(N_model)])
+# lats=np.array([ctang.read_lat_netcdf_1D(\
+        # Data+VAR+'_AFR-44_'+RCM_Model[i]+filefix[0])\
+        # for i in range(N_model)])
 
 # Read lon,lat for OBS Plot the remap OBS, because time variability cannot be normalised by RCM in low resolution
-
 lonsOBS,latsOBS=ctang.read_lonlat_netcdf(OBS_Dir+OBS_remap[0])
-
-
 
 # Read Ensmean of timmean for CORDEX & OBS
 timmean_CORDEX=np.array([ctang.read_lonlatmap_netcdf(VAR,\
@@ -145,55 +159,18 @@ timmean_OBS=np.array(ctang.read_lonlatmap_netcdf(OBSvar, OBS_Dir+OBSfile[0]))
 timmean_OBS_remap=np.array(ctang.read_lonlatmap_netcdf(OBSvar, OBS_Dir+OBS_remap[0]))
 
 print timmean_OBS_remap
-#=================================================== reading data
-# 21 * 4 table: 21 models vs 4 vars
-
-OBSfile=(\
-        'SISmm.CDR.mon.mean.198301-200512.SA.timmean.nc',\
-        'SISmm.CDR.mon.mean.198301-200512.SA.monmean.detrended.maskannual.timstd.nc',\
-        'SISmm.CDR.mon.mean.198301-200512.SA.yearmean.detrended.masknoooon.timstd.nc')
-
-OBS_remap=(\
-        'SISmm.CDR.mon.mean.198301-200512.SA.timmean.remap.rcm.nc',\
-        'SISmm.CDR.mon.mean.198301-200512.SA.monmean.detrended.maskannual.timstd.remap.rcm.nc',\
-        'SISmm.CDR.mon.mean.198301-200512.SA.yearmean.detrended.masknoooon.timstd.remap.rcm.nc')
-
-filefix=(\
-        '.hist_rcp85.day.1983-2005.SA.timmean.nc',\
-        '.hist_rcp85.day.1983-2005.SA.monmean.detrended.maskannual.timstd.nc',\
-        '.hist_rcp85.day.1983-2005.SA.yearmean.detrended.masknoooon.timstd.nc')
-
-# Read lon,lat for model
-lons,lats=ctang.read_lonlat_netcdf(\
-        Data+VAR+'_AFR-44_'+RCM_Model[1]+filefix[0])
-
-# Read lon,lat for OBS Plot the remap OBS, because time variability cannot be normalised by RCM in low resolution
-
-lonsOBS,latsOBS=ctang.read_lonlat_netcdf(OBS_Dir+OBS_remap[0])
-
-
-# Read Ensmean of timmean for CMIP5 & OBS
-timmean_CMIP5=np.array([ctang.read_lonlatmap_netcdf(VAR,\
-        Data+VAR+'_AFR-44_'+RCM_Model[i]+filefix[0])\
-        for i in range(N_model)])
-timmean_OBS=np.array(ctang.read_lonlatmap_netcdf(OBSvar, OBS_Dir+OBSfile[0]))
-timmean_OBS_remap=np.array(ctang.read_lonlatmap_netcdf(OBSvar, OBS_Dir+OBS_remap[0]))
-
-print timmean_OBS_remap
-
-
-Bias=np.array([timmean_CMIP5[i]-timmean_OBS_remap for i in range(N_model)])
+Bias=np.array([timmean_CORDEX[i]-timmean_OBS_remap for i in range(N_model)])
 print Bias.shape
 
 print timmean_OBS_remap.shape
-print timmean_CMIP5.shape
+print timmean_CORDEX.shape
 
 #=================================================== plot
-Title='Evaluation of the simulated SSR in the historical period 1983-2005'
+Title='Evaluation of the simulated '+str(VAR)+' in the historical period 1979-2005'
 #=================================================== 
-Unit=( '(W/m2)','(W/m2)','(W/m2)')
+Unit=( '(%)','(%)','(%)')
 #=================================================== 
-TITLE2=('','bias vs CM_SAF')
+TITLE2=('',' - '+str(OBS))
 def PlotMap(array2D,lons,lats,m,k,axx,vmin,vmax,cmap):
     # cmap = plt.cm.jet
     # cmap = plt.cm.seismic
@@ -217,14 +194,21 @@ def PlotMap(array2D,lons,lats,m,k,axx,vmin,vmax,cmap):
     cb=plt.colorbar(cmap=plt.cm.jet,orientation='horizontal',shrink=0.7) 
     cb.ax.tick_params(['{:.0f}'.format(x) for x in bounds ],labelsize=6) 
     #cbar.ax.set_yticklabels(['{:.0f}'.format(x) for x in np.arange(cbar_min, cbar_max+cbar_step, cbar_step)], fontsize=16, weight='bold')
+    
+    axx.text(0.9, 0.9,str(Season), ha='center', va='center', transform=axx.transAxes)
+
 #=================================================== 
 #=================================================== ploting
 fig, axes = plt.subplots(nrows=N_row, ncols=N_column,\
         # sharex=True, sharey=True,\
-        figsize=(6, 35),facecolor='w', edgecolor='k') # figsize=(w,h)
-fig.subplots_adjust(hspace=0.3,top=0.96,wspace=0)
+        figsize=(9, 80),facecolor='w', edgecolor='k') # figsize=(w,h)
+fig.subplots_adjust(hspace=0.2,top=0.96,wspace=0)
 #=================================================== 
-LIMIT=np.array([ [120,300],[-75,75]])
+LIMIT=np.array([ [0,100],[-50,50]])
+# LIMIT=np.array([\
+        # [[10,80],[10,80],[-25,25]],\
+        # [[0,15],[0,15],[-10,10]],\
+        # [[0,5],[0,5],[-5,5]]])
 
 for m in range(N_row):
     if m == 0:
@@ -234,7 +218,7 @@ for m in range(N_row):
             axx=axes[m,k]
             if k == 0:
                 cmap = plt.cm.jet
-                PlotMap(timmean_CMIP5[m],lons,lats,m,k,axx,LIMIT[k][0],LIMIT[k][1],cmap)
+                PlotMap(timmean_CORDEX[m],lons,lats,m,k,axx,LIMIT[k][0],LIMIT[k][1],cmap)
             if k == 1:
                 cmap = plt.cm.seismic
                 PlotMap(Bias[m],lons,lats,m,k,axx,LIMIT[k][0],LIMIT[k][1],cmap)
@@ -249,7 +233,7 @@ for m in range(N_row):
                 axx=axes[m,k]
                 if k == 0:
                     cmap = plt.cm.jet
-                    PlotMap(timmean_CMIP5[m],lons,lats,m,k,axx,LIMIT[k][0],LIMIT[k][1],cmap)
+                    PlotMap(timmean_CORDEX[m],lons,lats,m,k,axx,LIMIT[k][0],LIMIT[k][1],cmap)
                 if k == 1:
                     cmap = plt.cm.seismic
                     PlotMap(Bias[m],lons,lats,m,k,axx,LIMIT[k][0],LIMIT[k][1],cmap)
@@ -261,8 +245,9 @@ for m in range(N_row):
 
 plt.suptitle(Title)
 
-#plt.savefig('evaluation.eps',format='eps')
-plt.savefig('evaluation.rsds.cm_saf.by_model.rcm.png')
+OutputImage='evaluation.'+str(VAR)+'.'+str(OBS)+'.by_model.rcm.'+str(Season)
+#plt.savefig(OutputImage+'.eps',format='eps')
+plt.savefig(OutputImage+'.png')
 plt.show()
 
 quit()

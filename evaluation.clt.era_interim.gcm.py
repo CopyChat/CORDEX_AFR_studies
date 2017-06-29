@@ -184,7 +184,7 @@ print SAMPLE[2]
 #=================================================== end of cal
 #=================================================== plot
 Title='Evaluation of the simulated CLT vs ERA_Interim in the historical period 1979-2005'
-TTT1=('Climatology','OBS(ERA_Interim','Bias','Taylor diagram')
+TTT1=('CMIP5','ERA_Interim','CMIP5 - ERA_Interim','Taylor diagram')
 TTT0=('Mean', 'Monthly variability', 'Annual variability')
 #=================================================== 
 Unit=(\

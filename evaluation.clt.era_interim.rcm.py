@@ -253,13 +253,13 @@ def PlotMap(array2D,lons,lats,m,k,axx,vmin,vmax):
     axx.yaxis.set_visible(False)
 
     plt.title('CLT '+TTT0[m]+' '+TTT1[k]+' '+Unit[m][k],fontsize= 8)
-    cb=plt.colorbar(cmap=plt.cm.jet,orientation='horizontal',shrink=1) 
+    cb=plt.colorbar(cmap=plt.cm.jet,orientation='horizontal',shrink=0.8) 
     cb.ax.tick_params(['{:.0f}'.format(x) for x in bounds ],labelsize=7) 
     #cbar.ax.set_yticklabels(['{:.0f}'.format(x) for x in np.arange(cbar_min, cbar_max+cbar_step, cbar_step)], fontsize=16, weight='bold')
 #=================================================== 
 #=================================================== ploting
 fig, axes = plt.subplots(nrows=N_row, ncols=N_column,\
-        figsize=(30, 16),facecolor='w', edgecolor='k') # figsize=(w,h)
+        figsize=(60, 32),facecolor='w', edgecolor='k') # figsize=(w,h)
 #fig.subplots_adjust(hspace=0.35,top=0.96,wspace=0.3)
 #=================================================== 
 
