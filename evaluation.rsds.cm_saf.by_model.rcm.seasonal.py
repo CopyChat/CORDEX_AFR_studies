@@ -25,15 +25,15 @@ import Taylor
 import ctang
 
 #=================================================== Definitions
-Data='/Users/ctang/Code/CORDEX_AFR_studies/data/validation_CM_SAF/'
-OBS_Dir='/Users/ctang/Code/CORDEX_AFR_studies/data/OBS/'
-N_model = 22
+Data='/Users/ctang/Code/CORDEX_AFR_studies/data/validation_SARAH_2/'
+OBS_Dir='/Users/ctang/Code/CORDEX_AFR_studies/data/OBS/validation_SARAH-2/'
 VAR ='rsds' # ,'tas','sfcWind') #,'PVpot')
-OBS='CM SAF'
+OBS='SARAH-2'
 OBSvar = 'SIS'
 N_column = 2
 N_row = 22
 N_plot = N_column*N_row
+Season='DJF'
 Season='JJA'
 #=================================================== test
 ##
@@ -90,83 +90,149 @@ RCM_Model=(\
         
 	'CORDEX-ENSEMBLE_21RCMs',\
         )
-
-GCM_name=(\
-	'CanESM2',\
-	'CNRM-CM5',\
-	'CSIRO-Mk3-6-0',\
-	'EC-EARTH',\
-	'IPSL-CM5A-MR',\
-	'MIROC5',\
-	'HadGEM2-ES',\
-	'MPI-ESM-LR',\
-	'NorESM1-M',\
-	'GFDL-ESM2M',\
-        \
-	'CNRM-CM5',\
-	'EC-EARTH',\
-	'HadGEM2-ES',\
-	'MPI-ESM-LR',\
-	'EC-EARTH',\
-	'NorESM1-M',\
-	'EC-EARTH',\
-	'HadGEM2-ES',\
-	'EC-EARTH',\
-	'IPSL-CM5A-LR',\
-	'M-MPI-ESM-LR',\
-        
-	'CORDEX-ENSEMBLE',\
+RCM_name=(\
+        # evaluation:
+        'ERAINT-CCLM4',\
+        'ERAINT-HIRHAM5',\
+        'ERAINT-RACMO22T',\
+        'ERAINT-REMO2009',\
+        'ERAINT-RCA4',\
+        # RCM:
+        'CanESM2-RCA4',\
+        'CNRM-CM5-CCLM4',\
+        'CNRM-CM5-RCA4',\
+        'CSIRO-Mk3-6-0-RCA4',\
+        'EC-EARTH-CCLM4',\
+        'EC-EARTH-HIRHAM5',\
+        'EC-EARTH-RACMO22T',\
+        'EC-EARTH-REMO2009',\
+        'EC-EARTH-RCA4',\
+        'IPSL-CM5A-LR-REMO2009',\
+        'IPSL-CM5A-MR-RCA4',\
+        'MIROC5-RCA4',\
+        'HadGEM2-ES-CCLM4',\
+        'HadGEM2-ES-RACMO22T',\
+        'HadGEM2-ES-RCA4',\
+        'MPI-ESM-LR-CCLM4',\
+        'MPI-ESM-LR-REMO2009',\
+        'MPI-ESM-LR-RCA4',\
+        'NorESM1-M-HIRHAM5',\
+        'NorESM1-M-RCA4',\
+        'GFDL-ESM2M-RCA4',\
         )
+
+RCM_Model=(\
+        # 'ERA_In.ssrd.mon.mean.1990-2005.SA.JJA.timmean.nc',\
+        'rsds_AFR-44_ECMWF-ERAINT_evaluation_r1i1p1_CLMcom-CCLM4-8-17_v1_mon_198901-200812.1990-2005.SA.'+str(Season)+'.timmean.nc',\
+        'rsds_AFR-44_ECMWF-ERAINT_evaluation_r1i1p1_DMI-HIRHAM5_v2_mon_198901-201012.1990-2005.SA.'+str(Season)+'.timmean.nc',\
+        'rsds_AFR-44_ECMWF-ERAINT_evaluation_r1i1p1_KNMI-RACMO22T_v1_mon_197901-201212.1990-2005.SA.'+str(Season)+'.timmean.nc',\
+        'rsds_AFR-44_ECMWF-ERAINT_evaluation_r1i1p1_MPI-CSC-REMO2009_v1_mon_198902-201012.1990-2005.SA.'+str(Season)+'.timmean.nc',\
+        'rsds_AFR-44_ECMWF-ERAINT_evaluation_r1i1p1_SMHI-RCA4_v1_mon_198001-201012.1990-2005.SA.'+str(Season)+'.timmean.nc',\
+        # RCM:
+        'rsds_AFR-44_CCCma-CanESM2_SMHI-RCA4_v1.hist_rcp85.day.1990-2005.SA.'+str(Season)+'.timmean.nc',\
+        'rsds_AFR-44_CNRM-CERFACS-CNRM-CM5_CLMcom-CCLM4-8-17_v1.hist_rcp85.day.1990-2005.SA.'+str(Season)+'.timmean.nc',\
+        'rsds_AFR-44_CNRM-CERFACS-CNRM-CM5_SMHI-RCA4_v1.hist_rcp85.day.1990-2005.SA.'+str(Season)+'.timmean.nc',\
+        'rsds_AFR-44_CSIRO-QCCCE-CSIRO-Mk3-6-0_SMHI-RCA4_v1.hist_rcp85.day.1990-2005.SA.'+str(Season)+'.timmean.nc',\
+        'rsds_AFR-44_ECMWF-ERAINT_evaluation_r1i1p1_CLMcom-CCLM4-8-17_v1_mon_198901-200812.1990-2005.SA.'+str(Season)+'.timmean.nc',\
+        'rsds_AFR-44_ECMWF-ERAINT_evaluation_r1i1p1_DMI-HIRHAM5_v2_mon_198901-201012.1990-2005.SA.'+str(Season)+'.timmean.nc',\
+        'rsds_AFR-44_ECMWF-ERAINT_evaluation_r1i1p1_KNMI-RACMO22T_v1_mon_197901-201212.1990-2005.SA.'+str(Season)+'.timmean.nc',\
+        'rsds_AFR-44_ECMWF-ERAINT_evaluation_r1i1p1_MPI-CSC-REMO2009_v1_mon_198902-201012.1990-2005.SA.'+str(Season)+'.timmean.nc',\
+        'rsds_AFR-44_ECMWF-ERAINT_evaluation_r1i1p1_SMHI-RCA4_v1_mon_198001-201012.1990-2005.SA.'+str(Season)+'.timmean.nc',\
+        'rsds_AFR-44_ECMWF-ERAINT_evaluation_r1i1p1_UQAM-CRCM5_v1_mon_197901-201212.1990-2005.SA.'+str(Season)+'.timmean.nc',\
+        'rsds_AFR-44_ICHEC-EC-EARTH_CLMcom-CCLM4-8-17_v1.hist_rcp85.day.1990-2005.SA.'+str(Season)+'.timmean.nc',\
+        'rsds_AFR-44_ICHEC-EC-EARTH_DMI-HIRHAM5_v2.hist_rcp85.day.1990-2005.SA.'+str(Season)+'.timmean.nc',\
+        'rsds_AFR-44_ICHEC-EC-EARTH_KNMI-RACMO22T_v1.hist_rcp85.day.1990-2005.SA.'+str(Season)+'.timmean.nc',\
+        'rsds_AFR-44_ICHEC-EC-EARTH_MPI-CSC-REMO2009_v1.hist_rcp85.day.1990-2005.SA.'+str(Season)+'.timmean.nc',\
+        'rsds_AFR-44_ICHEC-EC-EARTH_SMHI-RCA4_v1.hist_rcp85.day.1990-2005.SA.'+str(Season)+'.timmean.nc',\
+        'rsds_AFR-44_IPSL-IPSL-CM5A-LR_GERICS-REMO2009_v1.hist_rcp85.day.1990-2005.SA.'+str(Season)+'.timmean.nc',\
+        'rsds_AFR-44_IPSL-IPSL-CM5A-MR_SMHI-RCA4_v1.hist_rcp85.day.1990-2005.SA.'+str(Season)+'.timmean.nc',\
+        'rsds_AFR-44_MIROC-MIROC5_SMHI-RCA4_v1.hist_rcp85.day.1990-2005.SA.'+str(Season)+'.timmean.nc',\
+        'rsds_AFR-44_MOHC-HadGEM2-ES_CLMcom-CCLM4-8-17_v1.hist_rcp85.day.1990-2005.SA.'+str(Season)+'.timmean.nc',\
+        'rsds_AFR-44_MOHC-HadGEM2-ES_KNMI-RACMO22T_v2.hist_rcp85.day.1990-2005.SA.'+str(Season)+'.timmean.nc',\
+        'rsds_AFR-44_MOHC-HadGEM2-ES_SMHI-RCA4_v1.hist_rcp85.day.1990-2005.SA.'+str(Season)+'.timmean.nc',\
+        'rsds_AFR-44_MPI-M-MPI-ESM-LR_CLMcom-CCLM4-8-17_v1.hist_rcp85.day.1990-2005.SA.'+str(Season)+'.timmean.nc',\
+        'rsds_AFR-44_MPI-M-MPI-ESM-LR_MPI-CSC-REMO2009_v1.hist_rcp85.day.1990-2005.SA.'+str(Season)+'.timmean.nc',\
+        'rsds_AFR-44_MPI-M-MPI-ESM-LR_SMHI-RCA4_v1.hist_rcp85.day.1990-2005.SA.'+str(Season)+'.timmean.nc',\
+        'rsds_AFR-44_NCC-NorESM1-M_DMI-HIRHAM5_v1.hist_rcp85.day.1990-2005.SA.'+str(Season)+'.timmean.nc',\
+        'rsds_AFR-44_NCC-NorESM1-M_SMHI-RCA4_v1.hist_rcp85.day.1990-2005.SA.'+str(Season)+'.timmean.nc',\
+        'rsds_AFR-44_NOAA-GFDL-GFDL-ESM2M_SMHI-RCA4_v1.hist_rcp85.day.1990-2005.SA.'+str(Season)+'.timmean.nc',\
+        )
+
+
+OBS_remap='SISmm.SARAH-2.1990-2005.SA.'+str(Season)+'.timmean.remap.rcm.nc'
+
 
 #=================================================== reading data
 # 21 * 4 table: 21 models vs 4 vars
 
-OBSfile=(\
-        'SISmm.CDR.mon.mean.198301-200512.SA.timmean.remap.rcm.nc',\
-        'SISmm.CDR.mon.mean.197901-200512.SA.monmean.detrended.maskannual.timstd.remap.gcm.nc',\
-        'SISmm.CDR.mon.mean.197901-200512.SA.yearmean.detrended.masknoooon.timstd.remap.gcm.nc')
-
-OBS_remap=(\
-        'SISmm.CDR.mon.mean.198301-200512.SA.'+str(Season)+'.timmean.remap.rcm.nc',\
-        'SISmm.CDR.mon.mean.197901-200512.SA.monmean.detrended.maskannual.timstd.remap.gcm.nc',\
-        'SISmm.CDR.mon.mean.197901-200512.SA.yearmean.detrended.masknoooon.timstd.remap.gcm.nc')
-
-filefix=(\
-        '.hist_rcp85.day.1983-2005.SA.'+str(Season)+'.timmean.nc',\
-        '_historical-rcp85_r1i1p1.1970-2099.nc.1979-2005.SA.monmean.detrended.maskannual.timstd.remap.nc',\
-        '_historical-rcp85_r1i1p1.1970-2099.nc.1979-2005.SA.yearmean.detrended.masknoooon.timstd.remap.nc')
+OBSfile='SISmm.SARAH-2.1990-2005.SA.'+str(Season)+'.timmean.remap.rcm.nc'
 
 
+
+print Data+RCM_Model[0]
+
+N_model = len(RCM_Model)
+#=================================================== 
 
 # Read lon,lat for model
-lons,lats=ctang.read_lonlat_netcdf(\
-        Data+VAR+'_AFR-44_'+RCM_Model[1]+filefix[0])
-# lons=np.array([ctang.read_lon_netcdf_1D(\
-        # Data+VAR+'_AFR-44_'+RCM_Model[i]+filefix[0])\
-        # for i in range(N_model)])
-# lats=np.array([ctang.read_lat_netcdf_1D(\
-        # Data+VAR+'_AFR-44_'+RCM_Model[i]+filefix[0])\
-        # for i in range(N_model)])
+lons,lats=ctang.read_lonlat_netcdf(Data+RCM_Model[0])
 
 # Read lon,lat for OBS Plot the remap OBS, because time variability cannot be normalised by RCM in low resolution
-lonsOBS,latsOBS=ctang.read_lonlat_netcdf(OBS_Dir+OBS_remap[0])
+lonsOBS,latsOBS=ctang.read_lonlat_netcdf(OBS_Dir+OBS_remap)
 
 # Read Ensmean of timmean for CORDEX & OBS
 timmean_CORDEX=np.array([ctang.read_lonlatmap_netcdf(VAR,\
-        Data+VAR+'_AFR-44_'+RCM_Model[i]+filefix[0])\
-        for i in range(N_model)])
-timmean_OBS=np.array(ctang.read_lonlatmap_netcdf(OBSvar, OBS_Dir+OBSfile[0]))
-timmean_OBS_remap=np.array(ctang.read_lonlatmap_netcdf(OBSvar, OBS_Dir+OBS_remap[0]))
+        Data+RCM_Model[i]) for i in range(N_model)])
+timmean_OBS=np.array(ctang.read_lonlatmap_netcdf(OBSvar, OBS_Dir+OBSfile))
+timmean_OBS_remap=np.array(ctang.read_lonlatmap_netcdf(OBSvar, OBS_Dir+OBS_remap))
+
+# remove missing values in SARAH-2: -999.0
+timmean_OBS_remap[timmean_OBS_remap == -999] = np.NAN
 
 print timmean_OBS_remap
 Bias=np.array([timmean_CORDEX[i]-timmean_OBS_remap for i in range(N_model)])
 print Bias.shape
 
+
+# statistic values:
+
+OBS_remap_1d=timmean_OBS_remap.ravel()
+
+MeanBias=np.array([np.nanmean(timmean_CORDEX[uuu].ravel()-OBS_remap_1d) for uuu in range(N_model)])
+
+
+COR=np.array([np.ma.corrcoef(timmean_CORDEX[uuu].ravel(),OBS_remap_1d)[0,1] for uuu in range(N_model)])
+
+print COR
+print timmean_CORDEX[0]
+aa=timmean_CORDEX[0].ravel()
+print aa.shape
+print OBS_remap_1d.shape
+OBS_nonnan=OBS_remap_1d[OBS_remap_1d != np.nan]
+aa_nonnan=aa[OBS_remap_1d != np.nan]
+
+print OBS_nonnan
+print aa_nonnan
+
+print np.correlate(aa_nonnan,OBS_nonnan)
+
+print np.ma.corrcoef(timmean_CORDEX[0].ravel(),OBS_remap_1d)
+
+# RMSE
+RMSE=np.array([np.sqrt(np.mean((timmean_CORDEX[jj].ravel()-OBS_remap_1d)**2)) for jj in range(N_model)])
+
+print RMSE
+# error=InputValue-OBS
+# square=error**2
+# mean=np.mean(square,dtype=np.float64)
+# RMSE = "%.2f" %  np.sqrt(mean)
+
+
 print timmean_OBS_remap.shape
 print timmean_CORDEX.shape
 
 #=================================================== plot
-Title='Evaluation of the simulated '+str(VAR)+' in the historical period 1983-2005'
+Title='Evaluation of the simulated '+str(VAR)+' in the historical period 1990-2005'
 #=================================================== 
 Unit=( '(W/m2)','(W/m2)','(W/m2)')
 #=================================================== 
@@ -189,13 +255,14 @@ def PlotMap(array2D,lons,lats,m,k,axx,vmin,vmax,cmap):
     axx.xaxis.set_visible(False)
     axx.yaxis.set_visible(False)
 
-    plt.title(str(m+1)+' '+RCM_name[m]+"_"+GCM_name[m]+" "+ TITLE2[k]+" "+Unit[k],fontsize= 8)
+    plt.title(str(m+1)+' '+RCM_name[m]+" "+ TITLE2[k]+" "+Unit[k],fontsize= 8)
 
     cb=plt.colorbar(cmap=plt.cm.jet,orientation='horizontal',shrink=0.8) 
     cb.ax.tick_params(['{:.0f}'.format(x) for x in bounds ],labelsize=6) 
     #cbar.ax.set_yticklabels(['{:.0f}'.format(x) for x in np.arange(cbar_min, cbar_max+cbar_step, cbar_step)], fontsize=16, weight='bold')
     
     axx.text(0.9, 0.9,str(Season), ha='center', va='center', transform=axx.transAxes)
+    axx.text(0.9, 0.1,'MB='+str("%.2f" % MeanBias[m]), ha='right',va='center', transform=axx.transAxes)
 
 #=================================================== 
 #=================================================== ploting
