@@ -26,14 +26,14 @@ import Taylor
 import ctang
 
 #=================================================== Definitions
-Data='/Users/ctang/Code/CORDEX_AFR_studies/data/validation_CM_SAF/'
-OBS_Dir='/Users/ctang/Code/CORDEX_AFR_studies/data/OBS/validation_CM_SAF/'
+Data='/Users/ctang/Code/CORDEX_AFR_studies/data/validation_CLARA-A2/'
+OBS_Dir='/Users/ctang/Code/CORDEX_AFR_studies/data/OBS/validation_CLARA-A2/'
 VAR ='clt' # ,'tas','sfcWind') #,'PVpot')
-OBS='CM_SAF'
+OBS='CLARA-A2'
 OBSvar = 'cfc'
 N_column = 2
-Season='JJA'
 Season='DJF'
+Season='JJA'
 #=================================================== test
 ##
 #=================================================== end of test
@@ -73,8 +73,8 @@ GCM_name=(\
 N_model = len(GCM_Model)
 N_row = N_model
 N_plot = N_column*N_row
-LABLE='ABCDEFGHIGKLMNOPQRSTUVWXYZ'
-LABLE2='abcdefghigklmnopqrstuvwxyz'
+LABLE='ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+LABLE2='abcdefghijklmnopqrstuvwxyz'
 #=================================================== reading data
 # 21 * 4 table: 21 models vs 4 vars
 
@@ -128,7 +128,7 @@ print Bias.shape
 print Bias[1].shape
 
 #=================================================== plot
-Title='Evaluation of the simulated SSR in the historical period 1983-2005 in '\
+Title='Evaluation of the simulated CLT in the historical period 1983-2005 in '\
         +str(Season)
 #=================================================== 
 Unit=( '(%)','(%)','(%)','(%)','(%)')

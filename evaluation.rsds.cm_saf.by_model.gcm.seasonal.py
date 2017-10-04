@@ -26,12 +26,13 @@ import Taylor
 import ctang
 
 #=================================================== Definitions
-Data='/Users/ctang/Code/CORDEX_AFR_studies/data/validation_CM_SAF/'
-OBS_Dir='/Users/ctang/Code/CORDEX_AFR_studies/data/OBS/validation_CM_SAF/'
+Data='/Users/ctang/Code/CORDEX_AFR_studies/data/validation_SARAH_2/'
+OBS_Dir='/Users/ctang/Code/CORDEX_AFR_studies/data/validation_SARAH_2/'
 VAR ='rsds' # ,'tas','sfcWind') #,'PVpot')
-OBS='CM_SAF'
+OBS='SARAH_2'
 OBSvar = 'SIS'
 N_column = 2
+Season='DJF'
 Season='JJA'
 #=================================================== test
 ##
@@ -58,24 +59,24 @@ GCM_name=GCM_Model
 N_model = len(GCM_Model)
 N_row = N_model
 N_plot = N_column*N_row
-LABLE='ABCDEFGHIGKLMNOPQRSTUVWXYZ'
-LABLE2='abcdefghigklmnopqrstuvwxyz'
+LABLE='ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+LABLE2='abcdefghijklmnopqrstuvwxyz'
 #=================================================== reading data
 # 21 * 4 table: 21 models vs 4 vars
 
 OBS_remap=(\
-'SISmm.CDR.mon.mean.198301-200512.SA.'+str(Season)+'.timmean.remap.CMIP5-ENSEMBLE.nc',\
-'SISmm.CDR.mon.mean.198301-200512.SA.'+str(Season)+'.timmean.remap.CanESM2.nc',\
-'SISmm.CDR.mon.mean.198301-200512.SA.'+str(Season)+'.timmean.remap.CNRM-CM5.nc',\
-'SISmm.CDR.mon.mean.198301-200512.SA.'+str(Season)+'.timmean.remap.CSIRO-Mk3-6-0.nc',\
-'SISmm.CDR.mon.mean.198301-200512.SA.'+str(Season)+'.timmean.remap.EC-EARTH.nc',\
-'SISmm.CDR.mon.mean.198301-200512.SA.'+str(Season)+'.timmean.remap.GFDL-ESM2M.nc',\
-'SISmm.CDR.mon.mean.198301-200512.SA.'+str(Season)+'.timmean.remap.HadGEM2-ES.nc',\
-'SISmm.CDR.mon.mean.198301-200512.SA.'+str(Season)+'.timmean.remap.IPSL-CM5A-LR.nc',\
-'SISmm.CDR.mon.mean.198301-200512.SA.'+str(Season)+'.timmean.remap.IPSL-CM5A-MR.nc',\
-'SISmm.CDR.mon.mean.198301-200512.SA.'+str(Season)+'.timmean.remap.MIROC5.nc',\
-'SISmm.CDR.mon.mean.198301-200512.SA.'+str(Season)+'.timmean.remap.MPI-ESM-LR.nc',\
-'SISmm.CDR.mon.mean.198301-200512.SA.'+str(Season)+'.timmean.remap.NorESM1-M.nc',\
+'SISmm.SARAH-2.1983-2005.SA.'+str(Season)+'.timmean.remap.CMIP5-ENSEMBLE.nc',\
+'SISmm.SARAH-2.1983-2005.SA.'+str(Season)+'.timmean.remap.CanESM2.nc',\
+'SISmm.SARAH-2.1983-2005.SA.'+str(Season)+'.timmean.remap.CNRM-CM5.nc',\
+'SISmm.SARAH-2.1983-2005.SA.'+str(Season)+'.timmean.remap.CSIRO-Mk3-6-0.nc',\
+'SISmm.SARAH-2.1983-2005.SA.'+str(Season)+'.timmean.remap.EC-EARTH.nc',\
+'SISmm.SARAH-2.1983-2005.SA.'+str(Season)+'.timmean.remap.GFDL-ESM2M.nc',\
+'SISmm.SARAH-2.1983-2005.SA.'+str(Season)+'.timmean.remap.HadGEM2-ES.nc',\
+'SISmm.SARAH-2.1983-2005.SA.'+str(Season)+'.timmean.remap.IPSL-CM5A-LR.nc',\
+'SISmm.SARAH-2.1983-2005.SA.'+str(Season)+'.timmean.remap.IPSL-CM5A-MR.nc',\
+'SISmm.SARAH-2.1983-2005.SA.'+str(Season)+'.timmean.remap.MIROC5.nc',\
+'SISmm.SARAH-2.1983-2005.SA.'+str(Season)+'.timmean.remap.MPI-ESM-LR.nc',\
+'SISmm.SARAH-2.1983-2005.SA.'+str(Season)+'.timmean.remap.NorESM1-M.nc',\
 )
 
 filefix='_historical-rcp85_r1i1p1.1983-2005.SA.'+str(Season)+'.timmean.nc'
@@ -98,6 +99,15 @@ timmean_CMIP5=np.array([ctang.read_lonlatmap_netcdf(VAR,\
 timmean_OBS_remap=np.array([ctang.read_lonlatmap_netcdf(OBSvar,\
         OBS_Dir+OBS_remap[i])\
         for i in range(N_model)])
+
+# remove missing values in SARAH-2: -999.0
+for i in range(12):
+    jj=timmean_OBS_remap[i]
+    jj[jj == -999] = np.NAN
+    timmean_OBS_remap[i]=jj
+
+print timmean_OBS_remap[0]
+print timmean_OBS_remap[1]
 
 print timmean_OBS_remap.shape
 

@@ -22,12 +22,9 @@ sys.path.append('/Users/ctang/Code/Python/')
 import ctang
 
 #=================================================== Definitions
-OBS_Dir='/Users/ctang/Code/CORDEX_AFR_studies/data/OBS/clt_validation/'
+OBS_Dir='/Users/ctang/Code/CORDEX_AFR_studies/data/OBS/rsds_validation/'
 VAR ='rsds' # ,'tas','sfcWind') #,'PVpot')
-OBS='CLARA-A2'
-N_column = 2
-N_row = 21
-N_plot = N_column*N_row
+
 degree_sign= u'\N{DEGREE SIGN}'
 ### if plot only the obs not bias:
 BIAS=1
@@ -39,36 +36,49 @@ BIAS=1
 Season=('DJF','JJA')
 
 OBS_name=(\
-	'CLARA-A2',\
-        'ISCCP',\
+	'SARAH-2',\
+        # 'CM_SAF_CDR',\
+	'SRB',\
 	'ERA_Interim',\
+        # 'NCAR',\
         'CFSR',\
         )
+
+### if want to plot less OBS, please comment some OBS out.
+
 Resolution=(\
-	str('0.25*0.25')+degree_sign,\
-	str('2.5*2.5')+degree_sign,\
+	str('0.5*0.5')+degree_sign,\
+        # str('0.3*0.3')+degree_sign,\
+	str('1.0*1.0')+degree_sign,\
 	str('0.75*0.75')+degree_sign,\
-        str('1.875*1.875')+degree_sign,\
+	# str('1.875*1.875')+degree_sign,\
+	str('0.3*0.3')+degree_sign,\
         )
 VAR=(\
-    'cfc',\
-    'cltisccp',\
-    'tcc',\
-    'TCDC_P8_L200_GGA0',\
+    'SIS',\
+    # 'SIS',\
+    'sw_sfc_dn',\
+    'ssrd',\
+    # 'dswrf',\
+    'DSWRF_P8_L1_GGA0',\
     )
 
 Unit=(\
-    '(%)',\
-    '(%)',\
-    '(%)',\
-    '(%)',\
+    '(W/$m^{2}$)',\
+    # '(W/$m^{2}$)',\
+    '(W/$m^{2}$)',\
+    '(W/$m^{2}$)',\
+    # '(W/$m^{2}$)',\
+    '(W/$m^{2}$)',\
     )
 
 
 Temp_cover=(\
     '1984-2005',\
+    # '1984-2005',\
     '1984-2005',\
     '1984-2005',\
+    # '1984-2005',\
     '1984-2005',\
     )
 N_obs=len(OBS_name)
@@ -77,7 +87,7 @@ N_obs=len(OBS_name)
 
 def PlotMap(array2D,lons,lats,m,k,axx,vmin,vmax,cmap):
     cmaplist = [cmap(i) for i in range(cmap.N)]
-    bounds = np.linspace(vmin,vmax,11)
+    bounds = np.linspace(vmin,vmax,21)
     norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
 
     map=Basemap(projection='cyl',llcrnrlat=lats[:,0].min(),urcrnrlat=lats[:,0].max(),\
@@ -111,27 +121,29 @@ def PlotMap(array2D,lons,lats,m,k,axx,vmin,vmax,cmap):
 
 fig, axes = plt.subplots(nrows=2, ncols=N_obs,\
         # sharex=True, sharey=True,\
-        figsize=(20, 6),facecolor='w', edgecolor='k') # figsize=(w,h)
+        figsize=(6.5*len(OBS_name), 6),facecolor='w', edgecolor='k') # figsize=(w,h)
 fig.subplots_adjust(hspace=0.2,top=0.90,wspace=0.2)
 #=================================================== 
 #=================================================== reading data
 # 21 * 4 table: 21 models vs 4 vars
 for S in range(2):
 
-    Reference='CFCmm.CM_SAF.CLARA-A2.1983-2005.GL.SA.'+str(Season[S])+'.timmean.nc'
+    Reference='SISmm.SARAH-E_v2.1984-2005.SA.'+str(Season[S])+'.timmean.nc'
 
     OBSfile=(\
-        'cltisccp.monmean.1984-2005.SA.'+str(Season[S])+'.timmean.nc',\
-        'ERA_In.clt.mon.mean.1979-2005.SA.'+str(Season[S])+'.timmean.nc',\
-        # 'tcdc.eatm.gauss.mon.mean.1979-2005.SA.'+str(Season[S])+'.timmean.nc',\
-        'csfr.clt.mon.1984.2005.SA.'+str(Season[S])+'.timmean.nc',\
+        # 'SISmm.CDR.mon.mean.1984-2005.SA.'+str(Season[S])+'.timmean.nc',\
+        'srb_rel3.0_shortwave_monthly_utc.1984-2005.SA.'+str(Season[S])+'.timmean.nc',\
+        'ERA_In.ssrd.mon.mean.1984-2005.SA.'+str(Season[S])+'.timmean.nc',\
+        # 'dswrf.sfc.gauss.monmean.1984-2005.SA.'+str(Season[S])+'.timmean.nc',\
+        'cfsr.rsds.mon.1984.2005.SA.'+str(Season[S])+'.timmean.nc',\
         )
 
     Ref_remap=(\
-        'CFCmm.CM_SAF.CLARA-A2.1983-2005.GL.SA.'+str(Season[S])+'.timmean.remap.isccp.nc',\
-        'CFCmm.CM_SAF.CLARA-A2.1983-2005.GL.SA.'+str(Season[S])+'.timmean.remap.era_in.nc',\
-        # 'CFCmm.CM_SAF.CLARA-A2.1983-2005.GL.SA.'+str(Season[S])+'.timmean.remap.ncar.nc',\
-        'CFCmm.CM_SAF.CLARA-A2.1983-2005.GL.SA.'+str(Season[S])+'.timmean.remap.cfsr.nc',\
+        # 'SISmm.SARAH-E_v2.1984-2005.SA.'+str(Season[S])+'.timmean.remap.cdr.nc',\
+        'SISmm.SARAH-E_v2.1984-2005.SA.'+str(Season[S])+'.timmean.remap.srb.nc',\
+        'SISmm.SARAH-E_v2.1984-2005.SA.'+str(Season[S])+'.timmean.remap.era_in.nc',\
+        # 'SISmm.SARAH-E_v2.1984-2005.SA.'+str(Season[S])+'.timmean.remap.ncep.nc',\
+        'SISmm.SARAH-E_v2.1984-2005.SA.'+str(Season[S])+'.timmean.remap.cfsr.nc',\
         )
 
 #=================================================== calculate bias
@@ -141,8 +153,11 @@ for S in range(2):
     Ref_OBS=np.array(ctang.read_lonlatmap_netcdf(VAR[0],OBS_Dir+Reference))
     print Ref_OBS.shape
 
+    Ref_OBS[Ref_OBS == -999] = np.nan
+
     lons,lats=ctang.read_lonlat_netcdf_1D(\
         OBS_Dir+Reference)
+
 
     k=0 # column number = N_obs
     plt.sca(axes[S,k]) # active shis subplot for RCM
@@ -151,7 +166,7 @@ for S in range(2):
     cmap = plt.cm.jet
 
     print S,k,"-----------"
-    PlotMap(Ref_OBS,lons,lats,S,k,axx,0,100,cmap)
+    PlotMap(Ref_OBS,lons,lats,S,k,axx,60,360,cmap)
 
     ### if plot the bias
     if BIAS==1:
@@ -161,16 +176,13 @@ for S in range(2):
         k=k+1
         Ref_OBS_remap=np.array(ctang.read_lonlatmap_netcdf(VAR[0],OBS_Dir+Ref_remap[i]))
 
+        Ref_OBS_remap[Ref_OBS_remap == -999] = np.nan
 
+        print i
         print OBS_Dir+OBSfile[i]
+
         OBS=np.array(ctang.read_lonlatmap_netcdf(VAR[i+1],OBS_Dir+OBSfile[i]))
         print Ref_OBS_remap.shape,OBS.shape
-
-        if OBS_name[k] == 'ERA_Interim':
-            OBS=OBS*100
-
-        # mask the missing value > 1000
-        OBS[OBS>1000]=np.nan
 
         lonsOBS,latsOBS=ctang.read_lonlat_netcdf_1D(\
             OBS_Dir+OBSfile[i])
@@ -182,9 +194,9 @@ for S in range(2):
 
         ### if plot the bias
         if BIAS==1:
-            PlotMap(OBS-Ref_OBS_remap,lonsOBS,latsOBS,S,k,axx,-50,50,cmap)
+            PlotMap(OBS-Ref_OBS_remap,lonsOBS,latsOBS,S,k,axx,-100,100,cmap)
         else:
-            PlotMap(OBS,lonsOBS,latsOBS,S,k,axx,0,100,cmap)
+            PlotMap(OBS,lonsOBS,latsOBS,S,k,axx,60,360,cmap)
 
 
 

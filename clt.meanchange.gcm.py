@@ -198,7 +198,7 @@ plt.sca(axes[1]) # active shis subplot for GCM
 ax=axes[1]
 PlotMap(Ensmean_change_ttest,lons,lats,ax,-20,20)
 
-plt.suptitle('8 CMPI5 models mean changes(relative) of CLT (%)',fontsize=14)
+plt.suptitle('11 CMPI5 models mean changes(relative) of CLT (%)',fontsize=14)
 
 print output+'.eps'
 plt.savefig(output+'.eps',format='eps')

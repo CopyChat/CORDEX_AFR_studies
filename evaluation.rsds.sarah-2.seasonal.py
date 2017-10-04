@@ -7,8 +7,6 @@ Ctang, A map of mean max and min of ensembles
 ========
 """
 import math
-import os
-import os.path as path
 import subprocess
 import numpy as np
 import pdb
@@ -34,8 +32,8 @@ VAR ='rsds' # ,'tas','sfcWind') #,'PVpot')
 OBS='SARAH_2'
 OBSvar = 'SIS'
 N_column = 2
-Season='JJA'
 Season='DJF'
+Season='JJA'
 #=================================================== test
 ##
 #=================================================== end of test
@@ -43,7 +41,6 @@ Season='DJF'
 
 # real model:
 Model_name=(\
-        'ERAINT',\
         'CanESM2',\
         'CNRM-CM5',\
         'CSIRO-Mk3-6-0',\
@@ -59,7 +56,6 @@ Model_name=(\
 
 GCM_Model=(\
         # 'CMIP5-ENSEMBLE',\
-        'ERA_In.ssrd.mon.mean.1990-2005.SA.'+str(Season)+'.timmean.nc',\
         # GCM:
         'rsds_Amon_CNRM-CM5_historical-rcp85_r1i1p1.1990-2005.SA.'+str(Season)+'.timmean.nc',\
         'rsds_Amon_CSIRO-Mk3-6-0_historical-rcp85_r1i1p1.1990-2005.SA.'+str(Season)+'.timmean.nc',\
@@ -109,7 +105,7 @@ GCM_Model=(\
         # 'rsds_AFR-44_NOAA-GFDL-GFDL-ESM2M_SMHI-RCA4_v1.hist_rcp85.day.1990-2005.SA.'+str(Season)+'.timmean.nc',\
         )
 
-GCM_name=Model_name
+GCM_name=GCM_Model
 N_model = len(GCM_Model)
 N_row = N_model
 N_plot = N_column*N_row
@@ -120,7 +116,6 @@ LABLE2='abcdefghijklmnopqrstuvwxyz'
 
 OBS_remap=(\
 # 'SISmm.SARAH-2.1990-2005.SA.'+str(Season)+'.timmean.remap.CMIP5-ENSEMBLE.nc',\
-'SISmm.SARAH-2.1990-2005.SA.'+str(Season)+'.timmean.remap.rea.nc',\
 'SISmm.SARAH-2.1990-2005.SA.'+str(Season)+'.timmean.remap.CNRM-CM5.nc',\
 'SISmm.SARAH-2.1990-2005.SA.'+str(Season)+'.timmean.remap.CSIRO-Mk3-6-0.nc',\
 'SISmm.SARAH-2.1990-2005.SA.'+str(Season)+'.timmean.remap.CanESM2.nc',\
@@ -183,17 +178,6 @@ lats=np.array([ctang.read_lat_netcdf_1D(\
 timmean_CMIP5=np.array([ctang.read_lonlatmap_netcdf(VAR,\
         Data+GCM_Model[i]) for i in range(N_model)])
 
-print OBS_Dir+OBS_remap[0]
-# SISmm.SARAH-2.1990-2005.SA.DJF.timmean.remap.rcm.nc
-
-for f in range(N_model):
-    PATH=OBS_Dir+OBS_remap[f]
-    if os.path.isfile(PATH):
-        print f
-    else:
-        print "find it!",f
-        print PATH
-        
 timmean_OBS_remap=np.array([ctang.read_lonlatmap_netcdf(OBSvar,\
         OBS_Dir+OBS_remap[i]) for i in range(N_model)])
 
@@ -212,43 +196,13 @@ Bias=np.array([timmean_CMIP5[i]-timmean_OBS_remap[i] for i in range(N_model)])
 print Bias.shape
 print Bias[1].shape
 
-
-#=================================================== 
-# statistic values:
-
-COR=np.zeros((N_model))
-RMSE=np.zeros((N_model))
-MeanBias=np.zeros((N_model))
-
-for n in range(N_model):
-    OBS_remap_1d=timmean_OBS_remap[n].ravel()
-    OBS_nonnan=np.array([value for value in OBS_remap_1d if not math.isnan(value)])
-    CMIP5_nonnan=np.array([timmean_CMIP5[n].ravel()[i] for i in range(len(OBS_remap_1d)) if not math.isnan(OBS_remap_1d[i])])
-    print OBS_remap_1d.shape,OBS_nonnan.shape,CMIP5_nonnan.shape
-
-    # MeanBias:
-    MeanBias[n]=np.mean(CMIP5_nonnan-OBS_nonnan) 
-
-    # spatial cor:
-    COR[n]= np.ma.corrcoef(OBS_nonnan,CMIP5_nonnan)[0,1]
-
-    # RMSE
-    RMSE[n]=np.sqrt(np.mean((CMIP5_nonnan-OBS_nonnan)**2))
-
-print COR,RMSE,MeanBias
-
-#=================================================== end of statistics
-
-
-
-
 #=================================================== plot
-Title='Evaluation of the simulated SSR in the historical period 1990-2005 in '\
+Title='Evaluation of the simulated SSR in the historical period 1983-2005 in '\
         +str(Season)
 #=================================================== 
-Unit=( '($\mathregular{W/m^{2}}$)','($\mathregular{W/m^{2}}$)')
+Unit=( '(W/m2)','(W/m2)','(W/m2)')
 #=================================================== 
-TITLE2=('',' - '+str(OBS))
+TITLE2=('','- '+str(OBS))
 def PlotMap(array2D,lons,lats,m,k,axx,vmin,vmax,cmap):
     # cmap = plt.cm.jet
     cmaplist = [cmap(i) for i in range(cmap.N)]
@@ -257,8 +211,7 @@ def PlotMap(array2D,lons,lats,m,k,axx,vmin,vmax,cmap):
 
     print lats.shape
     map=Basemap(projection='cyl',llcrnrlat=lats[:,0].min(),urcrnrlat=lats[:,0].max(),\
-            # llcrnrlon=lons[0,:].min(),urcrnrlon=lons[0,:].max(),resolution='l')
-            llcrnrlon=0.1,urcrnrlon=59,resolution='l')
+            llcrnrlon=lons[0,:].min(),urcrnrlon=lons[0,:].max(),resolution='l')
     ctang.setMap(map)
 
     x,y=map(lats,lons)
@@ -268,18 +221,15 @@ def PlotMap(array2D,lons,lats,m,k,axx,vmin,vmax,cmap):
     axx.xaxis.set_visible(False)
     axx.yaxis.set_visible(False)
 
-    plt.title(GCM_name[m]+TITLE2[k]+" "+Unit[k],fontsize= 8)
+    plt.title(GCM_name[m]+" "+TITLE2[k]+" "+Unit[k],fontsize= 8)
 
     cb=plt.colorbar(cmap=plt.cm.jet,orientation='horizontal',shrink=0.8) 
     cb.ax.tick_params(['{:.0f}'.format(x) for x in bounds ],labelsize=6) 
     axx.text(0.9, 0.9,str(Season), ha='center', va='center', transform=axx.transAxes)
-    axx.text(0.95, 0.25,'r='+str("%.2f" % COR[m]), ha='right',va='center', transform=axx.transAxes)
-    axx.text(0.95, 0.15,'MBE='+str("%.2f" % MeanBias[m]), ha='right',va='center', transform=axx.transAxes)
-    axx.text(0.95, 0.05,'RMSE='+str("%.2f" % RMSE[m]), ha='right',va='center', transform=axx.transAxes)
-    # if k==0:
-        # axx.text(0.1, 0.9,'('+str(LABLE[m])+')', ha='center', va='center', transform=axx.transAxes)
-    # else:
-        # axx.text(0.1, 0.9,'('+str(LABLE2[m])+')', ha='center', va='center', transform=axx.transAxes)
+    if k==0:
+        axx.text(0.1, 0.9,'('+str(LABLE[m])+')', ha='center', va='center', transform=axx.transAxes)
+    else:
+        axx.text(0.1, 0.9,'('+str(LABLE2[m])+')', ha='center', va='center', transform=axx.transAxes)
 
     #cbar.ax.set_yticklabels(['{:.0f}'.format(x) for x in np.arange(cbar_min, cbar_max+cbar_step, cbar_step)], fontsize=16, weight='bold')
 #=================================================== 
@@ -326,8 +276,8 @@ for m in range(N_row):
 
 plt.suptitle(Title)
 
-OutputImage='evaluation.'+str(VAR)+'.'+str(OBS)+'.gcm.'+str(Season)
-plt.savefig(OutputImage+'.eps',format='eps')
+OutputImage='evaluation.'+str(VAR)+'.'+str(OBS)+'.'+str(Season)
+#plt.savefig(OutputImage+'.eps',format='eps')
 plt.savefig(OutputImage+'.png')
 plt.show()
 

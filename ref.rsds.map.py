@@ -26,29 +26,29 @@ sys.path.append('/Users/ctang/Code/My_Python_Code/')
 import ctang
 
 #=================================================== Definitions
-OBS='/Users/ctang/Code/CORDEX_AFR_studies/OBS/'
+OBS='/Users/ctang/Code/CORDEX_AFR_studies/data/OBS/'
 #=================================================== ploting
-Title='RSDS mean of 1983-2005 from CM_SAF CDR'
+Title='RSDS annual mean of 1983-2005 from CM_SAF SARAH-2'
 #--------------------------------------------------- 
 #fig,axes = plt.subplots(111,figsize=(12, 12),facecolor='w', edgecolor='k')
-fig, ax = plt.subplots()
+fig, ax = plt.subplots(figsize=(8,5))
 #=================================================== read
 ref=np.array(ctang.read_lonlatmap_netcdf('SIS',\
-        OBS+'SISmm.CDR.mon.mean.198301-200512.yearmean.Africa.timmean.nc'))
+        OBS+'SISmm.SARAH-2.1983-2015.yearmean.SA.timmean.nc'))
 
 # Read lon,lat for model
 lons,lats=ctang.read_lonlat_netcdf_1D(\
-        OBS+'SISmm.CDR.mon.mean.198301-200512.yearmean.Africa.timmean.nc')
+        OBS+'SISmm.SARAH-2.1983-2015.yearmean.SA.timmean.nc')
 print ref.shape
 print lons.shape
 
 #=================================================== 
 vmin=180
-vmax=300
+vmax=280
 
 cmap = plt.cm.OrRd
 cmaplist = [cmap(i) for i in range(cmap.N)]
-bounds = np.linspace(vmin,vmax,10)
+bounds = np.linspace(vmin,vmax,11)
 norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
 
 map=Basemap(projection='cyl',llcrnrlat=lats[:,0].min(),urcrnrlat=lats[:,0].max(),\
@@ -64,13 +64,13 @@ patterns = ['-', '+', 'x', 'o', 'O', '.', '*']  # more patterns
 for p in [\
         #                ( (x,y) of left bottom, width, height)
         #patches.Rectangle( (10, -10), 20, 10, hatch=patterns[0],fill=False,alpha=0.1,),\
-        patches.Rectangle( (10, -10), 20, 10, fill=False,alpha=0.9,),\
-        patches.Rectangle( (30, -10), 10, 10, fill=False,alpha=0.9,),\
-        patches.Rectangle( (13, -15), 27, 5,  fill=False,alpha=0.9,),\
-        patches.Rectangle( (13, -30), 7, 15,  fill=False,alpha=0.9,),\
-        patches.Rectangle( (20, -35), 15, 20, fill=False,alpha=0.9,),\
-        patches.Rectangle( (43, -25), 7, 10,  fill=False,alpha=0.9,),\
-        patches.Rectangle( (55, -21.5), 3, 2, fill=False,alpha=0.9,), ]:
+        patches.Rectangle( (10, -10), 20, 10, fill=False,alpha=0.9,lw=2),\
+        patches.Rectangle( (30, -10), 10, 10, fill=False,alpha=0.9,lw=2),\
+        patches.Rectangle( (13, -15), 27, 5,  fill=False,alpha=0.9,lw=2),\
+        patches.Rectangle( (13, -30), 7, 15,  fill=False,alpha=0.9,lw=2),\
+        patches.Rectangle( (20, -35), 15, 20, fill=False,alpha=0.9,lw=2),\
+        patches.Rectangle( (43, -25), 7, 10,  fill=False,alpha=0.9,lw=2),\
+        patches.Rectangle( (55, -21.5), 3, 2, fill=False,alpha=0.9,lw=2), ]:
     ax.add_patch(p)
 
 plt.text(20, -5, 'Reg. 1', fontsize=8, fontweight='bold', ha='center', va='center', wrap=True,color='white')
@@ -81,8 +81,8 @@ plt.text(27.5,-25,'Reg. 5',fontsize=8, fontweight='bold', ha='center', va='cente
 plt.text(47,-20,'Reg. 6',fontsize=8, fontweight='bold', ha='center', va='center', wrap=True,color='white')
 plt.text(56,-17,'Reg. 7',fontsize=8, fontweight='bold', ha='center', va='center', wrap=True,color='white')
 
-cb=plt.colorbar(cmap=plt.cm.jet,orientation='horizontal',shrink=0.4) 
-cb.ax.tick_params(labelsize=5) 
+cb=plt.colorbar(cmap=plt.cm.jet,orientation='horizontal',shrink=0.6) 
+cb.ax.tick_params(labelsize=6) 
 
 
 

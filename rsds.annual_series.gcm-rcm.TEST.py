@@ -31,8 +31,9 @@ pl.close('all')
 
 ########################## for CORDEX charactors
 DIR='/Users/ctang/Code/CORDEX_AFR_studies/data/regional_annual_series/'
+prefix='rsds_AFR-44'
 N_region = 7
-VAR = 'clt'
+VAR = 'rsds'
 YEAR1=1970
 YEAR2=1999
 YEAR3=2006
@@ -49,7 +50,7 @@ MODEL=(\
         # 'MPI-M-MPI-ESM-LR_SMHI-RCA4_v1',\
         # 'NCC-NorESM1-M_SMHI-RCA4_v1',\
         # 'NOAA-GFDL-GFDL-ESM2M_SMHI-RCA4_v1',\
-        \
+        # \
         'CNRM-CERFACS-CNRM-CM5_CLMcom-CCLM4-8-17_v1',\
         'ICHEC-EC-EARTH_CLMcom-CCLM4-8-17_v1',\
         'MOHC-HadGEM2-ES_CLMcom-CCLM4-8-17_v1',\
@@ -64,17 +65,17 @@ MODEL=(\
         )
 
 GCM=(\
-    'clt_Amon_CNRM-CM5_historical-rcp85_r1i1p1',\
-    # 'clt_Amon_CanESM2_historical-rcp85_r1i1p1',\
-    # 'clt_Amon_CSIRO-Mk3-6-0_historical-rcp85_r1i1p1',\
-    'clt_Amon_EC-EARTH_historical-rcp85_r1i1p1',\
-    # 'clt_Amon_GFDL-ESM2M_historical-rcp85_r1i1p1',\
-    'clt_Amon_HadGEM2-ES_historical-rcp85_r1i1p1',\
-    # 'clt_Amon_IPSL-CM5A-LR_historical-rcp85_r1i1p1',\
-    # 'clt_Amon_IPSL-CM5A-MR_historical-rcp85_r1i1p1',\
-    # 'clt_Amon_MIROC5_historical-rcp85_r1i1p1',\
-    'clt_Amon_MPI-ESM-LR_historical-rcp85_r1i1p1',\
-    # 'clt_Amon_NorESM1-M_historical-rcp85_r1i1p1',\
+    'rsds_Amon_CNRM-CM5_historical-rcp85_r1i1p1',\
+    # 'rsds_Amon_CSIRO-Mk3-6-0_historical-rcp85_r1i1p1',\
+    # 'rsds_Amon_CanESM2_historical-rcp85_r1i1p1',\
+    'rsds_Amon_EC-EARTH_historical-rcp85_r1i1p1',\
+    # 'rsds_Amon_GFDL-ESM2M_historical-rcp85_r1i1p1',\
+    'rsds_Amon_HadGEM2-ES_historical-rcp85_r1i1p1',\
+    # 'rsds_Amon_IPSL-CM5A-LR_historical-rcp85_r1i1p1',\
+    # 'rsds_Amon_IPSL-CM5A-MR_historical-rcp85_r1i1p1',\
+    # 'rsds_Amon_MIROC5_historical-rcp85_r1i1p1',\
+    'rsds_Amon_MPI-ESM-LR_historical-rcp85_r1i1p1',\
+    # 'rsds_Amon_NorESM1-M_historical-rcp85_r1i1p1',\
     )
 
 N_model = len(MODEL)
@@ -97,40 +98,40 @@ TIME=np.array(range(YEAR1,YEAR4+1,1))
 
 #each map is mean_ref[0,0,:,:].shape
 Anomaly = np.zeros((N_model, N_region, YEAR4-YEAR1+1))
-Anomaly_GCM = np.zeros((N_model_GCM, N_region, YEAR4-YEAR1+1))
 Changes = np.zeros((N_model, N_region, YEAR4-YEAR1+1))
-Changes_GCM = np.zeros((N_model_GCM, N_region, YEAR4-YEAR1+1))
 yearmean_future = np.zeros((N_model, N_region, YEAR4-YEAR1+1))
+
+Anomaly_GCM = np.zeros((N_model_GCM, N_region, YEAR4-YEAR1+1))
+Changes_GCM = np.zeros((N_model_GCM, N_region, YEAR4-YEAR1+1))
 yearmean_future_GCM = np.zeros((N_model_GCM, N_region, YEAR4-YEAR1+1))
 
 # in 3D: (N_model,N_region,130years)
 for r in range(N_region):
-    yearmean_future[:,r,:]=np.array([[ctang.read_time_netcdf(VAR,\
-        DIR+VAR+'_AFR-44_'+MODEL[i]+'.hist_rcp85.day.1970-2099.'+str(r+1)+\
-        '.fldmean.yearmean.nc')] for i in range(N_model)])[:,0,:]
-    yearmean_future_GCM[:,r,:]=np.array([[ctang.read_time_netcdf(VAR,\
-        DIR+GCM[i]+'.1970-2099.'+str(r+1)+'.fldmean.yearmean.nc')] \
-        for i in range(N_model_GCM)])[:,0,:]
     Anomaly[:,r,:]=np.array([[ctang.read_time_netcdf(VAR,\
         DIR+VAR+'_AFR-44_'+MODEL[i]+'.hist_rcp85.day.1970-2099.'+str(r+1)+\
         '.fldmean.monmean.anomaly.yearmean.nc')] for i in range(N_model)])[:,0,:]
+    yearmean_future[:,r,:]=np.array([[ctang.read_time_netcdf(VAR,\
+        DIR+VAR+'_AFR-44_'+MODEL[i]+'.hist_rcp85.day.1970-2099.'+str(r+1)+\
+        '.fldmean.yearmean.nc')] for i in range(N_model)])[:,0,:]
     Anomaly_GCM[:,r,:]=np.array([[ctang.read_time_netcdf(VAR,\
         DIR+GCM[i]+'.1970-2099.'+str(r+1)+'.fldmean.monmean.anomaly.yearmean.nc')]\
         for i in range(N_model_GCM)])[:,0,:]
-
+    yearmean_future_GCM[:,r,:]=np.array([[ctang.read_time_netcdf(VAR,\
+        DIR+GCM[i]+'.1970-2099.'+str(r+1)+'.fldmean.yearmean.nc')] \
+        for i in range(N_model_GCM)])[:,0,:]
 
 # timmean_ref as ref of anomalies
 timmean_ref=np.mean(yearmean_future[:,:,0:YEAR2-YEAR1],axis=2)
 timmean_ref_GCM=np.mean(yearmean_future_GCM[:,:,0:YEAR2-YEAR1],axis=2)
 
-# calculate changes:
 for r in range(N_region):
     for m in range(N_model):
-        Changes[m,r,:] = np.array([(t - timmean_ref[m,r])*100/timmean_ref[m,r] \
+        Changes[m,r,:] = np.array( [ (t - timmean_ref[m,r])*100/timmean_ref[m,r] \
                 for t in yearmean_future[m,r,:]])
     for m in range(N_model_GCM):
         Changes_GCM[m,r,:] = np.array( [ (t - timmean_ref_GCM[m,r])*100/timmean_ref_GCM[m,r]\
                 for t in yearmean_future_GCM[m,r,:]])
+
 
 # nomarlize by the timmean_ref
 for r in range(N_region):
@@ -140,25 +141,6 @@ for r in range(N_region):
     for m in range(N_model_GCM):
         Anomaly_GCM[m,r,:]=np.array(\
             [ (t)*100/timmean_ref_GCM[m,r] for t in Anomaly_GCM[m,r,:]])
-
-#=================================================== test
-# fig1, ax = plt.subplots()
-# for r in range(N_region):
-    # for m in range(N_model):
-        # plt.plot(range(2099-1969),Anomaly[m,4,:])
-        # plt.plot(range(2099-1969),np.mean(Anomaly[:,4,:],axis=0),color='b')
-        # # plt.plot(range(2099-1969),range(2099-1969))
-
-# fig2, ax = plt.subplots()
-# for r in range(N_region):
-    # for m in range(N_model_GCM):
-        # plt.plot(range(2099-1969),Anomaly_GCM[m,4,:])
-        # plt.plot(range(2099-1969),np.mean(Anomaly_GCM[:,4,:],axis=0),color='b')
-        # # plt.plot(range(2099-1969),range(2099-1969))
-
-#=================================================== test
-
-
 
 # Ensmean of timstd in ref estimation of noise of climate change signal
 timstd_ref=np.std(Anomaly[:,:,0:YEAR2-YEAR1],axis=2)
@@ -176,31 +158,16 @@ for r in range(N_region):
     for m in range(N_model_GCM):
         Anomaly_GCM2[m,r,:]=np.array(ctang.running_mean3(Anomaly_GCM[m,r,:],30))
 
-print Anomaly_GCM2.shape
-#=================================================== test
-# fig1, ax = plt.subplots()
-# for r in range(N_region):
-    # for m in range(N_model):
-        # plt.plot(range(101),Anomaly2[m,4,:])
-        # plt.plot(range(101),np.mean(Anomaly2[:,4,:],axis=0),color='b')
-        # plt.plot(range(2099-1969),range(2099-1969))
-
-# fig2, ax = plt.subplots()
-# for r in range(N_region):
-    # for m in range(N_model_GCM):
-        # plt.plot(range(101),Anomaly_GCM2[m,4,:])
-        # plt.plot(range(101),np.mean(Anomaly_GCM2[:,4,:],axis=0),color='b')
-        # plt.plot(range(2099-1969),range(2099-1969))
-
-#=================================================== test
 # get ensmean & ensstd of anomaly
 ensmean_anomaly=np.mean(Anomaly2,axis=0)
 ensmean_anomaly_GCM=np.mean(Anomaly_GCM2,axis=0)
 ensstd_anomaly=np.std(Anomaly2,axis=0)
 ensstd_anomaly_GCM=np.std(Anomaly_GCM2,axis=0)
 
+print ensstd_anomaly_GCM.shape
+
 #=================================================== plot
-Title='annual time series (30-year running mean) of CLT along the 21st century under RCP8.5'
+Title='annual time series (30-year running mean) of RSDS along the 21st century under RCP8.5'
 
 
 fig, axes = plt.subplots(nrows=3, ncols=3,figsize=(16, 9),facecolor='w', edgecolor='k')
@@ -215,7 +182,7 @@ for k in range(N_region):
     axes[k].tick_params(direction='out',length=6,width=2,labelsize=10)
 
     axes[k].set_title('Region '+str(k+1),fontsize=10)
-    axes[k].set_ylabel('CLT anomalies in %', fontsize=10)
+    axes[k].set_ylabel('SSR anomalies in %', fontsize=10)
     
     axes[k].set_axisbelow(True)
     axes[k].yaxis.grid(color='gray', linestyle='dashed')
@@ -234,24 +201,11 @@ for k in range(N_region):
 
 #=================================================== plot every model, RCMs and GCMs
     
-    for m in range(N_model):
-        axes[k].plot(TIME[15:116], Anomaly2[m,k,:], '-',linewidth=2)
-        legend = axes[8].legend(loc='lower left', shadow=True)
-
-    # for m in range(N_model_GCM):
-        # axes[k].plot(TIME[15:116], Anomaly_GCM2[m,k,:],\
-                # '--',linewidth=1)
-        # legend = axes[8].legend(loc='lower left', shadow=True)
-
-    # for m in range(N_model):
-        # axes[k].plot(TIME, Changes[m,k,:], '-',linewidth=0.5)
-
-    # for m in range(N_model_GCM):
-        # axes[k].plot(TIME, Anomaly_GCM[1,k,:], '-',linewidth=2.5,color='green')
-
-    # for m in range(N_model_GCM):
-        # axes[k].plot(TIME, Changes_GCM[1,k,:], '-',linewidth=0.5,color='red')
-
+    for m in range(len(GCM)):
+    # RCMs
+        axes[k].plot(TIME[15:116], Anomaly2[m,k,:], '-',linewidth=0.5)
+    # GCMs
+        # axes[k].plot(TIME[15:116], Anomaly_GCM2[m,k,:], '-',linewidth=0.5)
 #=================================================== plot ensmean of timstd ref
 
     axes[k].errorbar(1990,0,yerr=Ensmean_timstd_ref[k], color='red', ls='-',linewidth=2)
@@ -260,17 +214,14 @@ for k in range(N_region):
 
 #=================================================== plot runmean ensmean anomalies
 
-    # axes[k].plot(TIME[15:116],ensmean_anomaly[k],\
     axes[k].plot(TIME[15:116],ensmean_anomaly[k],\
         '-', label=str(N_model)+' RCMs mean', color='blue', linewidth=2,zorder=2)
 
-    # axes[k].plot(TIME[15:116],ensmean_anomaly_GCM[k],\
-    axes[k].plot(TIME[15:116],ensmean_anomaly_GCM[k],\
+    axes[k].plot(TIME[15:116],ctang.running_mean(ensmean_anomaly_GCM[k],30),\
         '-', label=str(N_model_GCM)+' GCMs mean', color='black', linewidth=2,zorder=2)
 
 #=================================================== plot ensstd of anomalies
 
-    # rcm
     axes[k].plot(TIME[15:116],np.subtract(ensmean_anomaly[k], ensstd_anomaly[k]),\
         '-',  color='blue', linewidth=0.1,zorder=1)
     axes[k].plot(TIME[15:116],np.add(ensmean_anomaly[k], ensstd_anomaly[k]),\
@@ -288,8 +239,15 @@ for k in range(N_region):
     axes[k].fill_between(TIME[15:116], \
             np.subtract(ensmean_anomaly_GCM[k],ensstd_anomaly_GCM[k]),\
             np.add(ensmean_anomaly_GCM[k],ensstd_anomaly_GCM[k]),\
-            color='black',alpha=0.3,zorder=5)
-    axes[k].legend(loc='lower left', shadow=False)
+            color='black',alpha=0.5,zorder=5)
+
+
+    mm=ensmean_anomaly_GCM[k]
+    ma=np.subtract(ensmean_anomaly_GCM[k],ensstd_anomaly_GCM[k])
+    mb=np.add(ensmean_anomaly_GCM[k],ensstd_anomaly_GCM[k])
+
+    axes[k].legend(loc='upper left', shadow=False)
+
 
 #=================================================== add legend to ax[7]
 
@@ -302,8 +260,6 @@ for m in range(N_model):
         # '--',linewidth=1,label=GCM[m])
     # # legend = axes[8].legend(loc='lower left', shadow=True)
 # legend = axes[7].legend(loc='upper center', shadow=True)
-
-#=================================================== 
 for kk in [7,8]:
     ctang.empty_plot(axes[kk])
 
@@ -311,8 +267,8 @@ plt.suptitle(Title)
 
 #===================================================  end of  plot
 
-plt.savefig('clt.annual_series.gcm-rcm.eps', format='eps')
-plt.savefig('clt.annual_series.gcm-rcm.png')
+# plt.savefig('rsds.annual_series.gcm-rcm.eps', format='eps')
+plt.savefig('rsds.annual_series.gcm-rcm.TEST.png')
 plt.show()
 quit()
 

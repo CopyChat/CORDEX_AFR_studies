@@ -206,7 +206,7 @@ def Plot_GCM(m,axx):
     #axx.axis('off')
     axx.xaxis.set_visible(False)
     axx.yaxis.set_visible(False)
-    plt.title(str(GCM_Model[m])+' ('+GCM_resolution[m]+') ',fontsize= 6)
+    plt.title(str(GCM_Model[m])+' ('+GCM_resolution[m]+') ',fontsize= 8)
 
 def Plot_RCM(m,axx):
     map=Basemap(projection='cyl',llcrnrlat=lats.min(),urcrnrlat=lats.max(),\
@@ -217,7 +217,7 @@ def Plot_RCM(m,axx):
     print x.shape,y.shape
     print mean_change[m].shape
     map.pcolormesh(y,x,mean_change[m],cmap=cmap,vmin=-10,vmax=10)
-    plt.title('Exp '+ str(m+1)+', '+str(RCM_Name[m])+"_"+str(GCM_Model[m]),fontsize= 6)
+    plt.title('Exp '+ str(m+1)+', '+str(RCM_Name[m])+"_"+str(GCM_Model[m]),fontsize= 8)
 
 
 def NotAvailable(axx):

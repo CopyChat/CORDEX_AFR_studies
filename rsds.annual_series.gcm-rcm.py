@@ -40,41 +40,42 @@ YEAR3=2006
 YEAR4=2099
 
 MODEL=(\
-        'CCCma-CanESM2_SMHI-RCA4_v1',\
-        'CNRM-CERFACS-CNRM-CM5_SMHI-RCA4_v1',\
-        'CSIRO-QCCCE-CSIRO-Mk3-6-0_SMHI-RCA4_v1',\
-        'ICHEC-EC-EARTH_SMHI-RCA4_v1',\
-        'IPSL-IPSL-CM5A-MR_SMHI-RCA4_v1',\
-        'MIROC-MIROC5_SMHI-RCA4_v1',\
-        'MOHC-HadGEM2-ES_SMHI-RCA4_v1',\
-        'MPI-M-MPI-ESM-LR_SMHI-RCA4_v1',\
-        'NCC-NorESM1-M_SMHI-RCA4_v1',\
-        'NOAA-GFDL-GFDL-ESM2M_SMHI-RCA4_v1',\
+        # 'CCCma-CanESM2_SMHI-RCA4_v1',\
+        # 'CNRM-CERFACS-CNRM-CM5_SMHI-RCA4_v1',\
+        # 'CSIRO-QCCCE-CSIRO-Mk3-6-0_SMHI-RCA4_v1',\
+        # 'ICHEC-EC-EARTH_SMHI-RCA4_v1',\
+        # 'IPSL-IPSL-CM5A-MR_SMHI-RCA4_v1',\
+        # 'MIROC-MIROC5_SMHI-RCA4_v1',\
+        # 'MOHC-HadGEM2-ES_SMHI-RCA4_v1',\
+        # 'MPI-M-MPI-ESM-LR_SMHI-RCA4_v1',\
+        # 'NCC-NorESM1-M_SMHI-RCA4_v1',\
+        # 'NOAA-GFDL-GFDL-ESM2M_SMHI-RCA4_v1',\
         \
         'CNRM-CERFACS-CNRM-CM5_CLMcom-CCLM4-8-17_v1',\
         'ICHEC-EC-EARTH_CLMcom-CCLM4-8-17_v1',\
         'MOHC-HadGEM2-ES_CLMcom-CCLM4-8-17_v1',\
         'MPI-M-MPI-ESM-LR_CLMcom-CCLM4-8-17_v1',\
-        'ICHEC-EC-EARTH_DMI-HIRHAM5_v2',\
-        'NCC-NorESM1-M_DMI-HIRHAM5_v1',\
-        'ICHEC-EC-EARTH_KNMI-RACMO22T_v1',\
-        'MOHC-HadGEM2-ES_KNMI-RACMO22T_v2',\
-        'ICHEC-EC-EARTH_MPI-CSC-REMO2009_v1',\
-        'IPSL-IPSL-CM5A-LR_GERICS-REMO2009_v1',\
-        'MPI-M-MPI-ESM-LR_MPI-CSC-REMO2009_v1',\
+        # 'ICHEC-EC-EARTH_DMI-HIRHAM5_v2',\
+        # 'NCC-NorESM1-M_DMI-HIRHAM5_v1',\
+        # 'ICHEC-EC-EARTH_KNMI-RACMO22T_v1',\
+        # 'MOHC-HadGEM2-ES_KNMI-RACMO22T_v2',\
+        # 'ICHEC-EC-EARTH_MPI-CSC-REMO2009_v1',\
+        # 'IPSL-IPSL-CM5A-LR_GERICS-REMO2009_v1',\
+        # 'MPI-M-MPI-ESM-LR_MPI-CSC-REMO2009_v1',\
         )
 
 GCM=(\
     'rsds_Amon_CNRM-CM5_historical-rcp85_r1i1p1',\
-    'rsds_Amon_CSIRO-Mk3-6-0_historical-rcp85_r1i1p1',\
-    'rsds_Amon_CanESM2_historical-rcp85_r1i1p1',\
-    'rsds_Amon_GFDL-ESM2M_historical-rcp85_r1i1p1',\
+    # 'rsds_Amon_CSIRO-Mk3-6-0_historical-rcp85_r1i1p1',\
+    # 'rsds_Amon_CanESM2_historical-rcp85_r1i1p1',\
+    'rsds_Amon_EC-EARTH_historical-rcp85_r1i1p1',\
+    # 'rsds_Amon_GFDL-ESM2M_historical-rcp85_r1i1p1',\
     'rsds_Amon_HadGEM2-ES_historical-rcp85_r1i1p1',\
-    'rsds_Amon_IPSL-CM5A-LR_historical-rcp85_r1i1p1',\
-    'rsds_Amon_IPSL-CM5A-MR_historical-rcp85_r1i1p1',\
-    'rsds_Amon_MIROC5_historical-rcp85_r1i1p1',\
+    # 'rsds_Amon_IPSL-CM5A-LR_historical-rcp85_r1i1p1',\
+    # 'rsds_Amon_IPSL-CM5A-MR_historical-rcp85_r1i1p1',\
+    # 'rsds_Amon_MIROC5_historical-rcp85_r1i1p1',\
     'rsds_Amon_MPI-ESM-LR_historical-rcp85_r1i1p1',\
-    'rsds_Amon_NorESM1-M_historical-rcp85_r1i1p1',\
+    # 'rsds_Amon_NorESM1-M_historical-rcp85_r1i1p1',\
     )
 
 N_model = len(MODEL)
@@ -166,7 +167,7 @@ ensstd_anomaly_GCM=np.std(Anomaly_GCM2,axis=0)
 print ensstd_anomaly_GCM.shape
 
 #=================================================== plot
-Title='annual time series (30-year running mean) of SSR along the 21st century under RCP8.5'
+Title='annual time series (30-year running mean) of RSDS along the 21st century under RCP8.5'
 
 
 fig, axes = plt.subplots(nrows=3, ncols=3,figsize=(16, 9),facecolor='w', edgecolor='k')

@@ -25,17 +25,17 @@ import Taylor
 import ctang
 
 #=================================================== Definitions
-Data='/Users/ctang/Code/CORDEX_AFR_studies/data/validation_CM_SAF/'
-OBS_Dir='/Users/ctang/Code/CORDEX_AFR_studies/data/OBS/'
+Data='/Users/ctang/Code/CORDEX_AFR_studies/data/validation_CLARA-A2/'
+OBS_Dir='/Users/ctang/Code/CORDEX_AFR_studies/data/OBS/validation_CLARA-A2/'
 N_model = 21
 VAR ='clt' # ,'tas','sfcWind') #,'PVpot')
-OBS='CM_SAF'
+OBS='CLARA-A2'
 OBSvar = 'cfc'
 N_column = 2
 N_row = 21
 N_plot = N_column*N_row
 Season='DJF'
-# Season='JJA'
+Season='JJA'
 #=================================================== test
 ##
 #=================================================== end of test
@@ -166,7 +166,7 @@ print timmean_OBS_remap.shape
 print timmean_CORDEX.shape
 
 #=================================================== plot
-Title='Evaluation of the simulated '+str(VAR)+' in the historical period 1979-2005'
+Title='Evaluation of the simulated CLT in the historical period 1983-2005'
 #=================================================== 
 Unit=( '(%)','(%)','(%)')
 #=================================================== 
@@ -189,7 +189,7 @@ def PlotMap(array2D,lons,lats,m,k,axx,vmin,vmax,cmap):
     axx.xaxis.set_visible(False)
     axx.yaxis.set_visible(False)
 
-    plt.title(str(m+1)+' '+RCM_name[m]+"_"+GCM_name[m]+" "+ TITLE2[k]+" "+Unit[k],fontsize= 8)
+    plt.title(str(m+1)+' '+RCM_name[m]+"_"+GCM_name[m]+" "+ TITLE2[k]+" "+Unit[k],fontsize= 9)
 
     cb=plt.colorbar(cmap=plt.cm.jet,orientation='horizontal',shrink=0.7) 
     cb.ax.tick_params(['{:.0f}'.format(x) for x in bounds ],labelsize=6) 
