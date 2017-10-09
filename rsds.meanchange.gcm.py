@@ -25,26 +25,15 @@ import ctang
 
 #=================================================== I/O info:
 # input data:
-Data='/Users/ctang/Code/CORDEX_AFR_studies/data/'
+Data='/Users/ctang/Code/CORDEX_AFR_studies/data/seasonal.meanchanges.rcp45.rcp85.mid.end.rsds/'
 
 # output:
-output='rsds.meanchange.gcm'
-DataMat=output
+Output='rsds.meanchange.rcp45.rcp85.min.end.gcm'
 
 #=================================================== Definitions
-N_region = 9
 N_model = 11
 VAR = 'rsds' #,'tas','sfcWind') #,'PVpot')
 #---------------------------------------------------  data
-# 21 * 4 table: 21 models vs 4 vars
-
-    #               region_1 region_2 ... region_N_region
-    #  model_1
-    #  model_2
-    #  ...
-    #  model_N_model
-    #  ens
-#--------------------------------------------------- 
 
 GCM_Model=(\
     'CNRM-CM5',\
@@ -60,101 +49,170 @@ GCM_Model=(\
     'NorESM1-M',\
     )
 
+RCP=('hist','rcp45','rcp85')
+
+YEAR=('1970-1999','2035-2065','2070-2099')
+
+Season='JJA'
+Season='DJF'
+
 #================================================== reading data
 # 21 maps
-filefix=(\
-        '.hist.1970-1999.SA.timmean.remap.nc' ,\
-        '.rcp85.2070-2099.SA.timmean.remap.nc')
 
 # Read lon,lat for model
 lons,lats=ctang.read_lonlat_netcdf_1D(\
-        Data+VAR+'_Amon_'+GCM_Model[1]+filefix[0])
+        Data+VAR+'_Amon_'+GCM_Model[1]+'.'+RCP[0]+'.'+YEAR[0]+'.SA.'+str(Season)+'.timmean.remap.nc')
 
+# rsds_Amon_NorESM1-M.rcp45.2070-2099.SA.JJA.timmean.remap.nc
+# print Data+VAR+'_Amon_'+GCM_Model[1]+'.'+RCP[0]+'.'+YEAR[0]+'.SA.'+str(Season)+'.timmean.remap.nc'
+
+
+#===================================================  reading GCMs
 # Read Ensmean of timmean for CORDEX 
-## reading 21 models : (21,90,137)
-mean_ref=np.array([ctang.read_lonlatmap_netcdf(VAR,\
-    Data+VAR+'_Amon_'+GCM_Model[i]+filefix[0])\
+GCM_hist_JJA=np.array([ctang.read_lonlatmap_netcdf(VAR,\
+    Data+VAR+'_Amon_'+GCM_Model[i]+'.hist.1970-1999.SA.JJA.timmean.remap.nc')\
     for i in range(N_model)])
-mean_future=np.array([ctang.read_lonlatmap_netcdf(VAR,\
-    Data+VAR+'_Amon_'+GCM_Model[i]+filefix[1]) \
+
+GCM_rcp45_JJA_mid=np.array([ctang.read_lonlatmap_netcdf(VAR,\
+    Data+VAR+'_Amon_'+GCM_Model[i]+'.rcp45.2036-2065.SA.JJA.timmean.remap.nc')\
     for i in range(N_model)])
-#=================================================== Cal
 
-# missing value
-mean_ref[mean_ref > 999] = np.nan
-mean_future[mean_future > 999] = np.nan
+GCM_rcp45_JJA_end=np.array([ctang.read_lonlatmap_netcdf(VAR,\
+    Data+VAR+'_Amon_'+GCM_Model[i]+'.rcp45.2070-2099.SA.JJA.timmean.remap.nc')\
+    for i in range(N_model)])
 
-mean_change=(mean_future-mean_ref)*100/mean_ref
+GCM_rcp85_JJA_mid=np.array([ctang.read_lonlatmap_netcdf(VAR,\
+    Data+VAR+'_Amon_'+GCM_Model[i]+'.rcp85.2036-2065.SA.JJA.timmean.remap.nc')\
+    for i in range(N_model)])
 
-t_value=mean_change
+GCM_rcp85_JJA_end=np.array([ctang.read_lonlatmap_netcdf(VAR,\
+    Data+VAR+'_Amon_'+GCM_Model[i]+'.rcp85.2070-2099.SA.JJA.timmean.remap.nc')\
+    for i in range(N_model)])
 
-# for i in range(N_model):
-    # for lat in range(t_value.shape[1]):
-        # for lon in range(t_value.shape[2]):
-            # if mean_future[i,lat,lon] > 999:
-                # print mean_change[i,lat,lon]
-                # quit()
+#=================================================== missing value
+GCM_hist_JJA[GCM_hist_JJA < 0]=np.nan
+GCM_hist_JJA[GCM_hist_JJA < 0]=np.nan
 
+GCM_rcp45_JJA_mid[GCM_rcp45_JJA_mid < 0]=np.nan
+GCM_rcp45_JJA_end[GCM_rcp45_JJA_end < 0]=np.nan
+
+GCM_rcp85_JJA_mid[GCM_rcp85_JJA_mid < 0]=np.nan
+GCM_rcp85_JJA_end[GCM_rcp85_JJA_end < 0]=np.nan
+
+#=================================================== changes GCMs
+
+GCM_rcp45_JJA_mid_Change=GCM_rcp45_JJA_mid-GCM_hist_JJA
+GCM_rcp45_JJA_end_Change=GCM_rcp45_JJA_end-GCM_hist_JJA
+
+GCM_rcp85_JJA_mid_Change=GCM_rcp85_JJA_mid-GCM_hist_JJA 
+GCM_rcp85_JJA_end_Change=GCM_rcp85_JJA_end-GCM_hist_JJA
+
+#=================================================== Cal significant
+## input: changes map
+## output: significant map, NB
+
+ZEROS=np.zeros((\
+        GCM_rcp45_JJA_end_Change.shape[1],\
+        GCM_rcp45_JJA_end_Change.shape[2]))
+
+
+GCM_rcp45_JJA_mid_NB=ZEROS
+GCM_rcp45_JJA_end_NB=ZEROS
+GCM_rcp85_JJA_mid_NB=ZEROS
+GCM_rcp85_JJA_end_NB=ZEROS
+
+# GCM_rcp45_JJA_mid_Sig=ZEROS
+# GCM_rcp45_JJA_end_Sig=ZEROS
+# GCM_rcp85_JJA_mid_Sig=ZEROS
+# GCM_rcp85_JJA_end_Sig=ZEROS
 #--------------------------------------------------- 
-# for t test in each point
-#--------------------------------------------------- 
-#t_value in N_model,lat,lon
-def significant_map(t_value):
-    count=0
-    for lat in range(t_value.shape[1]):
-        for lon in range(t_value.shape[2]):
-            grid = t_value[:,lat,lon]
-            grid = grid[grid < 999]  # remove missing values
-            # print grid
+def Significant_map(multi_model_map,NB):
+    Sig=np.zeros((\
+            multi_model_map.shape[1],\
+            multi_model_map.shape[2]))
 
-            print(lat,lon,len(grid))
-            if len(grid) < 1:
-                t_value[:,lat,lon]=np.NaN
-                print lat,lon
+    print Sig.shape,Sig
+    for lat in range(multi_model_map.shape[1]):
+        for lon in range(multi_model_map.shape[2]):
+
+            # lat=34
+            # lon=48
+            print Sig.shape,Sig,lat,lon
+            grid = multi_model_map[:,lat,lon]
+            print grid
+            print GCM_rcp45_JJA_end_Change[:,lat,lon]
+            grid_nonnan=[value for value in grid if not math.isnan(value)]
+            print len(grid_nonnan)
+            print grid_nonnan
+            print(lat,lon,len(grid_nonnan))
+
+            if len(grid_nonnan) < 1:
+                Sig[lat,lon]=0
+                NB[lat,lon]=0
+                print "----------------- bad point"
             else:
-                Sig = stats.ttest_1samp(grid,0)[0]
-                if np.abs(Sig) > ctang.get_T_value(len(grid)):
-                    count+=1
+                # print grid
+                Significance = stats.ttest_1samp(grid_nonnan,0)[0]
+                T=ctang.get_T_value(len(grid))
+                
+
+                if np.abs(Significance) > T:
+
+                    print "Significance = "+str(Significance)
+                    Sig[lat,lon]=1
                 else:
-                    t_value[:,lat,lon]=np.NaN
-    return t_value
+                    Sig[lat,lon]=0
+
+                print Sig.shape,Sig,lat,lon,Sig[lat,lon],Significance,T
+
+                # how many models have value significant
+                cc=0
+                for jk in range(len(grid_nonnan)):
+                    print grid_nonnan[jk],np.mean(grid_nonnan)
+                    if (grid_nonnan[jk]*np.mean(grid_nonnan) > 0):
+                        if (np.abs(grid_nonnan[jk])>T):
+                            print lat,lon,grid_nonnan[jk],np.mean(grid_nonnan),T
+                            cc+=1
+                NB[lat,lon]=cc
+            print lat,lon,grid_nonnan[jk],np.mean(grid_nonnan),T,cc,NB[lat,lon]
+    return Sig
 #--------------------------------------------------- 
+# GCM_rcp45_JJA_mid_Sig=\
+        # Significant_map(GCM_rcp45_JJA_mid_Change,\
+        # GCM_rcp45_JJA_mid_NB )
 
-def robust(t_value):
-#   The following criteria are used to
-#   consider them as either uncertain or negligible:
-#       negligible: NaN >= N_model/2
-#       uncertain:  at least 2 significant individual differ in sign
-#       robust:     NaN < N_model/2, sum(abs(x_i)) = abs(sum(x_i))
+GCM_rcp45_JJA_end_Sig=\
+        Significant_map(GCM_rcp45_JJA_end_Change,\
+        GCM_rcp45_JJA_end_NB )
 
-#   input: 21 maps with t values
-#   return: 21 maps with t values
-    count=1
-    for lat in range(t_value.shape[1]):
-        for lon in range(t_value.shape[2]):
-            if np.isnan(t_value[:,lat,lon]).sum() >= N_model/2:     # negligible
-                #t_value[v,:,lat,lon]=[ 99999 for t in range(N_model)] 
-                t_value[:,lat,lon]=np.nan
-            else:
-                if (N_model-np.isnan(t_value[:,lat,lon]).sum()) > np.abs(np.nansum(np.sign(t_value[:,lat,lon]))):
-                    #t_value[v,:,lat,lon]=[-99999 for t in range(N_model)] # uncertain
-                    t_value[:,lat,lon]=np.nan
-                else:
-                    t_value[:,lat,lon]=t_value[:,lat,lon]
-                    #print "get robust point",count
-                    count += 1
-    return t_value
-#========================================= end of function
+# GCM_rcp85_JJA_mid_Sig=\
+        # Significant_map(GCM_rcp85_JJA_mid_Change,\
+        # GCM_rcp85_JJA_mid_NB )
 
-# t_value=robust(significant_map(t_value))
-# t_value=significant_map(t_value)
+# GCM_rcp85_JJA_end_Sig=\
+        # Significant_map(GCM_rcp85_JJA_end_Change,\
+        # GCM_rcp85_JJA_end_NB )
+        
+# GCM_rcp45_JJA_end_Sig,GCM_rcp45_JJA_end_NB = \
+        # Significant_map(GCM_rcp45_JJA_end_Change)
+# GCM_rcp85_JJA_mid_Sig,GCM_rcp85_JJA_mid_NB = \
+        # Significant_map(GCM_rcp85_JJA_mid_Change)
+# GCM_rcp85_JJA_end_Sig,GCM_rcp85_JJA_end_NB = \
+        # Significant_map(GCM_rcp85_JJA_end_Change)
 
-# save to txt file to save time
-# ctang.Save2mat(output,t_value) 
+#=================================================== check
+print GCM_rcp45_JJA_end_NB
+print GCM_rcp45_JJA_end_Sig
+print GCM_rcp45_JJA_end_NB[34,44]
+print GCM_rcp45_JJA_end_Sig[34,44]
+print len(GCM_rcp45_JJA_end_Change[:,34,44])
 
-# reading from mat file
-t_value=ctang.Loadmat(output+'.mat')
-print np.isnan(t_value).sum()
+print ctang.get_T_value(len(GCM_rcp45_JJA_end_Change[:,34,44]))
+print GCM_rcp45_JJA_end_Change[:,34,44]
+
+#=================================================== 
+
+quit()
 
 # plotting array:
 Ensmean_change=np.nanmean(mean_change,axis=0)
